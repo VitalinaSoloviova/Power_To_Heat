@@ -28,8 +28,11 @@ jobs:
       - name: Run linting
         run: npm run lint
 
+      - name: Run type checking
+        run: npm run build
 
-        
+
+
 # --- ZUSAMMENFASSUNG DER SYNTAX ---
 # name:        Name des gesamten Workflows
 # on:          Wann soll der Workflow starten? (Trigger)
