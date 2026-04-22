@@ -27,3 +27,19 @@ jobs:
 
       - name: Run linting
         run: npm run lint
+
+
+        
+# --- ZUSAMMENFASSUNG DER SYNTAX ---
+# name:        Name des gesamten Workflows
+# on:          Wann soll der Workflow starten? (Trigger)
+# jobs:        Was soll gemacht werden? (Eine Gruppe von Schritten)
+# runs-on:     Auf welchem Betriebssystem? (z.B. Ubuntu Linux)
+# defaults:    Standardwerte für alle folgenden Befehle (z.B. Arbeitsverzeichnis)
+# steps:       Die Liste der einzelnen Aufgaben (nacheinander)
+# uses:        Nutzt eine fertige Aktion von GitHub (wie ein Plugin)
+# with:        Einstellungen für eine 'uses' Aktion
+# run:         Ein normaler Terminal-Befehl (npm, ls, etc.)
+# name (step): Beschreibung des einzelnen Schritts (erscheint in der UI)
+# #            Kommentar-Zeichen (alles dahinter wird ignoriert)
+# -            Kennzeichnet ein neues Element in einer Liste
