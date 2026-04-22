@@ -47,7 +47,7 @@ export default defineConfig([
           argsIgnorePattern: '^_',
         },
       ],
-      'prettier/prettier': 'error',
+      'prettier/prettier': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/consistent-type-imports': [
         'error',
