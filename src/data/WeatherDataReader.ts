@@ -1,4 +1,4 @@
-import { type WeatherData } from './WeatherInterface';
+import { type WeatherData, type DateString } from './WeatherInterface';
 
 export class WeatherDataReader {
   /**
@@ -19,12 +19,14 @@ export class WeatherDataReader {
     const weatherDescriptionIndex = headers.indexOf('weather_description');
     const windSpeedIndex = headers.indexOf('wind_speed');
 
-    const dailyWeatherAggregation = new Map<string, {
+    interface DailyAggregation {
       minTemperatureRecord: number;
       maxTemperatureRecord: number;
       weatherDescriptions: string[];
       windSpeedMeasurements: number[];
-    }>();
+    }
+
+    const dailyWeatherAggregation = new Map<DateString, DailyAggregation>();
 
     for (let i = 1; i < lines.length; i++) {
       const currentLine = lines[i].trim();
@@ -34,7 +36,7 @@ export class WeatherDataReader {
       const isoTimestamp = columnValues[timeIndex]; 
       if (!isoTimestamp) continue;
 
-      const dateKey = isoTimestamp.split(' ')[0]; 
+      const dateKey: DateString = isoTimestamp.split(' ')[0]; 
       const currentMinTemp = parseFloat(columnValues[temperatureMinIndex]);
       const currentMaxTemp = parseFloat(columnValues[temperatureMaxIndex]);
       const currentDescription = columnValues[weatherDescriptionIndex];
@@ -51,10 +53,7 @@ export class WeatherDataReader {
         const dailySummary = dailyWeatherAggregation.get(dateKey)!;
         dailySummary.minTemperatureRecord = Math.min(dailySummary.minTemperatureRecord, currentMinTemp);
         dailySummary.maxTemperatureRecord = Math.max(dailySummary.maxTemperatureRecord, currentMaxTemp);
-        
-        if (currentDescription && !dailySummary.weatherDescriptions.includes(currentDescription)) {
-          dailySummary.weatherDescriptions.push(currentDescription);
-        }
+        dailySummary.weatherDescriptions.push(currentDescription);
         dailySummary.windSpeedMeasurements.push(currentWindSpeed);
       }
     }
@@ -63,11 +62,12 @@ export class WeatherDataReader {
       const averageWindSpeed = dailySummary.windSpeedMeasurements.reduce((sum, speed) => sum + speed, 0) / dailySummary.windSpeedMeasurements.length;
       
       return {
-        date: date,
-        minTemperature: dailySummary.minTemperatureRecord,
-        maxTemperature: dailySummary.maxTemperatureRecord,
-        weatherDescription: dailySummary.weatherDescriptions.join(', '),
-        windSpeed: parseFloat(averageWindSpeed.toFixed(2))
+        date: date as DateString,
+        minTemperatureRecord: dailySummary.minTemperatureRecord,
+        maxTemperatureRecord: dailySummary.maxTemperatureRecord,
+        weatherDescriptions: dailySummary.weatherDescriptions,
+        windSpeedMeasurements: dailySummary.windSpeedMeasurements,
+        windSpeedAverage: parseFloat(averageWindSpeed.toFixed(2))
       };
     });
   }

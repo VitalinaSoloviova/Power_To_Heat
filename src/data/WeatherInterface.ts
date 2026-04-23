@@ -1,7 +1,13 @@
+/**
+ * Repräsentiert ein Datum im Format YYYY-MM-DD als String.
+ */
+export type DateString = string;
+
 export interface WeatherData {
-  date: string; // Format: YYYY-MM-DD
-  minTemperature: number;
-  maxTemperature: number;
-  weatherDescription: string;
-  windSpeed: number;
+  date: DateString;
+  minTemperatureRecord: number;
+  maxTemperatureRecord: number;
+  weatherDescriptions: string[];
+  windSpeedMeasurements: number[];
+  windSpeedAverage: number;
 }
