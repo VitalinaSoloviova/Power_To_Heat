@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -18,7 +21,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@jest/globals": "^30.3.0",
     "@tailwindcss/vite": "^4.2.4",
+    "@types/jest": "^30.0.0",
     "@types/node": "^24.12.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
@@ -30,8 +35,11 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "eslint-plugin-unused-imports": "^4.4.1",
     "globals": "^17.5.0",
+    "jest": "^30.3.0",
+    "jest-fetch-mock": "^3.0.3",
     "prettier": "^3.8.3",
     "tailwindcss": "^4.2.4",
+    "ts-jest": "^29.4.9",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.58.2",
     "vite": "^8.0.9"
