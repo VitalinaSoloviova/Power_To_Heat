@@ -2,11 +2,11 @@ import { type WeatherData, type DateString } from './WeatherInterface';
 
 export class WeatherDataReader {
   /**
-   * Liest den Inhalt einer CSV-Datei ein und wandelt ihn in ein Array von WeatherData um.
-   * Die stündlichen Daten werden dabei auf Tagesbasis aggregiert.
+   * Reads the content of a CSV file and converts it into an array of WeatherData.
+   * Each row is directly converted without aggregation or filtering.
    * 
-   * @param csvContent Der rohe Textinhalt der CSV-Datei
-   * @returns Ein Array mit aggregierten Wetterdaten pro Tag
+   * @param csvContent The raw text content of the CSV file
+   * @returns An array with all weather data entries
    */
   public static mapCsvToWeatherData(csvContent: string): WeatherData[] {
     const lines = csvContent.split('\n');
@@ -19,56 +19,35 @@ export class WeatherDataReader {
     const weatherDescriptionIndex = headers.indexOf('weather_description');
     const windSpeedIndex = headers.indexOf('wind_speed');
 
-    interface DailyAggregation {
-      minTemperatureRecord: number;
-      maxTemperatureRecord: number;
-      weatherDescriptions: string[];
-      windSpeedMeasurements: number[];
-    }
-
-    const dailyWeatherAggregation = new Map<DateString, DailyAggregation>();
-
+    const allWeatherData: WeatherData[] = [];
+    // Process each line of the CSV, starting from the second line (index 1)
     for (let i = 1; i < lines.length; i++) {
       const currentLine = lines[i].trim();
+      // Skip empty lines
       if (!currentLine) continue;
 
       const columnValues = currentLine.split(';');
       const isoTimestamp = columnValues[timeIndex]; 
+      // Skip rows without a valid timestamp
       if (!isoTimestamp) continue;
 
       const dateKey: DateString = isoTimestamp.split(' ')[0]; 
       const currentMinTemp = parseFloat(columnValues[temperatureMinIndex]);
       const currentMaxTemp = parseFloat(columnValues[temperatureMaxIndex]);
-      const currentDescription = columnValues[weatherDescriptionIndex];
+      const currentDescription = columnValues[weatherDescriptionIndex] || '';
       const currentWindSpeed = parseFloat(columnValues[windSpeedIndex]);
 
-      if (!dailyWeatherAggregation.has(dateKey)) {
-        dailyWeatherAggregation.set(dateKey, {
-          minTemperatureRecord: currentMinTemp,
-          maxTemperatureRecord: currentMaxTemp,
-          weatherDescriptions: currentDescription ? [currentDescription] : [],
-          windSpeedMeasurements: [currentWindSpeed]
-        });
-      } else {
-        const dailySummary = dailyWeatherAggregation.get(dateKey)!;
-        dailySummary.minTemperatureRecord = Math.min(dailySummary.minTemperatureRecord, currentMinTemp);
-        dailySummary.maxTemperatureRecord = Math.max(dailySummary.maxTemperatureRecord, currentMaxTemp);
-        dailySummary.weatherDescriptions.push(currentDescription);
-        dailySummary.windSpeedMeasurements.push(currentWindSpeed);
-      }
+      // Create a WeatherData entry for each row
+      allWeatherData.push({
+        date: dateKey,
+        minTemperatureRecord: currentMinTemp,
+        maxTemperatureRecord: currentMaxTemp,
+        weatherDescriptions: [currentDescription],
+        windSpeedMeasurements: [currentWindSpeed],
+        windSpeedAverage: currentWindSpeed
+      });
     }
 
-    return Array.from(dailyWeatherAggregation.entries()).map(([date, dailySummary]) => {
-      const averageWindSpeed = dailySummary.windSpeedMeasurements.reduce((sum, speed) => sum + speed, 0) / dailySummary.windSpeedMeasurements.length;
-      
-      return {
-        date: date as DateString,
-        minTemperatureRecord: dailySummary.minTemperatureRecord,
-        maxTemperatureRecord: dailySummary.maxTemperatureRecord,
-        weatherDescriptions: dailySummary.weatherDescriptions,
-        windSpeedMeasurements: dailySummary.windSpeedMeasurements,
-        windSpeedAverage: parseFloat(averageWindSpeed.toFixed(2))
-      };
-    });
+    return allWeatherData;
   }
 }

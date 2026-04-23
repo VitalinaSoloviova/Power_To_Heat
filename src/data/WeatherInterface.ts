@@ -9,5 +9,11 @@ export interface WeatherData {
   maxTemperatureRecord: number;
   weatherDescriptions: string[];
   windSpeedMeasurements: number[];
+}
+
+export interface DailyWeatherSummary {
+  date: DateString;
+  temperatureAverage: number;
+  weatherDescription: string;
   windSpeedAverage: number;
 }
