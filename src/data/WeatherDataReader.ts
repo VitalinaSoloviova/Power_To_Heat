@@ -44,7 +44,6 @@ export class WeatherDataReader {
         maxTemperatureRecord: currentMaxTemp,
         weatherDescriptions: [currentDescription],
         windSpeedMeasurements: [currentWindSpeed],
-        windSpeedAverage: currentWindSpeed
       });
     }
 
