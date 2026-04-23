@@ -1,14 +1,15 @@
 {
   "extends": "./tsconfig.app.json",
   "compilerOptions": {
-    "types": ["jest"],
-    "module": "commonjs",
+    "types": ["jest", "node"],
+    "module": "esnext",
     "target": "es2023",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "erasableSyntaxOnly": false
+    "erasableSyntaxOnly": false,
+    "verbatimModuleSyntax": false
   },
   "include": ["src/**/__tests__/**/*", "src/**/*.test.ts", "src/**/*.test.tsx"],
   "exclude": ["node_modules"]
