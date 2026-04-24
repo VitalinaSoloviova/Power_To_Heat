@@ -7,17 +7,18 @@ interface ChartsComponentProps {
 }
 
 const ChartsComponent = ({ weatherData }: ChartsComponentProps) => {
-  // Prepare chart data from weather data
   const chartData = weatherData.map(data => ({
-    day: data.day,
+    day: data.day.getDate(), 
+    date: data.day.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }), 
     minTemp: data.weather.minTemp,
     maxTemp: data.weather.maxTemp,
     avgTemp: data.weather.avgTemp
   }));
 
-  const xAxisData = chartData.map(d => d.day);
+  const xAxisData = chartData.map(d => d.date);
   const minTempData = chartData.map(d => d.minTemp);
   const maxTempData = chartData.map(d => d.maxTemp);
+  const maxMaxTemp = Math.max(...maxTempData);
 
   return (
     <Paper
@@ -35,29 +36,43 @@ const ChartsComponent = ({ weatherData }: ChartsComponentProps) => {
         Temperature Overview
       </Typography>
       
-      <Box sx={{ width: '100%' }}>
-        <LineChart
-          height={350}
-          sx={{ width: '100%' }}
-          series={[
-            {
-              data: minTempData,
-              label: 'Min Temperature (°C)',
-              color: '#2196f3'
-            },
-            {
-              data: maxTempData,
-              label: 'Max Temperature (°C)',
-              color: '#ff6b6b'
-            },
-          ]}
-          xAxis={[{
-            scaleType: 'point',
-            data: xAxisData,
-            label: 'Day of Month'
-          }]}
-        />
-      
+      <Box 
+        sx={{ 
+          width: '70%', 
+          height: '200px', 
+          mt: 2,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Box sx={{ flex: 1 }}>
+          <LineChart
+            series={[
+              {
+                data: minTempData,
+                label: 'Min Temperature (°C)',
+                color: '#2196f3'
+              },
+              {
+                data: maxTempData,
+                label: 'Max Temperature (°C)',
+                color: '#ff6b6b'
+              },
+            ]}
+            xAxis={[{
+              scaleType: 'point',
+              data: xAxisData,
+              label: 'Date'
+            }]}
+            yAxis={[
+              {
+                max: maxMaxTemp,
+                label: 'Temperature (°C)'
+              }
+            ]}
+          />
+        </Box>
       </Box>
     </Paper>
   );
