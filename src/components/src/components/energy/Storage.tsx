@@ -1,50 +1,54 @@
 import { Box, Typography } from '@mui/material';
 import { motion, AnimatePresence } from 'framer-motion';
-import FloatingIsland from './FloatingIsland';
+import FloatingIsland, { type TimeOfDay, type Weather } from './FloatingIsland';
 
 interface StorageProps {
   storageLevel: number; // 0..1
   isCharging: boolean;
   isDischarging: boolean;
+  size?: number;
+  timeOfDay?: TimeOfDay;
+  weather?: Weather;
 }
 
-const Storage: React.FC<StorageProps> = ({ storageLevel, isCharging, isDischarging }) => {
+const Storage: React.FC<StorageProps> = ({
+  storageLevel,
+  isCharging,
+  isDischarging,
+  size = 240,
+  timeOfDay = 'day',
+  weather = 'clear',
+}) => {
   const fillColor =
     storageLevel > 0.6 ? '#10b981' : storageLevel > 0.3 ? '#f59e0b' : '#ef4444';
 
   return (
-    <FloatingIsland accent="rgba(99, 102, 241, 0.28)" delay={0.1}>
-      <Typography sx={{ fontSize: 12, fontWeight: 600, letterSpacing: 1.2, color: '#6366f1', textTransform: 'uppercase' }}>
-        Storage
-      </Typography>
-
-      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <FloatingIsland size={size} timeOfDay={timeOfDay} weather={weather} label="Storage" delay={0.1}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Box
           sx={{
             position: 'relative',
-            width: 70,
-            height: 110,
-            borderRadius: 3,
+            width: 56,
+            height: 88,
+            borderRadius: 2,
             border: '2.5px solid #e5e7eb',
             overflow: 'hidden',
             background: '#f9fafb',
             boxShadow: 'inset 0 2px 4px rgba(0,0,0,0.04)',
           }}
         >
-          {/* battery cap */}
           <Box
             sx={{
               position: 'absolute',
-              top: -8,
+              top: -7,
               left: '50%',
               transform: 'translateX(-50%)',
-              width: 22,
-              height: 6,
+              width: 18,
+              height: 5,
               background: '#e5e7eb',
               borderRadius: '2px 2px 0 0',
             }}
           />
-          {/* fill */}
           <motion.div
             style={{
               position: 'absolute',
@@ -69,7 +73,7 @@ const Storage: React.FC<StorageProps> = ({ storageLevel, isCharging, isDischargi
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontSize: 28,
+                  fontSize: 24,
                   color: 'white',
                   fontWeight: 700,
                   textShadow: '0 1px 4px rgba(0,0,0,0.3)',
@@ -85,11 +89,7 @@ const Storage: React.FC<StorageProps> = ({ storageLevel, isCharging, isDischargi
             )}
           </AnimatePresence>
         </Box>
-      </Box>
-
-      <Box sx={{ textAlign: 'center' }}>
-        <Typography sx={{ fontSize: 11, color: '#6b7280', fontWeight: 500 }}>Charge</Typography>
-        <Typography sx={{ fontSize: 22, fontWeight: 700, color: fillColor, lineHeight: 1.1 }}>
+        <Typography sx={{ fontSize: 11, fontWeight: 700, color: fillColor, mt: 0.5 }}>
           {(storageLevel * 100).toFixed(0)}%
         </Typography>
       </Box>
