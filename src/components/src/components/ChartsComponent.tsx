@@ -32,7 +32,7 @@ const ChartsComponent = ({ weatherData }: ChartsComponentProps) => {
           color: "primary.main",
         }}
       >
-        Temperature Overview - April 2026
+        Temperature Overview
       </Typography>
       
       <Box>
