@@ -1,6 +1,7 @@
 import { Box } from '@mui/material';
 import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar';
+import { dummyWeatherDataApril } from '../../../DummyWeather';
 
 function App() {
   return (
@@ -10,7 +11,7 @@ function App() {
       width: '100vw'
     }}>
       <Sidebar />
-      <MainContent />
+      <MainContent weatherData={dummyWeatherDataApril} />
     </Box>
   );
 }

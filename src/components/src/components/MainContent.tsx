@@ -1,9 +1,14 @@
 import { Box } from '@mui/material';
+import type { UiDayData } from '../../../calculations/uiDataProfile';
 import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from './SimulationComponent';
 import ChartsComponent from './ChartsComponent';
 
-const MainContent = () => {
+interface MainContentProps {
+  weatherData: UiDayData[];
+}
+
+const MainContent = ({ weatherData }: MainContentProps) => {
   return (
     <Box
       sx={{
@@ -22,7 +27,7 @@ const MainContent = () => {
       <SimulationComponent /> 
       
       {/* Charts Component */}
-     <ChartsComponent /> 
+     <ChartsComponent weatherData={weatherData} /> 
     </Box>
   );
 };
