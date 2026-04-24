@@ -3,7 +3,7 @@
 - rest of the values are derived from dataBase and Calculations
 */
 
-
+export type WeatherDescriptions = 'sunny' | 'cloudy' | 'rainy' | 'snowy' | 'windy' | 'foggy' | 'clear';
 
 // this represents a day within the sliderperiod
 export type UiDayData = {
@@ -13,7 +13,7 @@ export type UiDayData = {
         maxTemp: number
         avgTemp: number
         wind: number
-
+        description:  WeatherDescriptions[]
     }
     avgPrice: number
     energyDemand: number
