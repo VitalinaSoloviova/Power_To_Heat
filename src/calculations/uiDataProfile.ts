@@ -3,17 +3,17 @@
 - rest of the values are derived from dataBase and Calculations
 */
 
-
+export type WeatherDescriptions = 'sunny' | 'cloudy' | 'rainy' | 'snowy' | 'windy' | 'foggy' | 'clear';
 
 // this represents a day within the sliderperiod
 export type UiDayData = {
-    day: number 
+    day: Date 
     weather: {
         minTemp: number
         maxTemp: number
         avgTemp: number
         wind: number
-
+        description:  WeatherDescriptions[]
     }
     avgPrice: number
     energyDemand: number
@@ -22,9 +22,9 @@ export type UiDayData = {
 // this represents the period and includes a list of UiDayData objects
 export type UiDataProfile = {
     sliderRange: {
-        periodStart: number
-        periodEnd: number
+        periodStart: Date
+        periodEnd: Date
     }
-    period: UiDayData[] // limited to 30 days ?
-    selectedDay: number
+    period: UiDayData[] 
+    selectedDay: Date
 }
