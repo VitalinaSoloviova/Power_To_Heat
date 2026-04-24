@@ -35,10 +35,10 @@ const ChartsComponent = ({ weatherData }: ChartsComponentProps) => {
         Temperature Overview
       </Typography>
       
-      <Box>
+      <Box sx={{ width: '100%' }}>
         <LineChart
-          width={800}
           height={350}
+          sx={{ width: '100%' }}
           series={[
             {
               data: minTempData,
