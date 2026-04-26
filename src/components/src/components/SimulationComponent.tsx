@@ -25,20 +25,7 @@ const SimulationComponent: React.FC = () => {
   const production = (state.windProduction + state.solarProduction) / 2;
   const balance = production - state.consumption;
   const isCharging = balance > 0.02;
-  const isDischarging = balance < -0.02 && state.storageLevel > 0.02;
-
-  // Storage evolves over time based on production vs consumption.
-  useEffect(() => {
-    const id = setInterval(() => {
-      setState((s) => {
-        const prod = (s.windProduction + s.solarProduction) / 2;
-        const delta = (prod - s.consumption) * 0.015;
-        return { ...s, storageLevel: Math.max(0, Math.min(1, s.storageLevel + delta)) };
-      });
-    }, 120);
-    return () => clearInterval(id);
-  }, []);
-
+  const isDischarging = balance < -0.02 && state.storageLevel > 0.02;  
   const flow1Active = production > 0.05;
   const flow1Intensity = Math.min(1, production);
   const flow2Active = state.consumption > 0.05 && (state.storageLevel > 0.02 || production > 0);

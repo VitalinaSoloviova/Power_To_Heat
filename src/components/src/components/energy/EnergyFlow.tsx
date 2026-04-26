@@ -1,4 +1,4 @@
-import { motion } from 'framer-motion';
+import React from 'react';
 
 interface EnergyFlowProps {
   intensity: number;        // 0..1
@@ -9,8 +9,7 @@ interface EnergyFlowProps {
 }
 
 /**
- * Reusable horizontal animated energy flow line with glowing
- * particles travelling along an SVG path. Fills the parent width.
+ * Static energy flow line - animations removed
  */
 const EnergyFlow: React.FC<EnergyFlowProps> = ({
   intensity,
@@ -20,7 +19,6 @@ const EnergyFlow: React.FC<EnergyFlowProps> = ({
   height = 120,
 }) => {
   const opacity = active ? 0.9 : 0.15;
-  const speed = Math.max(1.2, 4 - intensity * 3);
   const d = 'M 0 60 C 40 60, 80 60, 120 60';
 
   return (
@@ -41,34 +39,26 @@ const EnergyFlow: React.FC<EnergyFlowProps> = ({
         opacity={0.25}
         strokeLinecap="round"
       />
-      {/* Glowing main line */}
-      <motion.path
+      {/* Static main line */}
+      <path
         d={d}
         stroke={color}
         strokeWidth={2.5}
         fill="none"
         strokeLinecap="round"
-        animate={{ opacity }}
-        transition={{ duration: 0.4 }}
+        opacity={opacity}
         style={{ filter: `drop-shadow(0 0 ${4 + intensity * 8}px ${color})` }}
       />
-      {/* Particles along the path */}
+      {/* Static particles along the path */}
       {active &&
         [...Array(particleCount)].map((_, i) => (
-          <motion.circle
+          <circle
             key={i}
             r={2.5 + intensity * 2}
             fill={color}
-            initial={{ offsetDistance: '0%' }}
-            animate={{ offsetDistance: '100%' }}
-            transition={{
-              duration: speed,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: (speed / particleCount) * i,
-            }}
+            cx={15 + (i * 30)}
+            cy={60}
             style={{
-              offsetPath: `path('${d}')`,
               filter: `drop-shadow(0 0 6px ${color})`,
             }}
           />
