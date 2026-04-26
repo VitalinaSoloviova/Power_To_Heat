@@ -1,33 +1,34 @@
 import { Box } from '@mui/material';
-import type { UiDayData } from '../../../calculations/uiDataProfile';
 import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from './SimulationComponent';
-import ChartsComponent from './ChartsComponent';
+import StatsRow from './StatsRow';
+import FlowWidget from './widgets/FlowWidget';
+import { useColors } from './theme/useTheme';
+import { dummyWeatherDataApril } from '../../../DummyWeather';
+import ForecastChart from './widgets/ForecastChart';
 
-interface MainContentProps {
-  weatherData: UiDayData[];
-}
-
-const MainContent = ({ weatherData }: MainContentProps) => {
+const MainContent = () => {
+  const colors = useColors();
   return (
     <Box
       sx={{
         flex: 1,
         display: 'flex',
         flexDirection: 'column',
-        p: 1,
-        bgcolor: 'grey.50',
+        bgcolor: colors.bgBase,
         overflow: 'auto',
+        color: colors.textPrimary,
       }}
     >
-      {/* Toolbar Component*/}
-      <ToolbarComponent /> 
-      
-      {/* Simulation Bereich Component*/}
-      <SimulationComponent /> 
-      
-      {/* Charts Component */}
-     <ChartsComponent weatherData={weatherData} /> 
+      <ToolbarComponent />
+      <StatsRow />
+      <SimulationComponent />
+
+      {/* Bottom widgets row */}
+      <Box sx={{ display: 'flex', gap: 2, px: 3, mb: 2 }}>
+        <FlowWidget />
+        <ForecastChart data={dummyWeatherDataApril} />
+      </Box>
     </Box>
   );
 };

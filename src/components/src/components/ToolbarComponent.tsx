@@ -1,25 +1,42 @@
-import { 
-  AppBar, 
-  Toolbar as MUIToolbar, 
-  Typography, 
-} from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
+import { useTheme } from './theme/useTheme';
+import ThemeToggle from './ThemeToggle';
 
 const ToolbarComponent = () => {
-  return (
-    <AppBar 
-      position="static" 
-      color="default" 
-      elevation={1}
-      sx={{ bgcolor: 'white', borderRadius: 2, mb: 2 }}
-    >
-      <MUIToolbar>
-        <Typography variant="h6" sx={{ flexGrow: 1, color: 'primary.main' }}>
-          Power-to-Heat Control
-        </Typography>
+  const { theme, setTheme, colors } = useTheme();
 
-      </MUIToolbar>
-    </AppBar>
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: 3,
+        px: 3,
+        py: 2,
+        mb: 2,
+      }}
+    >
+      {/* Title */}
+      <Box sx={{ flex: 1 }}>
+        <Typography
+          sx={{
+            fontSize: 22,
+            fontWeight: 800,
+            color: colors.textPrimary,
+            letterSpacing: 1.5,
+            lineHeight: 1.1,
+          }}
+        >
+          POWER TO HEAT
+        </Typography>
+        <Typography sx={{ fontSize: 12, color: colors.textSecondary, mt: 0.3 }}>
+          District heating powered by electricity
+        </Typography>
+      </Box>
+      {/* Theme toggle */}
+      <ThemeToggle theme={theme} onChange={setTheme} />
+    </Box>
   );
 };
 
