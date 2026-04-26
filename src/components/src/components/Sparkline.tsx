@@ -29,6 +29,25 @@ export const SparklineLine: React.FC<SparklineProps> = ({ data, color, gradientK
 
   const { min, range } = getDataRange(data);
   const scaleY = buildScaleY(min, range);
+  
+  // Handle single data point case
+  if (data.length === 1) {
+    const y = scaleY(data[0]);
+    return (
+      <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
+        <line
+          x1={0}
+          x2={SPARKLINE_WIDTH}
+          y1={y}
+          y2={y}
+          stroke={color}
+          strokeWidth={1.8}
+          strokeLinecap="round"
+        />
+      </svg>
+    );
+  }
+
   const stepX = SPARKLINE_WIDTH / (data.length - 1);
 
   const linePoints = data
@@ -63,6 +82,27 @@ export const SparklineBars: React.FC<Omit<SparklineProps, 'gradientKey'>> = ({ d
   if (!data.length) return null;
 
   const { min, range } = getDataRange(data);
+  
+  // Handle single data point case
+  if (data.length === 1) {
+    const barHeight = ((data[0] - min) / range) * SPARKLINE_HEIGHT;
+    const barWidth = SPARKLINE_WIDTH * 0.6; // Use 60% of width for single bar
+    const barX = (SPARKLINE_WIDTH - barWidth) / 2; // Center the bar
+    return (
+      <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
+        <rect
+          x={barX}
+          y={SPARKLINE_HEIGHT - barHeight}
+          width={barWidth}
+          height={barHeight}
+          rx={1}
+          fill={color}
+          opacity={0.85}
+        />
+      </svg>
+    );
+  }
+
   const barWidth = SPARKLINE_WIDTH / data.length - BAR_GAP;
 
   return (
