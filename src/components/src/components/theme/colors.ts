@@ -90,45 +90,46 @@ export const darkColors: AppColors = {
 // Light dashboard palette (same keys, tuned for a bright UI)
 export const lightColors: AppColors = {
   // Background layers
-  bgDeep: '#eef2f7',
-  bgBase: '#f5f7fb',
-  bgSurface: '#ffffff',
-  bgSurfaceHover: '#f1f5f9',
-  bgCard: 'rgba(255,255,255,0.75)',
-  bgCardSolid: '#ffffff',
+  bgDeep: '#cfd9e6',        
+  bgBase: '#e6edf5',     
+  bgSurface: '#f1f5f9',      
+  bgSurfaceHover: '#e2e8f0', 
+  bgCard: 'rgba(255,255,255,0.7)',
+  bgCardSolid: '#ffffff',    
+
 
   // Borders / dividers
-  border: 'rgba(15,23,42,0.08)',
-  borderStrong: 'rgba(15,23,42,0.14)',
+  border: 'rgba(51,65,85,0.14)',
+  borderStrong: 'rgba(51,65,85,0.24)',
 
   // Text
-  textPrimary: '#0f172a',
-  textSecondary: '#475569',
-  textMuted: '#94a3b8',
+  textPrimary: '#102033',
+  textSecondary: '#42526b',
+  textMuted: '#718096',
 
   // Accents
   primary: '#4f46e5',
-  primarySoft: 'rgba(79,70,229,0.12)',
-  primaryGlow: 'rgba(79,70,229,0.35)',
+  primarySoft: 'rgba(79,70,229,0.14)',
+  primaryGlow: 'rgba(79,70,229,0.28)',
 
-  // Energy (slightly darker hues for contrast on white)
+  // Energy
   energy: '#059669',
-  energySoft: 'rgba(5,150,105,0.12)',
-  heat: '#ea580c',
-  heatSoft: 'rgba(234,88,12,0.12)',
-  storage: '#9333ea',
+  energySoft: 'rgba(5,150,105,0.14)',
+  heat: '#f97316',
+  heatSoft: 'rgba(249,115,22,0.16)',
+  storage: '#8b5cf6',
   warning: '#d97706',
   danger: '#dc2626',
 
   // Status
   cool: '#2563eb',
-  coolSoft: 'rgba(37,99,235,0.12)',
+  coolSoft: 'rgba(37,99,235,0.14)',
 
   // Chart
-  chartAxis: 'rgba(15,23,42,0.45)',         // dark grey lines on white bg
+  chartAxis: 'rgba(30,41,59,0.5)',
   chartAxisLabel: '#475569',
-  chartTitle: '#0f172a',
-  chartGrid: 'rgba(15,23,42,0.08)',
+  chartTitle: '#102033',
+  chartGrid: 'rgba(30,41,59,0.1)',
 };
 
 export type ThemeMode = 'light' | 'dark';
