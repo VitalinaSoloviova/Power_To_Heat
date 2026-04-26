@@ -6,7 +6,7 @@ import {
   SettingsRounded,
 } from '@mui/icons-material';
 import { useState } from 'react';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 import { LogoComponent } from './LogoComponent';
 import { HelpComponent } from './HelpCmponent';
 

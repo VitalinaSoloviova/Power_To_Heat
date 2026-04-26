@@ -1,6 +1,6 @@
 import { ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { WbSunnyRounded, NightlightRounded } from '@mui/icons-material';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 import type { ThemeMode } from './theme/colors';
 
 export type { ThemeMode };

@@ -1,6 +1,6 @@
 import { LocalFireDepartmentRounded } from "@mui/icons-material"
 import { Box } from "@mui/material"
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 
 export const LogoComponent = () => {
   const colors = useColors();

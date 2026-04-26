@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import MetricsCard from './MetricsCard';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 
 /**
  * Generates a smooth, slightly noisy time series for sparkline previews.

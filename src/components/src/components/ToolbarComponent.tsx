@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 
-import { useTheme } from './theme/ThemeContext';
+import { useTheme } from './theme/useTheme';
 import ThemeToggle from './ThemeToggle';
 
 const ToolbarComponent = () => {

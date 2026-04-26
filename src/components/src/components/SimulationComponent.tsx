@@ -4,7 +4,7 @@ import EnergyIsland from './energy/EnergyIsland';
 import Storage from './energy/Storage';
 import City from './energy/City';
 import EnergyFlow from './energy/EnergyFlow';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 
 interface EnergyState {
   windProduction: number;

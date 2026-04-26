@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useColors } from '../theme/ThemeContext';
+import { useColors } from '../theme/useTheme';
 
 const FlowWidget = () => {
   const colors = useColors();

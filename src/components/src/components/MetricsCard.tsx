@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 import type { AppColors } from './theme/colors';
 import { Sparkline, type SparklineType } from './Sparkline';
 

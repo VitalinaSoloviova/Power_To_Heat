@@ -3,7 +3,7 @@ import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from './SimulationComponent';
 import StatsRow from './StatsRow';
 import FlowWidget from './widgets/FlowWidget';
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 import { dummyWeatherDataApril } from '../../../DummyWeather';
 import ForecastChart from './widgets/ForecastChart';
 

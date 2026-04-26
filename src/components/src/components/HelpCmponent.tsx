@@ -1,6 +1,6 @@
 import { HelpOutlineRounded } from "@mui/icons-material";
 import { Tooltip, Box } from "@mui/material";
-import { useColors } from './theme/ThemeContext';
+import { useColors } from './theme/useTheme';
 
 export const HelpComponent = () => {
     const colors = useColors();
