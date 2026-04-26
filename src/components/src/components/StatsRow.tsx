@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import StatCard from './StatCard';
-import { colors } from './theme/colors';
+import MetricsCard from './MetricsCard';
+import { useColors } from './theme/ThemeContext';
 
 /**
  * Generates a smooth, slightly noisy time series for sparkline previews.
@@ -27,23 +27,24 @@ const generateSparklineSeries = (
 };
 
 const StatsRow = () => {
+  const colors = useColors();
   return (
     <Box sx={{ display: 'flex', gap: 2, px: 3, mb: 2 }}>
-      <StatCard
+      <MetricsCard
         label="Current Price"
         value="4,32"
         unit="EUR/MWhe"
         spark={generateSparklineSeries(28, 4.3, 0.8)}  
         sparkColor={colors.energy}
       />
-      <StatCard
+      <MetricsCard
         label="Estimated Price" 
         value="14,6"
         unit="EUR/MWhe"
         spark={generateSparklineSeries(28, 14.6, 1.4)}
         sparkColor={colors.cool}
       />
-      <StatCard
+      <MetricsCard
         label="Estimated Heat Demand"
         value="28,4"
         unit="MW"
@@ -51,7 +52,7 @@ const StatsRow = () => {
         spark={generateSparklineSeries(28, 28, 4)}
         sparkColor={colors.danger}
       />
-      <StatCard 
+      <MetricsCard 
         label="Storage Level"
         value="72"
         unit="%"
