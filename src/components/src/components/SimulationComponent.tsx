@@ -4,7 +4,7 @@ import EnergyIsland from './energy/EnergyIsland';
 import Storage from './energy/Storage';
 import City from './energy/City';
 import EnergyFlow from './energy/EnergyFlow';
-import { colors } from './theme/colors';
+import { useColors } from './theme/ThemeContext';
 
 interface EnergyState {
   windProduction: number;
@@ -14,6 +14,7 @@ interface EnergyState {
 }
 
 const SimulationComponent: React.FC = () => {
+  const colors = useColors();
   const [state, setState] = useState<EnergyState>({
     windProduction: 0.65,
     solarProduction: 0.55,

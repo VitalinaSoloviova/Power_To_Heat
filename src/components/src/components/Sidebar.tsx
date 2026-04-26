@@ -6,7 +6,7 @@ import {
   SettingsRounded,
 } from '@mui/icons-material';
 import { useState } from 'react';
-import { colors } from './theme/colors';
+import { useColors } from './theme/ThemeContext';
 import { LogoComponent } from './LogoComponent';
 import { HelpComponent } from './HelpCmponent';
 
@@ -24,6 +24,7 @@ const navItems: NavItem[] = [
 ];
 
 const Sidebar = () => {
+  const colors = useColors();
   const [active, setActive] = useState('overview');
 
   return (

@@ -1,9 +1,10 @@
 import { Box } from '@mui/material';
 import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar';
-import { colors } from './theme/colors';
+import { ThemeProvider, useColors } from './theme/ThemeContext';
 
-function App() {
+const AppShell = () => {
+  const colors = useColors();
   return (
     <Box
       sx={{
@@ -16,6 +17,14 @@ function App() {
       <Sidebar />
       <MainContent />
     </Box>
+  );
+};
+
+function App() {
+  return (
+    <ThemeProvider defaultTheme="dark">
+      <AppShell />
+    </ThemeProvider>
   );
 }
 

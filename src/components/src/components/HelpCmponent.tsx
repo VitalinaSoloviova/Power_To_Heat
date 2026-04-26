@@ -1,8 +1,9 @@
 import { HelpOutlineRounded } from "@mui/icons-material";
 import { Tooltip, Box } from "@mui/material";
-import { colors } from './theme/colors';
+import { useColors } from './theme/ThemeContext';
 
 export const HelpComponent = () => {
+    const colors = useColors();
     return (
           <Tooltip title="Help" placement="right" arrow>
             <Box
