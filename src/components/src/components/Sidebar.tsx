@@ -8,7 +8,7 @@ import {
 import { useState } from 'react';
 import { useColors } from './theme/useTheme';
 import { LogoComponent } from './LogoComponent';
-import { HelpComponent } from './HelpCmponent';
+import { HelpComponent } from './HelpComponent';
 
 interface NavItem {
   id: string;
