@@ -4,6 +4,7 @@ import EnergyIsland from './energy/EnergyIsland';
 import Storage from './energy/Storage';
 import City from './energy/City';
 import EnergyFlow from './energy/EnergyFlow';
+import { colors } from './theme/colors';
 
 interface EnergyState {
   windProduction: number;
@@ -46,23 +47,22 @@ const SimulationComponent: React.FC = () => {
     <Paper
       elevation={0}
       sx={{
-        p: 4,
-        borderRadius: 5,
-        background: 'linear-gradient(180deg, #fafbff 0%, #f4f6fb 100%)',
-        boxShadow:
-          '0 1px 3px rgba(0,0,0,0.04), 0 20px 60px -30px rgba(99,102,241,0.15)',
-        border: '1px solid rgba(0,0,0,0.04)',
+        p: 0,
+        mx: 3,
+        mb: 2,
+        borderRadius: 3,
+        background: `radial-gradient(ellipse at 30% 30%, ${colors.bgSurface} 0%, ${colors.bgBase} 70%)`,
+        border: `1px solid ${colors.border}`,
         display: 'flex',
         flexDirection: 'column',
-        gap: 3,
-        minHeight: '70vh',
+        gap: 0,
+        minHeight: 360,
+        overflow: 'hidden',
       }}
     >
       
 
       <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch' }}>
-        
-
         {/* Canvas with islands and flows */}
         <Box
           sx={{
@@ -71,11 +71,8 @@ const SimulationComponent: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            px: 2,
+            px: 4,
             py: 4,
-            borderRadius: 4,
-            background:
-              'radial-gradient(ellipse at center, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.6) 100%)',
             overflow: 'hidden',
           }}
         >
@@ -85,7 +82,7 @@ const SimulationComponent: React.FC = () => {
               position: 'absolute',
               inset: 0,
               backgroundImage:
-                'radial-gradient(circle at 1px 1px, rgba(0,0,0,0.04) 1px, transparent 0)',
+                'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
               backgroundSize: '24px 24px',
               maskImage:
                 'radial-gradient(ellipse at center, black 40%, transparent 80%)',
