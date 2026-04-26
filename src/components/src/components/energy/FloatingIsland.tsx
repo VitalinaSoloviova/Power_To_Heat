@@ -202,7 +202,7 @@ const FloatingIsland: React.FC<FloatingIslandProps> = ({
               {/* Earth gradient */}
               <linearGradient id={`earth-${size}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#a78bfa00" />
-                <stop offset="0%" stopColor="#8b5e34" />
+                <stop offset="12%" stopColor="#8b5e34" />
                 <stop offset="100%" stopColor="#5c3a1e" />
               </linearGradient>
               {/* Grass gradient */}
