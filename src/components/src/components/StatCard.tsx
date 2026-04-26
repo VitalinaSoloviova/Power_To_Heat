@@ -10,13 +10,13 @@ interface Badge {
 }
 
 interface StatCardProps {
-  /** Small label shown above the value, e.g. "Strompreis". */
+  /** Small label shown above the value, e.g. "Electricity Price". */
   label: string;
   /** Main numeric value displayed prominently. */
   value: string;
   /** Optional unit shown next to the value, e.g. "ct/kWh". */
   unit?: string;
-  /** Optional status pill on the right side of the value (e.g. "niedrig"). */
+  /** Optional status pill on the right side of the value (e.g. "low"). */
   badge?: Badge;
   /** Time series for the inline sparkline preview. */
   spark?: number[];

@@ -20,7 +20,7 @@ export const HelpComponent = () => {
               }}
             >
               <HelpOutlineRounded />
-              <Box sx={{ fontSize: 9.5, fontWeight: 600, mt: 0.3 }} >Hilfe</Box>
+              <Box sx={{ fontSize: 9.5, fontWeight: 600, mt: 0.3 }} >Help</Box>
             </Box>
           </Tooltip>
           ); 

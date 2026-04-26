@@ -32,16 +32,14 @@ const StatsRow = () => {
       <StatCard
         label="Current Price"
         value="4,32"
-        unit="ct/kWh"
-        badge={{ text: 'niedrig', color: 'success' }}
+        unit="EUR/MWhe"
         spark={generateSparklineSeries(28, 4.3, 0.8)}  
         sparkColor={colors.energy}
       />
       <StatCard
         label="Estimated Price" 
         value="14,6"
-        unit="°C"
-        badge={{ text: 'mild', color: 'info' }}
+        unit="EUR/MWhe"
         spark={generateSparklineSeries(28, 14.6, 1.4)}
         sparkColor={colors.cool}
       />
@@ -49,7 +47,7 @@ const StatsRow = () => {
         label="Estimated Heat Demand"
         value="28,4"
         unit="MW"
-        badge={{ text: 'hoch', color: 'danger' }}
+        badge={{ text: 'high', color: 'danger' }}
         spark={generateSparklineSeries(28, 28, 4)}
         sparkColor={colors.danger}
       />
@@ -58,7 +56,7 @@ const StatsRow = () => {
         value="72"
         unit="%"
         trend="1.440 / 2.000 MWh"
-        badge={{ text: 'stabil', color: 'info'  }}
+        badge={{ text: 'stable', color: 'info'  }}
       />
     </Box>
   );
