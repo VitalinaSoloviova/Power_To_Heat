@@ -1,4 +1,4 @@
-import { type CityProfile, city } from "./CityData"
+import { type CityProfile } from "./CityData"
 
 // returns estimated hourly demand in kilowatts
 // param: outside temperature, city (as for now city is "our" city with hardcoded values)
@@ -12,7 +12,3 @@ export function getEenergyDemand(outsideTemp: number, city: CityProfile) {
         (city.targetInsideTemp - outsideTemp) // for MW => / 1000
     )
 }
-
-const outsideTemp: number = -10
-const demand = getEenergyDemand(outsideTemp, city)
-console.log(demand)
