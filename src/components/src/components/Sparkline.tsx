@@ -1,4 +1,4 @@
-import { colors } from './theme/colors';
+import { useColors } from './theme/ThemeContext';
 
 const SPARKLINE_WIDTH = 160;
 const SPARKLINE_HEIGHT = 32;
@@ -99,9 +99,11 @@ interface SparklineProxyProps {
 export const Sparkline: React.FC<SparklineProxyProps> = ({
   type,
   data,
-  color = colors.energy,
+  color,
   gradientKey,
 }) => {
-  if (type === 'bar') return <SparklineBars data={data} color={color} />;
-  return <SparklineLine data={data} color={color} gradientKey={gradientKey} />;
+  const colors = useColors();
+  const resolvedColor = color ?? colors.energy;
+  if (type === 'bar') return <SparklineBars data={data} color={resolvedColor} />;
+  return <SparklineLine data={data} color={resolvedColor} gradientKey={gradientKey} />;
 };
