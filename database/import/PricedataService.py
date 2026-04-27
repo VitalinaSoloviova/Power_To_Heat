@@ -10,12 +10,5 @@ def buildDailyPrice(data: pd.DataFrame):
 
     return daily_price
 
-def buildMonthDayPriceProfile(daily_price: pd.DataFrame):
-    month_day_price = (
-        daily_price.groupby(["month", "day"], as_index=False)
-        .agg(
-            avg_price=("avg_price", "mean")
-        )
-    )
-
-    return month_day_price
+def buildDailyPriceProfileForDB(daily_price: pd.DataFrame):
+    return daily_price[["date", "avg_price"]].copy()

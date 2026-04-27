@@ -93,94 +93,30 @@ def mergeDailyData(daily_data: pd.DataFrame, daily_weather_type: pd.DataFrame):
 
     return full_daily_data
 
-def MonthDayNumericProfile(full_daily_data: pd.DataFrame):
-    month_day_numeric = (
-        full_daily_data.groupby(["month", "day"], as_index=False)
-        .agg(
-            avg_temp=("avg_temp", "mean"),
-            min_temp=("min_temp", "mean"),
-            max_temp=("max_temp", "mean"),
-            avg_wind=("avg_wind", "mean"),
-        )
+def buildDailyWeatherProfileForDB(full_daily_data: pd.DataFrame):
+    profile = full_daily_data[["date", "avg_temp", "min_temp", "max_temp", "avg_wind", "daily_weather_type"]].copy()
+    profile = profile.rename(columns={"daily_weather_type": "dominant_weather_main"})
+    return profile
+
+def buildWeatherConditionStatsForDB(daily_weather_counts: pd.DataFrame):
+    stats_for_db = (
+        daily_weather_counts.groupby(["date", "weather_main"], as_index=False)
+        .agg(occurrence_count=("count", "sum"))
     )
 
-    return month_day_numeric
-
-def MonthDayWeatherCounts(full_daily_data: pd.DataFrame):
-    month_day_weather_counts = (
-        full_daily_data.groupby(["month", "day", "daily_weather_type"], as_index=False)
-        .size()
-        .rename(columns={"size": "count"})
-    )
-
-    return month_day_weather_counts
-
-def addMonthDayWeatherShares(month_day_weather_counts: pd.DataFrame):
-    totals = (
-        month_day_weather_counts.groupby(["month", "day"], as_index=False)["count"]
-        .sum()
-        .rename(columns={"count": "total_count"})
-    )
-
-    month_day_weather_counts = month_day_weather_counts.merge(
-        totals,
-        on=["month", "day"],
-        how="left"
-    )
-
-    month_day_weather_counts["share"] = (
-        month_day_weather_counts["count"] / month_day_weather_counts["total_count"]
-    )
-
-    return month_day_weather_counts
-
-def MonthDayDominantWeather(month_day_weather_counts: pd.DataFrame):
-    sorted_weather = month_day_weather_counts.sort_values(
-        ["month", "day", "count"],
-        ascending=[True, True, False]
-    )
-
-    dominant_weather = (
-        sorted_weather.groupby(["month", "day"], as_index=False)
-        .first()
-    )
-
-    dominant_weather = dominant_weather.rename(
-        columns={"daily_weather_type": "dominant_weather_main"}
-    )
-
-    return dominant_weather[["month", "day", "dominant_weather_main"]]
-
-def FinalWeatherProfile(month_day_numeric: pd.DataFrame, dominant_weather: pd.DataFrame):
-    final_profile = month_day_numeric.merge(
-        dominant_weather,
-        on=["month", "day"],
-        how="left"
-    )
-
-    return final_profile
-
-def buildWeatherConditionStatsForDB(month_day_weather_counts: pd.DataFrame):
-    stats_for_db = month_day_weather_counts.copy()
+    totals = stats_for_db.groupby("date")["occurrence_count"].transform("sum")
+    stats_for_db["occurrence_share"] = stats_for_db["occurrence_count"] / totals
 
     stats_for_db = stats_for_db.sort_values(
-        ["month", "day", "count"],
-        ascending=[True, True, False]
+        ["date", "occurrence_count"],
+        ascending=[True, False]
     ).reset_index(drop=True)
 
-    stats_for_db["rank"] = stats_for_db.groupby(["month", "day"]).cumcount() + 1
-
-    stats_for_db = stats_for_db.rename(columns={
-        "daily_weather_type": "weather_main",
-        "count": "occurrence_count",
-        "share": "occurrence_share"
-    })
-
+    stats_for_db["rank"] = stats_for_db.groupby(["date"]).cumcount() + 1
     stats_for_db["weather_description"] = stats_for_db["weather_main"]
 
     return stats_for_db[[
-        "month",
-        "day",
+        "date",
         "weather_main",
         "weather_description",
         "occurrence_count",
