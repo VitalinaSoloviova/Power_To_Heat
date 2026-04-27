@@ -12,64 +12,15 @@ const app = express();
 const PORT = process.env.PORT ?? 3001;
 
 
-app.get('/api/weather-profile/:month/:day', async (req: Request, res: Response) => {
-    const month = Number(req.params.month);
-    const day = Number(req.params.day);
-    try {
-        const result = await pool.query(
-            `SELECT * FROM daily_weather_profile WHERE month = $1 AND day = $2`,
-            [month, day],
-        );
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error in /api/weather-profile/:month/:day', error);
-        res.status(500).json({ error: 'Error loading weather profile' });
-    }
-});
-
-app.get('/api/weather-condition-stats/:month/:day', async (req: Request, res: Response) => {
-    const month = Number(req.params.month);
-    const day = Number(req.params.day);
-    try {
-        const result = await pool.query(
-            `SELECT * FROM daily_weather_condition_stats WHERE month = $1 AND day = $2 ORDER BY rank`,
-            [month, day],
-        );
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error in /api/weather-condition-stats/:month/:day', error);
-        res.status(500).json({ error: 'Error loading weather condition stats' });
-    }
-});
-
-app.get('/api/price-profile/:month/:day', async (req: Request, res: Response) => {
-    const month = Number(req.params.month);
-    const day = Number(req.params.day);
-    try {
-        const result = await pool.query(
-            `SELECT * FROM daily_price_profile WHERE month = $1 AND day = $2`,
-            [month, day],
-        );
-        res.json(result.rows);
-    } catch (error) {
-        console.error('Error in /api/price-profile/:month/:day', error);
-        res.status(500).json({ error: 'Error loading price profile' });
-    }
-});
-
-
 app.get('/api/weather-profile/range', async (req: Request, res: Response) => {
-    const month_from = Number(req.query.month_from);
-    const day_from = Number(req.query.day_from);
-    const month_to = Number(req.query.month_to);
-    const day_to = Number(req.query.day_to);
+    const date_from = req.query.date_from as string;
+    const date_to = req.query.date_to as string;
     try {
         const result = await pool.query(
             `SELECT * FROM daily_weather_profile
-                WHERE (month > $1 OR (month = $1 AND day >= $2))
-                AND (month < $3 OR (month = $3 AND day <= $4))
-                ORDER BY month, day`,
-            [month_from, day_from, month_to, day_to],
+                WHERE date >= $1 AND date <= $2
+                ORDER BY date`,
+            [date_from, date_to],
         );
         res.json(result.rows);
     } catch (error) {
@@ -79,17 +30,14 @@ app.get('/api/weather-profile/range', async (req: Request, res: Response) => {
 });
 
 app.get('/api/weather-condition-stats/range', async (req: Request, res: Response) => {
-    const month_from = Number(req.query.month_from);
-    const day_from = Number(req.query.day_from);
-    const month_to = Number(req.query.month_to);
-    const day_to = Number(req.query.day_to);
+    const date_from = req.query.date_from as string;
+    const date_to = req.query.date_to as string;
     try {
         const result = await pool.query(
             `SELECT * FROM daily_weather_condition_stats
-                WHERE (month > $1 OR (month = $1 AND day >= $2))
-                AND (month < $3 OR (month = $3 AND day <= $4))
-                ORDER BY month, day, rank`,
-            [month_from, day_from, month_to, day_to],
+                WHERE date >= $1 AND date <= $2
+                ORDER BY date, rank`,
+            [date_from, date_to],
         );
         res.json(result.rows);
     } catch (error) {
@@ -99,17 +47,14 @@ app.get('/api/weather-condition-stats/range', async (req: Request, res: Response
 });
 
 app.get('/api/price-profile/range', async (req: Request, res: Response) => {
-    const month_from = Number(req.query.month_from);
-    const day_from = Number(req.query.day_from);
-    const month_to = Number(req.query.month_to);
-    const day_to = Number(req.query.day_to);
+    const date_from = req.query.date_from as string;
+    const date_to = req.query.date_to as string;
     try {
         const result = await pool.query(
             `SELECT * FROM daily_price_profile
-                WHERE (month > $1 OR (month = $1 AND day >= $2))
-                AND (month < $3 OR (month = $3 AND day <= $4))
-                ORDER BY month, day`,
-            [month_from, day_from, month_to, day_to],
+                WHERE date >= $1 AND date <= $2
+                ORDER BY date`,
+            [date_from, date_to],
         );
         res.json(result.rows);
     } catch (error) {
@@ -117,6 +62,50 @@ app.get('/api/price-profile/range', async (req: Request, res: Response) => {
         res.status(500).json({ error: 'Error loading price profile' });
     }
 });
+
+
+app.get('/api/weather-profile/:date', async (req: Request, res: Response) => {
+    const date = req.params.date;
+    try {
+        const result = await pool.query(
+            `SELECT * FROM daily_weather_profile WHERE date = $1`,
+            [date],
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error in /api/weather-profile/:date', error);
+        res.status(500).json({ error: 'Error loading weather profile' });
+    }
+});
+
+app.get('/api/weather-condition-stats/:date', async (req: Request, res: Response) => {
+    const date = req.params.date;
+    try {
+        const result = await pool.query(
+            `SELECT * FROM daily_weather_condition_stats WHERE date = $1 ORDER BY rank`,
+            [date],
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error in /api/weather-condition-stats/:date', error);
+        res.status(500).json({ error: 'Error loading weather condition stats' });
+    }
+});
+
+app.get('/api/price-profile/:date', async (req: Request, res: Response) => {
+    const date = req.params.date;
+    try {
+        const result = await pool.query(
+            `SELECT * FROM daily_price_profile WHERE date = $1`,
+            [date],
+        );
+        res.json(result.rows);
+    } catch (error) {
+        console.error('Error in /api/price-profile/:date', error);
+        res.status(500).json({ error: 'Error loading price profile' });
+    }
+});
+
 
 export { app };
 

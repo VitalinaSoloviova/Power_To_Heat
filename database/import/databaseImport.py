@@ -33,14 +33,8 @@ def main():
 
     full_daily_data = WeatherdataService.mergeDailyData(daily_data, daily_weather_type)
 
-    month_day_numeric = WeatherdataService.MonthDayNumericProfile(full_daily_data)
-    month_day_weather_counts = WeatherdataService.MonthDayWeatherCounts(full_daily_data)
-    month_day_weather_counts = WeatherdataService.addMonthDayWeatherShares(month_day_weather_counts)
-    dominant_weather = WeatherdataService.MonthDayDominantWeather(month_day_weather_counts)
-
-    final_profile = WeatherdataService.FinalWeatherProfile(month_day_numeric, dominant_weather)
-
-    weather_stats_for_db = WeatherdataService.buildWeatherConditionStatsForDB(month_day_weather_counts)
+    final_profile = WeatherdataService.buildDailyWeatherProfileForDB(full_daily_data)
+    weather_stats_for_db = WeatherdataService.buildWeatherConditionStatsForDB(daily_weather_counts)
 
     print("Delete old data ...")
     replaceTable("daily_weather_condition_stats")
@@ -59,13 +53,13 @@ def main():
     pricedata = PricedataReadCSV.prepareNumericColumns(pricedata)
 
     daily_price = PricedataService.buildDailyPrice(pricedata)
-    month_day_price = PricedataService.buildMonthDayPriceProfile(daily_price)
+    daily_price_for_db = PricedataService.buildDailyPriceProfileForDB(daily_price)
 
     print("Delete old Preisdaten ...")
     replaceTable("daily_price_profile")
 
     print("Writing daily_price_profile ...")
-    month_day_price.to_sql("daily_price_profile", engine, if_exists="append", index=False)
+    daily_price_for_db.to_sql("daily_price_profile", engine, if_exists="append", index=False)
 
 if __name__ == "__main__":    
     main()
