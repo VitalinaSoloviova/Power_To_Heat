@@ -7,13 +7,13 @@
 
 // this represents a day within the sliderperiod
 export type UiDayData = {
-    day: number 
+    day: Date
     weather: {
         minTemp: number
         maxTemp: number
         avgTemp: number
         wind: number
-
+        description: string
     }
     avgPrice: number
     energyDemand: number
