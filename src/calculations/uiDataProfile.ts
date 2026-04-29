@@ -13,7 +13,7 @@ export type UiDayData = {
         maxTemp: number
         avgTemp: number
         wind: number
-        description:  WeatherDescriptions[]
+        description: string
     }
     avgPrice: number
     energyDemand: number
