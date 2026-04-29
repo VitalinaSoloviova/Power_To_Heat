@@ -9,8 +9,7 @@ interface EnergyFlowProps {
 }
 
 /**
- * Reusable horizontal animated energy flow line with glowing
- * particles travelling along an SVG path. Fills the parent width.
+ * Animated energy flow line with moving particles
  */
 const EnergyFlow: React.FC<EnergyFlowProps> = ({
   intensity,
@@ -52,7 +51,7 @@ const EnergyFlow: React.FC<EnergyFlowProps> = ({
         transition={{ duration: 0.4 }}
         style={{ filter: `drop-shadow(0 0 ${4 + intensity * 8}px ${color})` }}
       />
-      {/* Particles along the path */}
+      {/* Animated particles along the path */}
       {active &&
         [...Array(particleCount)].map((_, i) => (
           <motion.circle

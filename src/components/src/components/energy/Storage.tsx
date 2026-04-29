@@ -1,5 +1,5 @@
 import { Box, Typography } from '@mui/material';
-import { motion, AnimatePresence } from 'framer-motion';
+import React from 'react';
 
 interface StorageProps {
   storageLevel: number; // 0..1
@@ -18,10 +18,7 @@ const Storage: React.FC<StorageProps> = ({
     storageLevel > 0.6 ? '#10b981' : storageLevel > 0.3 ? '#f59e0b' : '#ef4444';
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.7, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+    <div
       style={{
         position: 'relative',
         width: size,
@@ -39,8 +36,8 @@ const Storage: React.FC<StorageProps> = ({
         zIndex: 2,
       }}
     >
-      {/* Ground shadow */}
-      <motion.div
+      {/* Static ground shadow */}
+      <div
         style={{
           position: 'absolute',
           left: '50%',
@@ -52,12 +49,10 @@ const Storage: React.FC<StorageProps> = ({
           filter: 'blur(2px)',
           zIndex: 0,
         }}
-        animate={{ scaleX: [1, 0.92, 1], opacity: [0.9, 0.7, 0.9] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.1 }}
       />
 
-      {/* Floating motion wrapper */}
-      <motion.div
+      {/* Static content wrapper */}
+      <div
         style={{
           display: 'flex',
           flexDirection: 'column',
@@ -66,8 +61,6 @@ const Storage: React.FC<StorageProps> = ({
           height: '100%',
           width: '100%',
         }}
-        animate={{ y: [0, -6, 0] }}
-        transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut', delay: 0.1 }}
       >
         <Typography 
           sx={{ 
@@ -106,59 +99,37 @@ const Storage: React.FC<StorageProps> = ({
                 borderRadius: '3px 3px 0 0',
               }}
             />
-            <motion.div
+            <div
               style={{
                 position: 'absolute',
                 bottom: 0,
                 left: 0,
                 right: 0,
+                height: `${storageLevel * 100}%`,
                 background: `linear-gradient(to top, ${fillColor}, ${fillColor}cc)`,
                 borderRadius: '0 0 6px 6px',
               }}
-              animate={{ height: `${storageLevel * 100}%` }}
-              transition={{ duration: 0.6, ease: 'easeOut' }}
             />
-            {/* Shimmer effect */}
-            <motion.div
-              style={{
-                position: 'absolute',
-                left: 0,
-                right: 0,
-                height: 4,
-                background: 'rgba(255,255,255,0.6)',
-                filter: 'blur(2px)',
-              }}
-              animate={{ bottom: [`0%`, `${storageLevel * 100}%`] }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
-            />
-            <AnimatePresence>
-              {(isCharging || isDischarging) && (
-                <motion.div
-                  key={isCharging ? 'c' : 'd'}
-                  initial={{ opacity: 0, scale: 0.6 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.6 }}
-                  style={{
-                    position: 'absolute',
-                    inset: 0,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontSize: 32,
-                    color: 'white',
-                    fontWeight: 700,
-                    textShadow: '0 2px 8px rgba(0,0,0,0.4)',
-                  }}
-                >
-                  <motion.span
-                    animate={{ scale: [1, 1.15, 1] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
-                  >
-                    {isCharging ? '↑' : '↓'}
-                  </motion.span>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {/* Static charging/discharging indicator */}
+            {(isCharging || isDischarging) && (
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 32,
+                  color: 'white',
+                  fontWeight: 700,
+                  textShadow: '0 2px 8px rgba(0,0,0,0.4)',
+                }}
+              >
+                <span>
+                  {isCharging ? '↑' : '↓'}
+                </span>
+              </div>
+            )}
           </Box>
         </Box>
 
@@ -170,8 +141,8 @@ const Storage: React.FC<StorageProps> = ({
             {(storageLevel * 100).toFixed(0)}%
           </Typography>
         </Box>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 

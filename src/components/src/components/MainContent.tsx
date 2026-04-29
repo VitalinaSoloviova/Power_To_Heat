@@ -6,6 +6,7 @@ import FlowWidget from './widgets/FlowWidget';
 import { useColors } from './theme/useTheme';
 import { dummyWeatherDataApril } from '../../../DummyWeather';
 import ForecastChart from './widgets/ForecastChart';
+import StorageForecast from './widgets/storageForecast';
 
 const MainContent = () => {
   const colors = useColors();
@@ -23,6 +24,7 @@ const MainContent = () => {
       <ToolbarComponent />
       <StatsRow />
       <SimulationComponent />
+      <StorageForecast />
 
       {/* Bottom widgets row */}
       <Box sx={{ display: 'flex', gap: 2, px: 3, mb: 2 }}>
