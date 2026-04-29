@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import { useColors } from '../../theme/useTheme';
-import {
+import { 
   DEFAULT_DURATION,
-  DEFAULT_HISTORY_YEARS,
+  DEFAULT_HISTORY_YEARS, 
   DEFAULT_STORAGE_LEVEL,
-  type Duration,
-  type HistoryYears,
-} from './constants';
+  type Duration, 
+  type HistoryYears 
+} from '../../../../../services/UIService';
 import { useBuyRecommendation } from './hooks/useBuyRecommendation';
 import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';

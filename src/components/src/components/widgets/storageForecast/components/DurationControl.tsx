@@ -1,6 +1,6 @@
 import { Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useColors } from '../../../theme/useTheme';
-import { DURATION_OPTIONS, type Duration } from '../constants';
+import { DURATION_OPTIONS, type Duration } from '../../../../../../services/UIService';
 
 interface DurationControlProps {
   value: Duration;

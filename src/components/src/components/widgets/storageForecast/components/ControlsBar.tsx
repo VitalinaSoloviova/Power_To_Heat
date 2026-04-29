@@ -2,7 +2,7 @@ import { Box } from '@mui/material';
 import StorageLevelControl from './StorageLevelControl';
 import DurationControl from './DurationControl';
 import HistoryControl from './HistoryControl';
-import type { Duration, HistoryYears } from '../constants';
+import type { Duration, HistoryYears } from '../../../../../../services/UIService';
 
 interface ControlsBarProps {
   storageLevel: number;
