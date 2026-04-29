@@ -12,7 +12,7 @@ import { useBuyRecommendation } from './hooks/useBuyRecommendation';
 import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';
 import RecommendationSection from './components/RecommendationSection';
-import ComparisonChartsSection from './components/ComparisonChartsSection';
+import ComparisonChartsSection from './components/charts/ComparisonChartsSection';
 
 const StorageForecast = () => {
   const colors = useColors();

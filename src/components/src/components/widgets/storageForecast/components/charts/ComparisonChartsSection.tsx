@@ -91,7 +91,6 @@ const ComparisonChartsSection = ({
           <TemperatureChart
             xLabels={xLabels}
             weatherHistory={weatherHistory}
-            forecastTemperature={forecastTemperature}
             historyYears={historyYears}
           />
         </Box>

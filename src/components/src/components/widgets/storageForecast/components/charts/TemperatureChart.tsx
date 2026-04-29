@@ -7,14 +7,12 @@ import type { WeatherRangeForMonth } from '../../storageForecastUtils';
 interface TemperatureChartProps {
   xLabels: string[];
   weatherHistory: WeatherRangeForMonth[];
-  forecastTemperature: number[];
   historyYears: number;
 }
 
 const TemperatureChart = ({
   xLabels,
   weatherHistory,
-  forecastTemperature,
   historyYears,
 }: TemperatureChartProps) => {
   const colors = useColors();
@@ -61,12 +59,7 @@ const TemperatureChart = ({
               showMark: false,
               curve: 'monotoneX' as const,
             },
-            {
-              data: forecastTemperature,
-              label: 'Forecast',
-              color: colors.energy,
-              curve: 'monotoneX' as const,
-            },
+           
           ]}
           margin={{ left: 50, right: 20, top: 10, bottom: 30 }}
           sx={chartSx}
