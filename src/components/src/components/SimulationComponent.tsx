@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Paper, Box } from '@mui/material';
 import EnergyIsland from './energy/EnergyIsland';
 import Storage from './energy/Storage';
