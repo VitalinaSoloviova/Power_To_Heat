@@ -31,6 +31,14 @@ jobs:
       - name: Run type checking
         run: npm run build
 
+      - name: Run unit tests
+        run: npm test -- --run testing/UnitTests/
+
+      - name: Run integration tests
+        run: npm test -- --run testing/Integrationtests/
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 
 
 # --- ZUSAMMENFASSUNG DER SYNTAX ---
