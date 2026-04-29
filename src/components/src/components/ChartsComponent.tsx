@@ -1,9 +1,28 @@
-import { Paper, Typography } from '@mui/material';
+import { Paper, Typography, Box } from '@mui/material';
+import { LineChart } from '@mui/x-charts/LineChart';
+import type { UiDayData } from '../../../calculations/uiDataProfile';
 
-const ChartsComponent = () => {
+interface ChartsComponentProps {
+  weatherData: UiDayData[];
+}
+
+const ChartsComponent = ({ weatherData }: ChartsComponentProps) => {
+  const chartData = weatherData.map(data => ({
+    day: data.day.getDate(), 
+    date: data.day.toLocaleDateString('de-DE', { month: 'short', day: 'numeric' }), 
+    minTemp: data.weather.minTemp,
+    maxTemp: data.weather.maxTemp,
+    avgTemp: data.weather.avgTemp
+  }));
+
+  const xAxisData = chartData.map(d => d.date);
+  const minTempData = chartData.map(d => d.minTemp);
+  const maxTempData = chartData.map(d => d.maxTemp);
+  const maxMaxTemp = Math.max(...maxTempData);
+
   return (
     <Paper
-      sx={{ p: 2, height: "30%", display: "flex", flexDirection: "column", borderRadius: 2, mb: 2 }}
+      sx={{ p: 2, height: "auto", display: "flex", flexDirection: "column", borderRadius: 2, mb: 2 }}
     >
       <Typography
         variant="h6"
@@ -14,11 +33,47 @@ const ChartsComponent = () => {
           color: "primary.main",
         }}
       >
-        Charts Bereich
+        Temperature Overview
       </Typography>
-      <Typography variant="body2" sx={{ mt: 2 }}>
-        Charts werden hier angezeigt...
-      </Typography>
+      
+      <Box 
+        sx={{ 
+          width: '70%', 
+          height: '200px', 
+          mt: 2,
+          overflow: 'hidden',
+          display: 'flex',
+          flexDirection: 'column'
+        }}
+      >
+        <Box sx={{ flex: 1 }}>
+          <LineChart
+            series={[
+              {
+                data: minTempData,
+                label: 'Min Temperature (°C)',
+                color: '#2196f3'
+              },
+              {
+                data: maxTempData,
+                label: 'Max Temperature (°C)',
+                color: '#ff6b6b'
+              },
+            ]}
+            xAxis={[{
+              scaleType: 'point',
+              data: xAxisData,
+              label: 'Date'
+            }]}
+            yAxis={[
+              {
+                max: maxMaxTemp,
+                label: 'Temperature (°C)'
+              }
+            ]}
+          />
+        </Box>
+      </Box>
     </Paper>
   );
 };
