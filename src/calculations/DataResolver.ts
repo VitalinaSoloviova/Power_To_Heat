@@ -16,7 +16,7 @@ type PriceRow = {
     avg_price: number
 }
 
-class DataResolver {
+export class DataResolver {
     private baseUrl: string
 
     constructor(baseUrl: string) {
@@ -138,5 +138,3 @@ class DataResolver {
     }
 
 }
-
-export { ForecastService };

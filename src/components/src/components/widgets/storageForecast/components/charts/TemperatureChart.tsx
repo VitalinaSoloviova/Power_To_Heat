@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { useColors } from '../../../theme/useTheme';
-import { getChartSx } from '../../../theme/colors';
-import type { WeatherRangeForMonth } from '../../storageForecastUtils';
+import { useColors } from '../../../../theme/useTheme';
+import { getChartSx } from '../../../../theme/colors';
+import type { WeatherRangeForMonth } from '../../../storageForecastUtils';
 
 interface TemperatureChartProps {
   xLabels: string[];

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography, IconButton, Collapse } from '@mui/material';
-import { useColors } from '../../../theme/useTheme';
-import type { WeatherRangeForMonth } from '../../storageForecastUtils';
+import { useColors } from '../../../../theme/useTheme';
+import type { WeatherRangeForMonth } from '../../../storageForecastUtils';
 import ComparisonChart from './ComparisonChart';
 import TemperatureChart from './TemperatureChart';
 
@@ -13,7 +13,7 @@ interface ComparisonChartsSectionProps {
   historicalDemand: number[];
   forecastDemand: number[];
   weatherHistory: WeatherRangeForMonth[];
-  forecastTemperature: number[];
+  forecastTemperature?: number[];
 }
 
 const ComparisonChartsSection = ({
@@ -24,7 +24,6 @@ const ComparisonChartsSection = ({
   historicalDemand,
   forecastDemand,
   weatherHistory,
-  forecastTemperature,
 }: ComparisonChartsSectionProps) => {
   const colors = useColors();
   const [isExpanded, setIsExpanded] = useState(true);
