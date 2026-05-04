@@ -52,7 +52,7 @@ export class OpenWeatherCurrentWeatherService implements CurrentWeatherService {
     private readonly apiKey: string;
     private readonly baseUrl: string;
 
-    constructor(apiKey: string, baseUrl = "https://api.openweathermap.org/data/2.5") {
+    constructor(apiKey: string, baseUrl = "MOCK") {
         this.apiKey = apiKey;
         this.baseUrl = baseUrl;
     }
