@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from './SimulationComponent';
-import StatsRow from './StatsRow';
+import TopWidgetsRow from './widgets/topRow/TopWidgetsRow';
 import FlowWidget from './widgets/FlowWidget';
 import { useColors } from './theme/useTheme';
 import { dummyWeatherDataApril } from '../../../DummyWeather';
@@ -22,7 +22,7 @@ const MainContent = () => {
       }}
     >
       <ToolbarComponent />
-      <StatsRow />
+      <TopWidgetsRow />
       <SimulationComponent />
       <StorageForecast />
 
