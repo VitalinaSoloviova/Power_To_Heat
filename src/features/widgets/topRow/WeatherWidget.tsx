@@ -12,9 +12,9 @@ import {
 } from "@mui/icons-material";
 import type { ReactNode } from "react";
 import WidgetCard from "./WidgetCard";
-import { useColors } from "../../theme/useTheme";
+import { useColors } from "@theme/useTheme";
 import { useCurrentWeather, useLocation } from "./hooks/useTopWidgetData";
-import type { WeatherCondition } from "../../../../../services/CurrentWeatherService";
+import type { WeatherCondition } from "@services/CurrentWeatherService";
 
 const conditionIcon = (
     condition: WeatherCondition,

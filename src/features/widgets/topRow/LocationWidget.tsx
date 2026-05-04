@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { PlaceRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
-import { useColors } from "../../theme/useTheme";
+import { useColors } from "@theme/useTheme";
 import { useLocation } from "./hooks/useTopWidgetData";
 
 const LocationWidget: React.FC = () => {

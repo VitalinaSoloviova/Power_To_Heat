@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import DecisionCard from './DecisionCard';
 import ScoreBreakdownCard from './ScoreBreakdownCard';
-import { type BuyDecision, type ScoreBreakdown } from '../../storageForecastUtils';
+import { type BuyDecision, type ScoreBreakdown } from '../storageForecastUtils';
 
 interface RecommendationSectionProps {
   decision: BuyDecision;

@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
-import { useColors } from '../../theme/useTheme';
+import { useColors } from '@theme/useTheme';
 import { 
   DEFAULT_DURATION,
   DEFAULT_HISTORY_YEARS, 
   DEFAULT_STORAGE_LEVEL,
   type Duration, 
   type HistoryYears 
-} from '../../../../../services/UIService';
+} from '@services/UIService';
 import { useBuyRecommendation } from './hooks/useBuyRecommendation';
-import { useChartsData } from './hooks/useChartsData';
+import { useChartsData } from '@features/charts/hooks/useChartsData';
 import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';
 import RecommendationSection from './components/RecommendationSection';
-import ComparisonChartsSection from './components/charts/ComparisonChartsSection';
+import ComparisonChartsSection from '@features/charts/ComparisonChartsSection';
 
 const StorageForecast = () => {
   const colors = useColors();

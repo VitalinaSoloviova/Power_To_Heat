@@ -1,6 +1,6 @@
 import { Paper, Typography, Box } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import type { UiDayData } from '../../../calculations/uiDataProfile';
+import type { UiDayData } from '@calculations/uiDataProfile';
 
 interface ChartsComponentProps {
   weatherData: UiDayData[];

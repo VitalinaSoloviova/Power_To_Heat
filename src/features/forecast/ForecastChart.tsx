@@ -1,8 +1,8 @@
 import { Box, Typography } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
-import { useColors } from '../theme/useTheme';
-import { getChartSx } from '../theme/colors';
-import type { UiDayData } from '../../../../calculations/uiDataProfile';
+import { useColors } from '@theme/useTheme';
+import { getChartSx } from '@theme/colors';
+import type { UiDayData } from '@calculations/uiDataProfile';
 
 interface ForecastChartProps {
   /** Days to plot. Order matters — used as the X axis. */

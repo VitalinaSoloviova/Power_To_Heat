@@ -1,4 +1,4 @@
-import { useColors } from './theme/useTheme';
+import { useColors } from '@theme/useTheme';
 
 const SPARKLINE_WIDTH = 160;
 const SPARKLINE_HEIGHT = 32;

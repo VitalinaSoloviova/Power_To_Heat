@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
 import ToolbarComponent from './ToolbarComponent';
-import SimulationComponent from './SimulationComponent';
-import TopWidgetsRow from './widgets/topRow/TopWidgetsRow';
-import FlowWidget from './widgets/FlowWidget';
-import { useColors } from './theme/useTheme';
-import { dummyWeatherDataApril } from '../../../DummyWeather';
-import ForecastChart from './widgets/ForecastChart';
-import StorageForecast from './widgets/storageForecast';
+import SimulationComponent from '@features/simulation/SimulationComponent';
+import TopWidgetsRow from '@features/widgets/topRow/TopWidgetsRow';
+import FlowWidget from '@features/widgets/FlowWidget';
+import { useColors } from '@theme/useTheme';
+import { dummyWeatherDataApril } from '../DummyWeather';
+import ForecastChart from '@features/forecast/ForecastChart';
+import StorageForecast from '@features/forecast';
 
 const MainContent = () => {
   const colors = useColors();

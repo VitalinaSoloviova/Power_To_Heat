@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Paper, Box } from '@mui/material';
-import EnergyIsland from './energy/EnergyIsland';
-import Storage from './energy/Storage';
-import City from './energy/City';
-import EnergyFlow from './energy/EnergyFlow';
-import { useColors } from './theme/useTheme';
+import EnergyIsland from './EnergyIsland';
+import Storage from './Storage';
+import City from './City';
+import EnergyFlow from './EnergyFlow';
+import { useColors } from '@theme/useTheme';
 
 interface EnergyState {
   windProduction: number;

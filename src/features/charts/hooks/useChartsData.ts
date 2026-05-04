@@ -3,8 +3,8 @@ import {
     type ChartsData,
     type Duration,
     type HistoryYears,
-} from '../../../../../../services/UIService';
-import { uiService } from '../../../../../../services/serviceContainer';
+} from '@services/UIService';
+import { uiService } from '@services/serviceContainer';
 
 interface UseChartsDataResult {
     data: ChartsData | null;

@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import { useColors } from '../../../theme/useTheme';
-import { buyDecisionLabel, type BuyDecision } from '../../storageForecastUtils';
+import { useColors } from '@theme/useTheme';
+import { buyDecisionLabel, type BuyDecision } from '../storageForecastUtils';
 
 interface DecisionBadgeProps {
   decision: BuyDecision;

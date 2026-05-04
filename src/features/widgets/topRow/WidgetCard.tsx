@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import type { ReactNode } from "react";
-import { useColors } from "../../theme/useTheme";
+import { useColors } from "@theme/useTheme";
 
 interface WidgetCardProps {
     label: string;

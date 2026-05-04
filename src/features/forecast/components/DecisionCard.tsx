@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
-import { useColors } from '../../../theme/useTheme';
-import { type BuyDecision } from '../../storageForecastUtils';
+import { useColors } from '@theme/useTheme';
+import { type BuyDecision } from '../storageForecastUtils';
 import DecisionBadge from './DecisionBadge';
 import DecisionExplanation from './DecisionExplanation';
 

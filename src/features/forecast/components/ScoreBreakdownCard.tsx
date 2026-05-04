@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
-import { useColors } from '../../../theme/useTheme';
-import { type ScoreBreakdown } from '../../storageForecastUtils';
+import { useColors } from '@theme/useTheme';
+import { type ScoreBreakdown } from '../storageForecastUtils';
 import ScoreRow from './ScoreRow';
 
 interface ScoreBreakdownCardProps {

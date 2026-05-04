@@ -1,7 +1,7 @@
 import { Typography } from "@mui/material";
 import { DashboardCustomizeRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
-import { useColors } from "../../theme/useTheme";
+import { useColors } from "@theme/useTheme";
 
 /** Reserved slot for the next dashboard widget. Keeps the row balanced. */
 const PlaceholderWidget: React.FC = () => {

@@ -1,5 +1,5 @@
 import { Box, Typography, Slider, TextField, InputAdornment } from '@mui/material';
-import { useColors } from '../../../theme/useTheme';
+import { useColors } from '@theme/useTheme';
 
 interface StorageLevelControlProps {
   value: number;

@@ -3,10 +3,10 @@ import {
     locationService,
     currentWeatherService,
     currentEnergyPriceService,
-} from "../../../../../../services/serviceContainer";
-import type { Location } from "../../../../../../services/LocationService";
-import type { CurrentWeather } from "../../../../../../services/CurrentWeatherService";
-import type { CurrentEnergyPrice } from "../../../../../../services/CurrentEnergyPriceService";
+} from "@services/serviceContainer";
+import type { Location } from "@services/LocationService";
+import type { CurrentWeather } from "@services/CurrentWeatherService";
+import type { CurrentEnergyPrice } from "@services/CurrentEnergyPriceService";
 
 interface AsyncState<T> {
     data: T | null;

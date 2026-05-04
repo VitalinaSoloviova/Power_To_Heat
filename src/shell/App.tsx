@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar';
-import { ThemeProvider } from './theme/ThemeContext';
-import { useColors } from './theme/useTheme';
+import { ThemeProvider } from '@theme/ThemeContext';
+import { useColors } from '@theme/useTheme';
 
 const AppShell = () => {
   const colors = useColors();

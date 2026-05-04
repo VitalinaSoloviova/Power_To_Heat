@@ -1,7 +1,7 @@
 import { Box, Typography } from '@mui/material';
-import { useColors } from './theme/useTheme';
-import type { AppColors } from './theme/colors';
-import { Sparkline, type SparklineType } from './Sparkline';
+import { useColors } from '@theme/useTheme';
+import type { AppColors } from '@theme/colors';
+import { Sparkline, type SparklineType } from '@features/charts/Sparkline';
 
 type BadgeTone = 'success' | 'warning' | 'danger' | 'info';
 
