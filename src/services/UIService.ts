@@ -38,12 +38,6 @@ export interface ChartsData {
     dataYears: DataCoverage;
 }
 
-// UIService
-//   - Knows nothing about HTTP / DB
-//   - Builds the period (today → today + N*7 days, capped)
-//   - Asks DataResolver for the historical N-year average per calendar day
-//   - Reshapes into a per-day list ready for the chart
-
 export class UIService {
     private resolver: DataResolver;
 
