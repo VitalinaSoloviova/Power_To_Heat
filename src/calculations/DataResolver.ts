@@ -16,20 +16,11 @@ type PriceRow = {
     avg_price: number
 }
 
-/** How many years of data were actually found for each series. */
-export interface DataCoverage {
-    weatherYears: number;
-    priceYears: number;
-    weatherFirstDate: string | null;
-    priceFirstDate: string | null;
-    weatherLastDate: string | null;
-    priceLastDate: string | null;
-}
-
 /** Return value of getUiDataProfile. */
 export interface UiDataProfileResult {
     days: UiDayData[];
-    coverage: DataCoverage;
+    weatherDates: string[];
+    priceDates: string[];
 }
 
 export class DataResolver {
@@ -52,15 +43,8 @@ export class DataResolver {
         const weatherByDay = this.groupAndAverageWeather(weatherData)
         const priceByDay   = this.groupAndAveragePrice(priceData)
 
-        // Count how many distinct years are actually present in each dataset.
         const weatherDates = weatherData.map((r) => r.date)
         const priceDates = priceData.map((r) => r.date)
-        const weatherYears = this.countDistinctYears(weatherDates)
-        const priceYears   = this.countDistinctYears(priceDates)
-        const weatherFirstDate = this.getEarliestDate(weatherDates)
-        const priceFirstDate = this.getEarliestDate(priceDates)
-        const weatherLastDate = this.getLatestDate(weatherDates)
-        const priceLastDate = this.getLatestDate(priceDates)
 
         const days: UiDayData[] = []
         for (const [key, weather] of weatherByDay) {
@@ -80,14 +64,8 @@ export class DataResolver {
 
         return {
             days: days.sort((a, b) => a.day.getTime() - b.day.getTime()),
-            coverage: {
-                weatherYears,
-                priceYears,
-                weatherFirstDate,
-                priceFirstDate,
-                weatherLastDate,
-                priceLastDate,
-            },
+            weatherDates,
+            priceDates,
         };
     }
 
@@ -185,21 +163,4 @@ export class DataResolver {
         )
     }
 
-    /** Count how many distinct calendar years appear in an array of "YYYY-MM-DD" strings. */
-    private countDistinctYears(dates: string[]): number {
-        const years = new Set(dates.map(d => d.slice(0, 4)))
-        return years.size
-    }
-
-    /** Returns the latest date (YYYY-MM-DD) from the provided list, or null if empty. */
-    private getLatestDate(dates: string[]): string | null {
-        if (dates.length === 0) return null
-        return [...dates].sort().at(-1) ?? null
-    }
-
-    /** Returns the earliest date (YYYY-MM-DD) from the provided list, or null if empty. */
-    private getEarliestDate(dates: string[]): string | null {
-        if (dates.length === 0) return null
-        return [...dates].sort().at(0) ?? null
-    }
 }

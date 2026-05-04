@@ -1,6 +1,15 @@
 import { DataResolver } from "../calculations/DataResolver";
 import type { UiDayData } from "../calculations/uiDataProfile";
-import type { DataCoverage } from "../calculations/DataResolver";
+
+/** How many years of data were actually found for each series. */
+export interface DataCoverage {
+    weatherYears: number;
+    priceYears: number;
+    weatherFirstDate: string | null;
+    priceFirstDate: string | null;
+    weatherLastDate: string | null;
+    priceLastDate: string | null;
+}
 
 /** Forecast / analysis duration in weeks. Hard cap at 4 weeks. */
 export const DURATION_OPTIONS = [1, 2, 3, 4] as const;
@@ -65,11 +74,24 @@ export class UIService {
     ): Promise<ChartsData> {
         const period = this.buildPeriod(duration, historyYears);
 
-        const { days: profile, coverage } = await this.resolver.getUiDataProfile(
+        const {
+            days: profile,
+            weatherDates,
+            priceDates,
+        } = await this.resolver.getUiDataProfile(
             period.start,
             period.end,
             historyYears
         );
+
+        const coverage: DataCoverage = {
+            weatherYears: this.countDistinctYears(weatherDates),
+            priceYears: this.countDistinctYears(priceDates),
+            weatherFirstDate: this.getEarliestDate(weatherDates),
+            priceFirstDate: this.getEarliestDate(priceDates),
+            weatherLastDate: this.getLatestDate(weatherDates),
+            priceLastDate: this.getLatestDate(priceDates),
+        };
 
         // DataResolver returns days keyed by calendar (MM-DD) with year=2000.
         // Map them back onto every actual day in our requested period.
@@ -139,5 +161,23 @@ export class UIService {
             avgPrice: 0,
             energyDemand: 0,
         };
+    }
+
+    /** Count how many distinct calendar years appear in an array of "YYYY-MM-DD" strings. */
+    private countDistinctYears(dates: string[]): number {
+        const years = new Set(dates.map((d) => d.slice(0, 4)));
+        return years.size;
+    }
+
+    /** Returns the latest date (YYYY-MM-DD) from the provided list, or null if empty. */
+    private getLatestDate(dates: string[]): string | null {
+        if (dates.length === 0) return null;
+        return [...dates].sort().at(-1) ?? null;
+    }
+
+    /** Returns the earliest date (YYYY-MM-DD) from the provided list, or null if empty. */
+    private getEarliestDate(dates: string[]): string | null {
+        if (dates.length === 0) return null;
+        return [...dates].sort().at(0) ?? null;
     }
 }

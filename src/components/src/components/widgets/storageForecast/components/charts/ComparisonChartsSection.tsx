@@ -44,7 +44,7 @@ const ComparisonChartsSection = ({
   };
 
   const priceLabel = `Avg since ${getYearText(actualPriceFirstDate)} (${actualPriceYears}y)`;
-  const demandLabel = `Calculated from weather since ${getYearText(actualWeatherFirstDate)} (${actualWeatherYears}y)`;
+  const demandLabel = `Avg energy demand since ${getYearText(actualWeatherFirstDate)} (${actualWeatherYears}y)`;
 
   const formatLastDate = (value: string | null): string => {
     if (!value) return 'No data';
