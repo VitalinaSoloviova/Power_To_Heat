@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useColors } from '../../theme/useTheme';
 import { 
   DEFAULT_DURATION,
@@ -9,6 +9,7 @@ import {
   type HistoryYears 
 } from '../../../../../services/UIService';
 import { useBuyRecommendation } from './hooks/useBuyRecommendation';
+import { useChartsData } from './hooks/useChartsData';
 import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';
 import RecommendationSection from './components/RecommendationSection';
@@ -21,11 +22,28 @@ const StorageForecast = () => {
   const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
 
-  const { xLabels, recommendation, periodLabel } = useBuyRecommendation({
+  // Recommendation card still uses the legacy MOCK.
+  const { recommendation, periodLabel } = useBuyRecommendation({
     storageLevel,
     duration,
     historyYears,
   });
+
+  // Real per-day data for the chart section.
+  const { data: charts, loading: chartsLoading, error: chartsError } =
+    useChartsData(duration, historyYears);
+
+  const xLabels = charts?.xLabels ?? [];
+  const historicalPrices = charts?.days.map((d) => d.avgPrice) ?? [];
+  const historicalDemand = charts?.days.map((d) => d.energyDemand) ?? [];
+  // Weather history for the chart section.
+  const weatherHistory =
+    charts?.days.map((d) => ({
+      month: d.day.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+      minTemp: d.weather.minTemp,
+      maxTemp: d.weather.maxTemp,
+      avgTemp: d.weather.avgTemp,
+    })) ?? [];
 
   return (
     <Box
@@ -62,18 +80,34 @@ const StorageForecast = () => {
         breakdown={recommendation.breakdown}
       />
 
+      {chartsError && (
+        <Typography sx={{ color: colors.heat, fontSize: 13 }}>
+          Error loading chart data: {chartsError.message}
+        </Typography>
+      )}
+      {chartsLoading && !charts && (
+        <Typography sx={{ color: colors.textSecondary, fontSize: 13 }}>
+          Loading chart data…
+        </Typography>
+      )}
+
       <ComparisonChartsSection
         xLabels={xLabels}
-        historyYears={historyYears}
-        historicalPrices={recommendation.historicalPrices}
-        forecastPrices={recommendation.forecastPrices}
-        historicalDemand={recommendation.historicalDemand}
-        forecastDemand={recommendation.forecastDemand}
-        weatherHistory={recommendation.weatherHistory}
-        forecastTemperature={recommendation.forecastTemperature}
+        actualPriceYears={charts?.dataYears.priceYears ?? historyYears}
+        actualWeatherYears={charts?.dataYears.weatherYears ?? historyYears}
+        actualWeatherFirstDate={charts?.dataYears.weatherFirstDate ?? null}
+        actualPriceFirstDate={charts?.dataYears.priceFirstDate ?? null}
+        actualWeatherLastDate={charts?.dataYears.weatherLastDate ?? null}
+        actualPriceLastDate={charts?.dataYears.priceLastDate ?? null}
+        historicalPrices={historicalPrices}
+        forecastPrices={[]} // Forecast data not implemented yet
+        historicalDemand={historicalDemand}
+        forecastDemand={[]} // Forecast data not implemented yet
+        weatherHistory={weatherHistory}
       />
     </Box>
   );
 };
 
 export default StorageForecast;
+

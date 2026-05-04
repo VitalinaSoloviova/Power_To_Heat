@@ -5,6 +5,7 @@ import { getChartSx } from '../../../../theme/colors';
 
 interface ComparisonChartProps {
   title: string;
+  lastUsedDate: string;
   xLabels: string[];
   historical: number[];
   forecast: number[];
@@ -15,6 +16,7 @@ interface ComparisonChartProps {
 
 const ComparisonChart = ({
   title,
+  lastUsedDate,
   xLabels,
   historical,
   forecast,
@@ -36,6 +38,9 @@ const ComparisonChart = ({
     >
       <Typography sx={{ fontSize: 13, color: colors.textPrimary, fontWeight: 600, mb: 1 }}>
         {title}
+      </Typography>
+      <Typography sx={{ fontSize: 11, color: colors.textSecondary, mb: 1 }}>
+        Data used until: {lastUsedDate}
       </Typography>
       <Box sx={{ height: 200 }}>
         <LineChart

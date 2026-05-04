@@ -174,6 +174,8 @@ export class DataResolver {
         return result
     }
 
+   // Demand is calculated as: number of clients * energy demand per person * (target inside temp - outside temp) 
+   // (with a minimum of 0 to avoid negative demand when it's hot outside)
     private getEenergyDemand(outsideTemp: number, city: CityProfile) {
         return Math.max(
             0,
@@ -200,9 +202,4 @@ export class DataResolver {
         if (dates.length === 0) return null
         return [...dates].sort().at(0) ?? null
     }
-
-
-
-   
-
 }

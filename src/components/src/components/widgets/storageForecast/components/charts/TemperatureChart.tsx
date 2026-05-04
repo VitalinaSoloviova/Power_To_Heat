@@ -7,16 +7,24 @@ import type { WeatherRangeForMonth } from '../../../storageForecastUtils';
 interface TemperatureChartProps {
   xLabels: string[];
   weatherHistory: WeatherRangeForMonth[];
-  historyYears: number;
+  actualYears: number;
+  firstYear: string;
+  lastUsedDate: string;
 }
 
 const TemperatureChart = ({
   xLabels,
   weatherHistory,
-  historyYears,
+  actualYears,
+  firstYear,
+  lastUsedDate,
 }: TemperatureChartProps) => {
   const colors = useColors();
   const chartSx = getChartSx(colors);
+
+  const label = firstYear === 'unknown'
+    ? `${actualYears}y`
+    : `since ${firstYear} (${actualYears}y)`;
 
   const minSeries = weatherHistory.map((p) => p.minTemp);
   const avgSeries = weatherHistory.map((p) => p.avgTemp);
@@ -34,32 +42,34 @@ const TemperatureChart = ({
       <Typography sx={{ fontSize: 13, color: colors.textPrimary, fontWeight: 600, mb: 1 }}>
         Temperature (°C)
       </Typography>
+      <Typography sx={{ fontSize: 11, color: colors.textSecondary, mb: 1 }}>
+        Data used until: {lastUsedDate}
+      </Typography>
       <Box sx={{ height: 220 }}>
         <LineChart
           xAxis={[{ data: xLabels, scaleType: 'point' }]}
           series={[
             {
               data: maxSeries,
-              label: `Historical max (${historyYears}y)`,
+              label: `Historical max`,
               color: colors.heat,
               showMark: false,
               curve: 'monotoneX' as const,
             },
             {
               data: minSeries,
-              label: `Historical min (${historyYears}y)`,
+              label: `Historical min`,
               color: colors.cool,
               showMark: false,
               curve: 'monotoneX' as const,
             },
             {
               data: avgSeries,
-              label: `Historical avg (${historyYears}y)`,
+              label: `Historical avg (${label})`,
               color: colors.textSecondary,
               showMark: false,
               curve: 'monotoneX' as const,
             },
-           
           ]}
           margin={{ left: 50, right: 20, top: 10, bottom: 30 }}
           sx={chartSx}
