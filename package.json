@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest",
     "api": "tsx --env-file=database/api/.env database/api/rest-server.ts",
-    "dev": "vite",
+    "dev": "concurrently -n api,web -c blue,green \"npm:api\" \"vite\"",
+    "dev:web": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
