@@ -19,12 +19,10 @@ interface WeatherDataPoint {
     minTemp: number
     maxTemp: number;
     everageTemp: number;
-    forcast: 
 }
 
 // TODO Forcast number of sunny days and wind speed
 export interface ChartsData {
-ele
 }
 
 export class UIService {
