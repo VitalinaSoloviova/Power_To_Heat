@@ -33,7 +33,7 @@ const DurationControl = ({ value, onChange }: DurationControlProps) => {
               },
             }}
           >
-            {opt} {opt === 1 ? 'month' : 'months'}
+            {opt} {opt === 1 ? 'week' : 'weeks'}
           </ToggleButton>
         ))}
       </ToggleButtonGroup>
