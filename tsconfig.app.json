@@ -19,7 +19,16 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true
+    "noFallthroughCasesInSwitch": true,
+
+    /* Path aliases */
+    "paths": {
+      "@features/*": ["./src/features/*"],
+      "@services/*": ["./src/services/*"],
+      "@calculations/*": ["./src/calculations/*"],
+      "@theme/*": ["./src/theme/*"],
+      "@shell/*": ["./src/shell/*"]
+    }
   },
   "include": ["src"]
 }

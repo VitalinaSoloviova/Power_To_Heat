@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { ForecastService } from '../../src/calculations/uiCommunication.js';
+import { DataResolver } from '../../src/calculations/DataResolver.js';
 
 const mockWeatherData = [
     { date: '2020-01-01', avg_temp: -2, min_temp: -5, max_temp: 1,  avg_wind: 10, dominant_weather_main: 'Snow'   },
@@ -23,10 +23,10 @@ function mockFetch(weatherData = mockWeatherData, priceData = mockPriceData) {
 }
 
 describe('ForecastService', () => {
-    let service: ForecastService;
+    let service: DataResolver;
 
     beforeEach(() => {
-        service = new ForecastService('http://localhost:3001');
+        service = new DataResolver('http://localhost:3001');
         mockFetch();
     });
 
@@ -34,7 +34,7 @@ describe('ForecastService', () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-02'), 5
         );
-        expect(result).toHaveLength(2);
+        expect(result.days).toHaveLength(2);
     });
 
     it('averages temperature correctly across years', async () => {
@@ -42,14 +42,14 @@ describe('ForecastService', () => {
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
         // Jan 1: (-2 + 2) / 2 = 0
-        expect(result[0].weather.avgTemp).toBeCloseTo(0);
+        expect(result.days[0].weather.avgTemp).toBeCloseTo(0);
     });
 
     it('sets weather description from most recent year', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result[0].weather.description).toBe('Clouds');
+        expect(result.days[0].weather.description).toBe('Clouds');
     });
 
     it('averages price correctly across years', async () => {
@@ -57,14 +57,14 @@ describe('ForecastService', () => {
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
         // Jan 1: (50 + 70) / 2 = 60
-        expect(result[0].avgPrice).toBeCloseTo(60);
+        expect(result.days[0].avgPrice).toBeCloseTo(60);
     });
 
     it('returns days sorted chronologically', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-02'), 5
         );
-        expect(result[0].day.getTime()).toBeLessThan(result[1].day.getTime());
+        expect(result.days[0].day.getTime()).toBeLessThan(result.days[1].day.getTime());
     });
 
     it('sets avgPrice to 0 if no price data exists for that day', async () => {
@@ -72,7 +72,7 @@ describe('ForecastService', () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result[0].avgPrice).toBe(0);
+        expect(result.days[0].avgPrice).toBe(0);
     });
 
     it('sets energyDemand to 0 when temperature is above target (20°C)', async () => {
@@ -82,14 +82,14 @@ describe('ForecastService', () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result[0].energyDemand).toBe(0);
+        expect(result.days[0].energyDemand).toBe(0);
     });
 
     it('calculates positive energyDemand when temperature is below target', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result[0].energyDemand).toBeGreaterThan(0);
+        expect(result.days[0].energyDemand).toBeGreaterThan(0);
     });
 
     it('returns empty array if no weather data is available', async () => {
@@ -97,6 +97,6 @@ describe('ForecastService', () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result).toEqual([]);
+        expect(result.days).toEqual([]);
     });
 });
