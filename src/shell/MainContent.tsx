@@ -4,8 +4,6 @@ import SimulationComponent from '@features/simulation/SimulationComponent';
 import TopWidgetsRow from '@features/widgets/topRow/TopWidgetsRow';
 import FlowWidget from '@features/widgets/FlowWidget';
 import { useColors } from '@theme/useTheme';
-import { dummyWeatherDataApril } from '../DummyWeather';
-import ForecastChart from '@features/forecast/ForecastChart';
 import StorageForecast from '@features/forecast';
 
 const MainContent = () => {
@@ -29,7 +27,7 @@ const MainContent = () => {
       {/* Bottom widgets row */}
       <Box sx={{ display: 'flex', gap: 2, px: 3, mb: 2 }}>
         <FlowWidget />
-        <ForecastChart data={dummyWeatherDataApril} />
+        {/* <ForecastChart data={dummyWeatherDataApril} /> */}
       </Box>
     </Box>
   );
