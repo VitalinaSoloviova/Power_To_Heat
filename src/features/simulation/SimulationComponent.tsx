@@ -15,7 +15,7 @@ interface EnergyState {
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
-  const [state, setState] = useState<EnergyState>({
+  const [state] = useState<EnergyState>({
     windProduction: 0.65,
     solarProduction: 0.55,
     consumption: 0.45,

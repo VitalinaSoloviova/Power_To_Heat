@@ -1,4 +1,4 @@
-import { DataResolver } from "../calculations/DataResolver";
+import type { DataResolver } from "../calculations/DataResolver";
 import type { UiDayData } from "../calculations/uiDataProfile";
 import { DataCoverageCalculator } from "./DataCoverageCalculator";
 import type { DataCoverage } from "./DataCoverageCalculator";

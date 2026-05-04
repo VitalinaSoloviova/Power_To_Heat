@@ -74,6 +74,7 @@ export function useCurrentWeather(
             cancelled = true;
             clearInterval(id);
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [location?.latitude, location?.longitude]);
 
     return state;

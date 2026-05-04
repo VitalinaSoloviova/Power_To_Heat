@@ -13,7 +13,7 @@ import {
 
 // Backend base URL – override via Vite env when needed (VITE_API_BASE_URL).
 const BASE_URL =
-    (import.meta as any).env?.VITE_API_BASE_URL ?? "http://localhost:3001";
+    import.meta.env.VITE_API_BASE_URL ?? "http://localhost:3001";
 
 const dataResolver = new DataResolver(BASE_URL);
 
@@ -24,7 +24,7 @@ export const uiService = new UIService(dataResolver);
 
 export const locationService: LocationService = new StaticLocationService();
 
-const openWeatherKey = (import.meta as any).env?.VITE_OPENWEATHER_API_KEY as
+const openWeatherKey = import.meta.env.VITE_OPENWEATHER_API_KEY as
     | string
     | undefined;
 
