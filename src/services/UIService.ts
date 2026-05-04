@@ -18,9 +18,7 @@ export const DEFAULT_HISTORY_YEARS: HistoryYears = 5;
 /** Hard cap: never analyse more than 4 weeks ahead. */
 export const MAX_FORECAST_DAYS = 4 * 7;
 
-// =====================================================================
 // UI section data shape – x-axis is one tick per day
-// =====================================================================
 
 export interface ChartsPeriod {
     start: Date;
@@ -40,13 +38,11 @@ export interface ChartsData {
     dataYears: DataCoverage;
 }
 
-// =====================================================================
 // UIService
 //   - Knows nothing about HTTP / DB
 //   - Builds the period (today → today + N*7 days, capped)
 //   - Asks DataResolver for the historical N-year average per calendar day
 //   - Reshapes into a per-day list ready for the chart
-// =====================================================================
 
 export class UIService {
     private resolver: DataResolver;
@@ -97,9 +93,7 @@ export class UIService {
         return { period, days, xLabels, dataYears: coverage };
     }
 
-    // -----------------------------------------------------------------
     // Period helpers
-    // -----------------------------------------------------------------
 
     private buildPeriod(
         duration: Duration,
