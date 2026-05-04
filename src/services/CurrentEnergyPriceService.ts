@@ -34,7 +34,7 @@ export class MockCurrentEnergyPriceService implements CurrentEnergyPriceService 
 }
 
 function classify(centsPerKilowattHour: number): EnergyPriceStatus {
-    // Have to be recalculated. How do we decide if its "low", "medium" or "high"?
+    // Have to be recalculated. How do we decide if it's "low", "medium" or "high"?
     if (centsPerKilowattHour < 20) return "low";
     if (centsPerKilowattHour < 35) return "medium";
     return "high";
