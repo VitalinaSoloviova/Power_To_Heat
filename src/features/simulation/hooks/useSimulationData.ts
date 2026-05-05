@@ -39,28 +39,35 @@ const normalizeWeatherCondition = (
  */
 export function useSimulationData(range: SimulationRange) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
   useEffect(() => {
     let cancelled = false;
-    // Use callback form to avoid react-hooks/set-state-in-effect warning
-    setLoading(() => true);
+    
     uiService
       .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
-        setLoading(false);
+        setFetchState('success');
       })
       .catch(() => {
         if (cancelled) return;
         setHours(null);
-        setLoading(false);
+        setFetchState('error');
       });
+    
     return () => {
       cancelled = true;
     };
   }, [range]);
+
+  // Set loading state when range changes
+  useEffect(() => {
+    setFetchState('loading');
+  }, [range]);
+
+  const loading = fetchState === 'loading';
 
   const series = useMemo<SimulationPoint[]>(() => {
     const targetCount = POINTS_PER_RANGE[range];
