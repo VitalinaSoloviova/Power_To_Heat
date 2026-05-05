@@ -5,6 +5,8 @@ interface TreeProps {
   y: number;
   /** Size/radius of the tree crown */
   size?: number;
+  /** ID of the gradient defined in the parent SVG's <defs> to use for the crown fill. */
+  gradientId: string;
 }
 
 /**
@@ -15,6 +17,7 @@ const Tree: React.FC<TreeProps> = ({
   x,
   y,
   size = 8,
+  gradientId,
 }) => {
   const trunkWidth = size * 0.25;
   const trunkHeight = size * 1.2;
@@ -38,28 +41,28 @@ const Tree: React.FC<TreeProps> = ({
         cy={y - size * 0.3}
         rx={crownWidth * 0.5}
         ry={crownHeight * 0.4}
-        fill="url(#treeGradient)"
+        fill={`url(#${gradientId})`}
       />
       <ellipse
         cx={x - size * 0.3}
         cy={y + size * 0.1}
         rx={size * 0.6}
         ry={size * 0.5}
-        fill="url(#treeGradient)"
+        fill={`url(#${gradientId})`}
       />
       <ellipse
         cx={x + size * 0.2}
         cy={y - size * 0.1}
         rx={size * 0.7}
         ry={size * 0.6}
-        fill="url(#treeGradient)"
+        fill={`url(#${gradientId})`}
       />
       <ellipse
         cx={x}
         cy={y - size * 0.6}
         rx={size * 0.4}
         ry={size * 0.3}
-        fill="url(#treeGradient)"
+        fill={`url(#${gradientId})`}
       />
     </g>
   );

@@ -152,17 +152,9 @@ const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
             <stop offset="0%"   stopColor="#22c55e" />
             <stop offset="100%" stopColor="#166534" />
           </linearGradient>
-          <radialGradient id="grassGradient" cx="0.5" cy="0.4">
-            <stop offset="0%" stopColor="#65a30d" />
-            <stop offset="100%" stopColor="#4d7c0f" />
-          </radialGradient>
-          <linearGradient id="treeGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#166534" />
-          </linearGradient>
         </defs>
 
-        <GroundPatch />
+        <GroundPatch gradientId="cyGround" />
 
         {/* back row */}
         {BACK.map((b) => (
@@ -174,10 +166,10 @@ const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
         ))}
 
         {/* foreground trees */}
-        <Tree x={22} y={152} size={8} />
-        <Tree x={80} y={156} size={5} />
-        <Tree x={122} y={156} size={5} />
-        <Tree x={180} y={152} size={8} />
+        <Tree x={22} y={152} size={8} gradientId="cyTreeG" />
+        <Tree x={80} y={156} size={5} gradientId="cyTreeG" />
+        <Tree x={122} y={156} size={5} gradientId="cyTreeG" />
+        <Tree x={180} y={152} size={8} gradientId="cyTreeG" />
       </svg>
     </IslandFrame>
   );
