@@ -154,7 +154,6 @@ const SimulationComponent: React.FC = () => {
           <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
               intensity={consumptionIntensity}
-              active={true}
               color="#0ea5e9"
             />
           </Box>

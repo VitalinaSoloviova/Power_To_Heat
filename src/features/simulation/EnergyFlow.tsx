@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 
 interface EnergyFlowProps {
   intensity: number;        // 0..1
-  active: boolean;
   color?: string;
   particleCount?: number;
   height?: number;
@@ -13,7 +12,6 @@ interface EnergyFlowProps {
  */
 const EnergyFlow: React.FC<EnergyFlowProps> = ({
   intensity,
-  active,
   color = '#10b981',
   particleCount = 4,
   height = 120,
