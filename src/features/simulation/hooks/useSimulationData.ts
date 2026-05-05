@@ -39,34 +39,30 @@ const normalizeWeatherCondition = (
  */
 export function useSimulationData(range: SimulationRange) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
-  const [lastRange, setLastRange] = useState<SimulationRange>(range);
+  const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
 
   useEffect(() => {
     let cancelled = false;
-    
-    // Track range change for loading state
-    if (range !== lastRange) {
-      setLastRange(range);
-      setHours(null); // Clear old data immediately
-    }
     
     uiService
       .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
+        setCurrentRange(range);
       })
       .catch(() => {
         if (cancelled) return;
         setHours(null);
+        setCurrentRange(range);
       });
     
     return () => {
       cancelled = true;
     };
-  }, [range, lastRange]);
+  }, [range]);
 
-  const loading = hours === null && lastRange === range;
+  const loading = range !== currentRange;
 
   const series = useMemo<SimulationPoint[]>(() => {
     const targetCount = POINTS_PER_RANGE[range];
