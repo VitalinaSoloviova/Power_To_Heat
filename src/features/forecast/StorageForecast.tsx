@@ -10,7 +10,6 @@ import {
 } from '@services/UIService';
 import { useBuyRecommendation } from './hooks/useBuyRecommendation';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
-import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';
 import RecommendationSection from './components/RecommendationSection';
 import ComparisonChartsSection from '@features/charts/ComparisonChartsSection';
@@ -56,8 +55,6 @@ const StorageForecast = () => {
         gap: 2,
       }}
     >
-      <Header historyYears={historyYears} periodLabel={periodLabel} />
-
       <ControlsBar
         storageLevel={storageLevel}
         onStorageLevelChange={setStorageLevel}
@@ -67,21 +64,6 @@ const StorageForecast = () => {
         onHistoryYearsChange={setHistoryYears}
       />
 
-      <RecommendationSection
-        decision={recommendation.decision}
-        score={recommendation.score}
-        explanation={recommendation.explanation}
-        currentPrice={recommendation.currentPrice}
-        historicalAvgPrice={recommendation.historicalAvgPrice}
-        forecastAvgPrice={recommendation.forecastAvgPrice}
-        breakdown={recommendation.breakdown}
-      />
-
-      {chartsError && (
-        <Typography sx={{ color: colors.heat, fontSize: 13 }}>
-          Error loading chart data: {chartsError.message}
-        </Typography>
-      )}
       {chartsLoading && !charts && (
         <Typography sx={{ color: colors.textSecondary, fontSize: 13 }}>
           Loading chart data…
