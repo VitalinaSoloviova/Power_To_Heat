@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Box, Typography, IconButton, Collapse } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type { WeatherRangeForMonth } from '@calculations/types';
+import type { WeatherRangeForMonth } from '@services/UIService';
 import ComparisonChart from './ComparisonChart';
-import TemperatureChart from './TemperatureChart';
+import TemperatureChart from '../forecast/TemperatureChart';
+
 
 interface ComparisonChartsSectionProps {
   xLabels: string[];

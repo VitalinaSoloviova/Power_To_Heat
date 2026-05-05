@@ -76,42 +76,7 @@ export class UIService {
         start.setHours(0, 0, 0, 0);
         const end = new Date(start);
         end.setDate(end.getDate() + days - 1);
-        return { start, end, durationWeeks: duration, historyYears };
-    }
-
-    private eachDay(start: Date, end: Date): Date[] {
-        const out: Date[] = [];
-        const cursor = new Date(start);
-        cursor.setHours(0, 0, 0, 0);
-        const last = new Date(end);
-        last.setHours(0, 0, 0, 0);
-        while (cursor.getTime() <= last.getTime()) {
-            out.push(new Date(cursor));
-            cursor.setDate(cursor.getDate() + 1);
-        }
-        return out;
-    }
-
-    /** "MM-DD" key for matching the same calendar day across years. */
-    private calendarKey(d: Date): string {
-        const m = String(d.getMonth() + 1).padStart(2, "0");
-        const day = String(d.getDate()).padStart(2, "0");
-        return `${m}-${day}`;
-    }
-
-    private emptyDay(day: Date): UiDayData {
-        return {
-            day,
-            weather: {
-                minTemp: 0,
-                maxTemp: 0,
-                avgTemp: 0,
-                wind: 0,
-                description: "",
-            },
-            avgPrice: 0,
-            energyDemand: 0,
-        };
+        return { start, end, historyYears };
     }
 
 }
