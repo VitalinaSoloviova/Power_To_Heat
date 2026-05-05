@@ -43,10 +43,9 @@ export class UIService {
      * each point being the N-year historical average for that calendar day.
      */
     public async getChartsData(
-        duration: Duration,
         historyYears: HistoryYears
     ): Promise<ChartsData> {
-        const period = this.buildPeriod(duration, historyYears);
+        const period = this.buildPeriod(historyYears);
 
         const {
             days: profile,
@@ -82,10 +81,9 @@ export class UIService {
     // Period helpers
 
     private buildPeriod(
-        duration: Duration,
         historyYears: HistoryYears
     ): ChartsPeriod {
-        const days = Math.min(duration * 7, MAX_FORECAST_DAYS);
+        const period = 
         const start = new Date();
         start.setHours(0, 0, 0, 0);
         const end = new Date(start);

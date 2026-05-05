@@ -4,7 +4,6 @@ import { useColors } from '@theme/useTheme';
 import { 
   DEFAULT_HISTORY_YEARS, 
   DEFAULT_STORAGE_LEVEL,
-  DEFAULT_DURATION,
   type HistoryYears 
 } from '@services/UIService';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
@@ -19,7 +18,7 @@ const StorageForecast = () => {
 
   // Real per-day data for the chart section.
   const { data: charts, loading: chartsLoading } =
-    useChartsData(DEFAULT_DURATION, historyYears);
+    useChartsData(historyYears);
 
   const xLabels = charts?.xLabels ?? [];
   const historicalPrices = charts?.days.map((d) => d.avgPrice) ?? [];
