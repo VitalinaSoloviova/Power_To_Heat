@@ -29,7 +29,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
   point,
   isCharging,
   isDischarging,
-  size = 300,
+  size = 250,
 }) => {
   const colors = useColors();
   const fraction = storageFraction(point.storage);
@@ -88,9 +88,12 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
         <svg
           width="100%"
           height="100%"
-          viewBox="0 0 200 260"
+          viewBox="20 35 160 190"
           preserveAspectRatio="xMidYMax meet"
-          style={{ filter: 'drop-shadow(0 18px 28px rgba(0,0,0,0.45))' }}
+          style={{ 
+            filter: 'drop-shadow(0 10px 20px rgba(0,0,0,0.45))',
+            padding: '0 0px',  // 10px links/rechts padding
+          }}
         >
           <defs>
             {/* White tank body */}
