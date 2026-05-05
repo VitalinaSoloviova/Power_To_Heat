@@ -1,13 +1,13 @@
 # REST API Server
 
-Express-based REST API that serves weather and electricity price data from a PostgreSQL database.
+Express-based REST API that serves raw hourly weather and electricity price data from the Supabase database.
 
 ## Setup
 
-Set the following environment variable (e.g. in a `.env` file):
+Set the following environment variables (e.g. in a `.env` file):
 
 ```
-DATABASE_URL=postgres://user:password@host:5432/dbname
+DATABASE_URL=postgresql://...
 PORT=3001  # optional, defaults to 3001
 ```
 
@@ -21,47 +21,50 @@ The server will be available at `http://localhost:3001`.
 
 ## Endpoints
 
-All dates use the format `YYYY-MM-DD`.
+All dates use the format `YYYY-MM-DD`. Both endpoints return all hourly rows within the given date range, ordered by `datetime` ascending.
 
-### Weather Profile
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/weather-profile/:date` | Weather profile for a single date |
-| GET | `/api/weather-profile/range?date_from=...&date_to=...` | Weather profiles for a date range |
-
-### Weather Condition Stats
+### Weather
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/weather-condition-stats/:date` | Weather condition stats for a single date (ordered by rank) |
-| GET | `/api/weather-condition-stats/range?date_from=...&date_to=...` | Weather condition stats for a date range |
+| GET | `/api/weather/range?date_from=...&date_to=...` | Hourly weather data for a date range |
 
-### Price Profile
+**Response fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `datetime` | string (ISO 8601) | UTC timestamp |
+| `temp` | number | Temperature in °C |
+| `temp_min` | number | Minimum temperature in °C |
+| `temp_max` | number | Maximum temperature in °C |
+| `wind_speed` | number | Wind speed in m/s |
+| `weather_main` | string | Weather category (e.g. `Clear`, `Rain`, `Snow`) |
+| `weather_description` | string | Detailed weather description |
+
+### Price
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| GET | `/api/price-profile/:date` | Electricity price profile for a single date |
-| GET | `/api/price-profile/range?date_from=...&date_to=...` | Electricity price profiles for a date range |
+| GET | `/api/price/range?date_from=...&date_to=...` | Hourly electricity price data for a date range |
 
-## Example Requests
+**Response fields:**
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `datetime` | string (ISO 8601) | UTC timestamp |
+| `price_eur_mwhe` | number | Electricity price in EUR/MWh |
+
+## Example requests
 
 ```bash
-# Single date
-GET /api/weather-profile/2024-01-15
-GET /api/price-profile/2024-01-15
-
-# Date range
-GET /api/weather-profile/range?date_from=2024-01-01&date_to=2024-01-31
-GET /api/price-profile/range?date_from=2024-01-01&date_to=2024-01-31
+GET /api/weather/range?date_from=2020-01-01&date_to=2020-01-07
+GET /api/price/range?date_from=2020-01-01&date_to=2020-01-07
 ```
 
-## Error Responses
+## Error responses
 
-On server errors, all endpoints return:
+On server errors all endpoints return HTTP `500` with:
 
 ```json
 { "error": "..." }
 ```
-
-with HTTP status `500`.

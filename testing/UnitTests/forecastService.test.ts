@@ -2,17 +2,17 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DataResolver } from '../../src/calculations/DataResolver.js';
 
 const mockWeatherData = [
-    { date: '2020-01-01', avg_temp: -2, min_temp: -5, max_temp: 1,  avg_wind: 10, dominant_weather_main: 'Snow'   },
-    { date: '2021-01-01', avg_temp:  2, min_temp: -1, max_temp: 5,  avg_wind:  8, dominant_weather_main: 'Clouds' },
-    { date: '2020-01-02', avg_temp:  0, min_temp: -3, max_temp: 3,  avg_wind: 12, dominant_weather_main: 'Clouds' },
-    { date: '2021-01-02', avg_temp:  4, min_temp:  1, max_temp: 7,  avg_wind:  6, dominant_weather_main: 'Clear'  },
+    { datetime: '2020-01-01T00:00:00Z', temp: -2, temp_min: -5, temp_max:  1, wind_speed: 10, weather_main: 'Snow'   },
+    { datetime: '2021-01-01T00:00:00Z', temp:  2, temp_min: -1, temp_max:  5, wind_speed:  8, weather_main: 'Clouds' },
+    { datetime: '2020-01-02T00:00:00Z', temp:  0, temp_min: -3, temp_max:  3, wind_speed: 12, weather_main: 'Clouds' },
+    { datetime: '2021-01-02T00:00:00Z', temp:  4, temp_min:  1, temp_max:  7, wind_speed:  6, weather_main: 'Clear'  },
 ];
 
 const mockPriceData = [
-    { date: '2020-01-01', avg_price: 50 },
-    { date: '2021-01-01', avg_price: 70 },
-    { date: '2020-01-02', avg_price: 40 },
-    { date: '2021-01-02', avg_price: 60 },
+    { datetime: '2020-01-01T00:00:00Z', price_eur_mwhe: 50 },
+    { datetime: '2021-01-01T00:00:00Z', price_eur_mwhe: 70 },
+    { datetime: '2020-01-02T00:00:00Z', price_eur_mwhe: 40 },
+    { datetime: '2021-01-02T00:00:00Z', price_eur_mwhe: 60 },
 ];
 
 function mockFetch(weatherData = mockWeatherData, priceData = mockPriceData) {
@@ -30,73 +30,99 @@ describe('ForecastService', () => {
         mockFetch();
     });
 
-    it('returns one UiDayData per unique calendar day', async () => {
+    it('returns 24 UiHourData entries for a single-day period', async () => {
+        const result = await service.getUiDataProfile(
+            new Date('2000-01-01'), new Date('2000-01-01'), 5
+        );
+        expect(result.hours).toHaveLength(24);
+    });
+
+    it('returns 48 UiHourData entries for a two-day period', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-02'), 5
         );
-        expect(result.days).toHaveLength(2);
+        expect(result.hours).toHaveLength(48);
     });
 
-    it('averages temperature correctly across years', async () => {
+    it('averages temperature correctly across years for the 00:00 hour', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        // Jan 1: (-2 + 2) / 2 = 0
-        expect(result.days[0].weather.avgTemp).toBeCloseTo(0);
+        // Jan 1 00:00 UTC: (-2 + 2) / 2 = 0
+        expect(result.hours[0].weather.temp).toBeCloseTo(0);
     });
 
-    it('sets weather description from most recent year', async () => {
+    it('averages minTemp correctly across years', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result.days[0].weather.description).toBe('Clouds');
+        // (-5 + -1) / 2 = -3
+        expect(result.hours[0].weather.minTemp).toBeCloseTo(-3);
+    });
+
+    it('averages maxTemp correctly across years', async () => {
+        const result = await service.getUiDataProfile(
+            new Date('2000-01-01'), new Date('2000-01-01'), 5
+        );
+        // (1 + 5) / 2 = 3
+        expect(result.hours[0].weather.maxTemp).toBeCloseTo(3);
+    });
+
+    it('sets weather description from most recent entry', async () => {
+        const result = await service.getUiDataProfile(
+            new Date('2000-01-01'), new Date('2000-01-01'), 5
+        );
+        expect(result.hours[0].weather.description).toBe('Clouds');
     });
 
     it('averages price correctly across years', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        // Jan 1: (50 + 70) / 2 = 60
-        expect(result.days[0].avgPrice).toBeCloseTo(60);
+        // (50 + 70) / 2 = 60
+        expect(result.hours[0].price).toBeCloseTo(60);
     });
 
-    it('returns days sorted chronologically', async () => {
+    it('returns hours sorted chronologically', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-02'), 5
         );
-        expect(result.days[0].day.getTime()).toBeLessThan(result.days[1].day.getTime());
+        expect(result.hours[0].datetime.getTime()).toBeLessThan(result.hours[1].datetime.getTime());
     });
 
-    it('sets avgPrice to 0 if no price data exists for that day', async () => {
+    it('sets price to 0 if no price data exists for that hour', async () => {
         mockFetch(mockWeatherData, []);
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result.days[0].avgPrice).toBe(0);
+        expect(result.hours[0].price).toBe(0);
     });
 
     it('sets energyDemand to 0 when temperature is above target (20°C)', async () => {
         mockFetch([
-            { date: '2020-01-01', avg_temp: 25, min_temp: 20, max_temp: 30, avg_wind: 5, dominant_weather_main: 'Clear' },
+            { datetime: '2020-01-01T00:00:00Z', temp: 25, temp_min: 20, temp_max: 30, wind_speed: 5, weather_main: 'Clear' },
         ], []);
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result.days[0].energyDemand).toBe(0);
+        expect(result.hours[0].energyDemand).toBe(0);
     });
 
     it('calculates positive energyDemand when temperature is below target', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result.days[0].energyDemand).toBeGreaterThan(0);
+        expect(result.hours[0].energyDemand).toBeGreaterThan(0);
     });
 
-    it('returns empty array if no weather data is available', async () => {
+    it('returns empty hours (all zeros) when no weather data is available', async () => {
         mockFetch([], []);
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        expect(result.days).toEqual([]);
+        expect(result.hours).toHaveLength(24);
+        expect(result.hours[0].weather.temp).toBe(0);
+        expect(result.hours[0].price).toBe(0);
+        expect(result.hours[0].energyDemand).toBe(0);
     });
 });
