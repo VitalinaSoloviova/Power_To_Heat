@@ -115,10 +115,12 @@ export class DataResolver {
         }
         const result = new Map<string, WeatherAvg>()
         for (const [key, group] of groups) {
+            const minTemp = Math.min(...group.map(r => Number(r.temp_min)))
+            const maxTemp = Math.max(...group.map(r => Number(r.temp_max)))
             result.set(key, {
-                temp:        this.average(group.map(r => Number(r.temp))),
-                minTemp:     this.average(group.map(r => Number(r.temp_min))),
-                maxTemp:     this.average(group.map(r => Number(r.temp_max))),
+                temp:        (minTemp + maxTemp) / 2,
+                minTemp,
+                maxTemp,
                 wind:        this.average(group.map(r => Number(r.wind_speed))),
                 description: group[group.length - 1].weather_main,
             })
