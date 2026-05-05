@@ -51,9 +51,9 @@ const SimulationComponent: React.FC = () => {
   const isDischarging = balance < -20 && storageFraction > 0.02;
 
   const productionIntensity = Math.min(1, generatedKw / 800);
-  const productionActive = generatedKw > 30;
+  const productionActive = generatedKw > 15; // Reduced from 30
   const consumptionIntensity = Math.min(1, demandKw / 800);
-  const consumptionActive = demandKw > 30 && (storageFraction > 0.02 || generatedKw > 0);
+  const consumptionActive = demandKw > 15 && (storageFraction > 0.02 || generatedKw > 0); // Reduced from 30
 
   return (
     <Paper
@@ -138,7 +138,7 @@ const SimulationComponent: React.FC = () => {
           <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
               intensity={productionIntensity}
-              active={productionActive}
+              active={true}
               color="#16a34a"
             />
           </Box>
@@ -154,7 +154,7 @@ const SimulationComponent: React.FC = () => {
           <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
               intensity={consumptionIntensity}
-              active={consumptionActive}
+              active={true}
               color="#0ea5e9"
             />
           </Box>

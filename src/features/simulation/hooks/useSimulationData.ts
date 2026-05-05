@@ -73,7 +73,14 @@ export function useSimulationData(range: SimulationRange) {
     const targetCount = POINTS_PER_RANGE[range];
     const stepHours = STEP_HOURS[range];
 
-    if (!hours || hours.length === 0) return [];
+    if (!hours || hours.length === 0) {
+      console.warn(`useSimulationData: No data available for range "${range}". Hours:`, hours);
+      return [];
+    }
+
+    if (hours.length < targetCount) {
+      console.warn(`useSimulationData: Only ${hours.length} hours available, need ${targetCount} for range "${range}"`);
+    }
 
     const slice = hours.slice(0, targetCount);
     const capacity = 1000;
@@ -84,8 +91,8 @@ export function useSimulationData(range: SimulationRange) {
       const expected = current * 0.97;
 
       const hour = h.datetime.getHours();
-      const solar = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)) * 500;
-      const wind = (h.weather.wind ?? 0) * 35;
+      const solar = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)) * 700; // Increased from 500
+      const wind = Math.max(80, (h.weather.wind ?? 6) * 45); // Minimum 80kW, default 6 m/s wind
       const generated = solar + wind;
 
       const energy = { generated, price: h.price };
