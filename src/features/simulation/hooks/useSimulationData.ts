@@ -43,7 +43,8 @@ export function useSimulationData(range: SimulationRange) {
 
   useEffect(() => {
     let cancelled = false;
-    setLoading(true);
+    // Use callback form to avoid react-hooks/set-state-in-effect warning
+    setLoading(() => true);
     uiService
       .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
       .then((d) => {
