@@ -2,7 +2,7 @@ import { Box, Typography } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useColors } from '@theme/useTheme';
 import { getChartSx } from '@theme/colors';
-import type { WeatherRangeForMonth } from '@features/forecast/storageForecastUtils';
+import type { WeatherRangeForMonth } from '@services/UIService';
 
 interface TemperatureChartProps {
   xLabels: string[];

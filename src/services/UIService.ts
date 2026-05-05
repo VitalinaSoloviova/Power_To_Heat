@@ -11,6 +11,13 @@ export type HistoryYears = (typeof HISTORY_OPTIONS)[number];
 export const DEFAULT_STORAGE_LEVEL = 45;
 export const DEFAULT_HISTORY_YEARS: HistoryYears = 5;
 
+export interface WeatherRangeForMonth {
+  month: string;
+  minTemp: number;
+  maxTemp: number;
+  avgTemp: number;
+}
+
 export interface ChartsPeriod {
     start: Date;
     end: Date;
