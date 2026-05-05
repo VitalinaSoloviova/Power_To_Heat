@@ -1,25 +1,25 @@
 # Calculations
 
-TypeScript modules that fetch data from the REST API, aggregate it, and produce the data structures consumed by the UI.
+TypeScript modules that fetch hourly data from the REST API, average it across historical years, and produce the data structures consumed by the UI.
 
 ## Files
 
 | File | Description |
 |------|-------------|
-| `uiCommunication.ts` | `ForecastService` class — fetches and processes data for the UI |
-| `uiDataProfile.ts` | Type definitions for UI data (`UiDayData`, `UiDataProfile`) |
+| `DataResolver.ts` | `DataResolver` class — fetches and processes data for the UI |
+| `uiDataProfile.ts` | Type definitions for UI data (`UiHourData`, `UiDataProfile`) |
 | `CityData.ts` | City configuration used for energy demand calculations |
 
 ---
 
-## ForecastService (`uiCommunication.ts`)
+## DataResolver (`DataResolver.ts`)
 
-The central class of this module. It fetches historical weather and price data from the REST API, averages them across multiple years into calendar-day profiles, and returns a list of `UiDayData` objects ready for the UI.
+The central class of this module. It fetches historical hourly weather and price data from the REST API, groups and averages them per calendar bucket across multiple years, and returns a list of `UiHourData` objects ready for the UI.
 
 ### Constructor
 
 ```ts
-new ForecastService(baseUrl: string)
+new DataResolver(baseUrl: string)
 ```
 
 | Parameter | Description |
@@ -29,45 +29,60 @@ new ForecastService(baseUrl: string)
 ### Main method
 
 ```ts
-getUiDataProfile(periodStart: Date, periodEnd: Date, historicalData: number): Promise<UiDayData[]>
+getUiDataProfile(
+  periodStart: Date,
+  periodEnd: Date,
+  historicalData: number,
+  granularity?: Granularity   // 'daily' (default) | 'hourly'
+): Promise<UiDataProfileResult>
 ```
 
 | Parameter | Description |
 |-----------|-------------|
-| `periodStart` | Start of the period the user selected (day and month are used, year is ignored) |
-| `periodEnd` | End of the period the user selected (day and month are used, year is ignored) |
-| `historicalData` | Number of past years to include (e.g. `5` uses the last 5 complete years) |
+| `periodStart` | Start of the requested period |
+| `periodEnd` | End of the requested period |
+| `historicalData` | Number of past years to average (e.g. `5` uses the last 5 complete years) |
+| `granularity` | `'daily'` — one entry per day (default); `'hourly'` — one entry per hour |
 
-**Returns** an array of `UiDayData` objects, one per calendar day in the period, sorted by date.
+**Returns** `UiDataProfileResult`:
+
+| Field | Description |
+|-------|-------------|
+| `hours` | `UiHourData[]` — one entry per day or hour in the period, sorted ascending |
+| `weatherDates` | Raw date strings of fetched weather rows (used for data coverage calculation) |
+| `priceDates` | Raw date strings of fetched price rows (used for data coverage calculation) |
 
 #### How it works
 
 1. **Date range** — builds a fetch range from `(currentYear - historicalData)` to `(currentYear - 1)`, covering the same calendar period across multiple years.
-2. **Fetch** — calls `/api/weather-profile/range` and `/api/price-profile/range` in parallel.
-3. **Average by calendar day** — groups all fetched rows by month+day (`MM-DD`) and averages the values across years.
-4. **Energy demand** — calculates energy demand per day using the city profile (see below).
-5. **Return** — assembles and returns the sorted `UiDayData[]`.
+2. **Fetch** — calls `/api/weather/range` and `/api/price/range` in parallel.
+3. **Group & average** — groups all fetched rows by calendar bucket (UTC) and averages across years:
+   - `'daily'` → bucket key `MM-DD`, one entry per calendar day
+   - `'hourly'` → bucket key `MM-DD-HH`, one entry per calendar hour
+4. **Temperature range** — `minTemp` = `MIN` of all `temp_min` values in the bucket, `maxTemp` = `MAX` of all `temp_max` values, `temp` = `(minTemp + maxTemp) / 2`.
+5. **Energy demand** — calculated per entry using the city profile (see below).
+6. **Return** — generates every day or hour in the period; entries with no historical data are zero-filled.
 
 ---
 
 ## Data types (`uiDataProfile.ts`)
 
-### `UiDayData`
+### `UiHourData`
 
-Represents a single day in the UI period.
+Represents one entry in the UI period (one hour or one day depending on granularity).
 
 ```ts
-type UiDayData = {
-    day: Date
+type UiHourData = {
+    datetime: Date
     weather: {
-        avgTemp: number
-        minTemp: number
-        maxTemp: number
-        wind: number
-        description: string   // e.g. "clear", "rain", "snow"
+        temp: number        // midpoint temperature in °C: (minTemp + maxTemp) / 2
+        minTemp: number     // minimum temperature across all matching historical entries
+        maxTemp: number     // maximum temperature across all matching historical entries
+        wind: number        // average wind speed in m/s
+        description: string // weather category, e.g. "Clear", "Rain", "Snow"
     }
-    avgPrice: number          // average electricity price in EUR/MWh
-    energyDemand: number      // estimated heating energy demand in kW
+    price: number           // average electricity price in EUR/MWh (0 if unavailable)
+    energyDemand: number    // estimated heating energy demand in kW
 }
 ```
 
@@ -81,7 +96,7 @@ type UiDataProfile = {
         periodStart: Date
         periodEnd: Date
     }
-    period: UiDayData[]
+    period: UiHourData[]
     selectedDay: Date
 }
 ```
@@ -90,7 +105,7 @@ type UiDataProfile = {
 
 ## City configuration (`CityData.ts`)
 
-Used by `ForecastService` to estimate heating energy demand.
+Used by `DataResolver` to estimate heating energy demand.
 
 ```ts
 const city: CityProfile = {
