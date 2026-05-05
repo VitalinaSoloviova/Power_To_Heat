@@ -2,34 +2,22 @@ import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import {
-  DEFAULT_DURATION,
   DEFAULT_HISTORY_YEARS,
   DEFAULT_STORAGE_LEVEL,
-  type Duration,
   type HistoryYears
 } from '@services/UIService';
-import { useBuyRecommendation } from './hooks/useBuyRecommendation';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
-import Header from './components/Header';
 import ControlsBar from './components/ControlsBar';
-import RecommendationSection from './components/RecommendationSection';
 import ComparisonChartsSection from '@features/charts/ComparisonChartsSection';
 
 const StorageForecast = () => {
   const colors = useColors();
 
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
-  const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
 
-  const { recommendation, periodLabel } = useBuyRecommendation({
-    storageLevel,
-    duration,
-    historyYears,
-  });
-
-  const { data: charts, loading: chartsLoading, error: chartsError } =
-    useChartsData(duration, historyYears);
+  const { data: charts, loading: chartsLoading } =
+    useChartsData(historyYears);
 
   const xLabels = charts?.xLabels ?? [];
   const historicalPrices = charts?.hours.map((h) => h.price) ?? [];
@@ -56,32 +44,13 @@ const StorageForecast = () => {
         gap: 2,
       }}
     >
-      <Header historyYears={historyYears} periodLabel={periodLabel} />
-
       <ControlsBar
         storageLevel={storageLevel}
         onStorageLevelChange={setStorageLevel}
-        duration={duration}
-        onDurationChange={setDuration}
         historyYears={historyYears}
         onHistoryYearsChange={setHistoryYears}
       />
 
-      <RecommendationSection
-        decision={recommendation.decision}
-        score={recommendation.score}
-        explanation={recommendation.explanation}
-        currentPrice={recommendation.currentPrice}
-        historicalAvgPrice={recommendation.historicalAvgPrice}
-        forecastAvgPrice={recommendation.forecastAvgPrice}
-        breakdown={recommendation.breakdown}
-      />
-
-      {chartsError && (
-        <Typography sx={{ color: colors.heat, fontSize: 13 }}>
-          Error loading chart data: {chartsError.message}
-        </Typography>
-      )}
       {chartsLoading && !charts && (
         <Typography sx={{ color: colors.textSecondary, fontSize: 13 }}>
           Loading chart data…

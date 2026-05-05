@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Box, Typography, IconButton, Collapse } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type { WeatherRangeForMonth } from '@features/forecast/storageForecastUtils';
+import type { WeatherRangeForMonth } from '@services/UIService';
 import ComparisonChart from './ComparisonChart';
 import TemperatureChart from './TemperatureChart';
 
