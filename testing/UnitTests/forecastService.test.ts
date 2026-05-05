@@ -30,18 +30,32 @@ describe('ForecastService', () => {
         mockFetch();
     });
 
-    it('returns 24 UiHourData entries for a single-day period', async () => {
+    it('returns 24 UiHourData entries for a single-day period (hourly)', async () => {
         const result = await service.getUiDataProfile(
-            new Date('2000-01-01'), new Date('2000-01-01'), 5
+            new Date('2000-01-01'), new Date('2000-01-01'), 5, 'hourly'
         );
         expect(result.hours).toHaveLength(24);
     });
 
-    it('returns 48 UiHourData entries for a two-day period', async () => {
+    it('returns 48 UiHourData entries for a two-day period (hourly)', async () => {
         const result = await service.getUiDataProfile(
-            new Date('2000-01-01'), new Date('2000-01-02'), 5
+            new Date('2000-01-01'), new Date('2000-01-02'), 5, 'hourly'
         );
         expect(result.hours).toHaveLength(48);
+    });
+
+    it('returns 1 UiHourData entry per day for a single-day period (daily)', async () => {
+        const result = await service.getUiDataProfile(
+            new Date('2000-01-01'), new Date('2000-01-01'), 5, 'daily'
+        );
+        expect(result.hours).toHaveLength(1);
+    });
+
+    it('returns 2 UiHourData entries for a two-day period (daily)', async () => {
+        const result = await service.getUiDataProfile(
+            new Date('2000-01-01'), new Date('2000-01-02'), 5, 'daily'
+        );
+        expect(result.hours).toHaveLength(2);
     });
 
     it('averages temperature correctly across years for the 00:00 hour', async () => {
@@ -118,7 +132,7 @@ describe('ForecastService', () => {
     it('returns empty hours (all zeros) when no weather data is available', async () => {
         mockFetch([], []);
         const result = await service.getUiDataProfile(
-            new Date('2000-01-01'), new Date('2000-01-01'), 5
+            new Date('2000-01-01'), new Date('2000-01-01'), 5, 'hourly'
         );
         expect(result.hours).toHaveLength(24);
         expect(result.hours[0].weather.temp).toBe(0);
