@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { getForecastMonths, calculateBuyRecommendation } from '../storageForecastUtils';
-import type { Duration, HistoryYears } from '@services/UIService';
+import type { HistoryYears } from '@services/UIService';
 
 interface UseBuyRecommendationInput {
   storageLevel: number;
