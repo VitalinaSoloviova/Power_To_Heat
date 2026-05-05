@@ -9,6 +9,7 @@ import { useSimulationData } from './hooks/useSimulationData';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRange } from './simulationTypes';
 import StorageIsland from './StorageIsland';
+import { SimulationConfig } from './SimulationConfig';
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
@@ -47,11 +48,13 @@ const SimulationComponent: React.FC = () => {
   const demandKw = point.demand.current;
   const storageFraction = point.storage.level / point.storage.capacity;
   const balance = generatedKw - demandKw;
-  const isCharging = balance > 20;
-  const isDischarging = balance < -20 && storageFraction > 0.02;
+  const { chargeThreshold, dischargeThreshold, maxIntensityKw, storage: storageCfg } =
+    SimulationConfig.THRESHOLDS;
+  const isCharging = balance > chargeThreshold;
+  const isDischarging = balance < dischargeThreshold && storageFraction > storageCfg.empty;
 
-  const productionIntensity = Math.min(1, generatedKw / 800);
-  const consumptionIntensity = Math.min(1, demandKw / 800);
+  const productionIntensity = Math.min(1, generatedKw / maxIntensityKw);
+  const consumptionIntensity = Math.min(1, demandKw / maxIntensityKw);
 
   return (
     <Paper

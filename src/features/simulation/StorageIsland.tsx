@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import type { SimulationPoint } from './simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
+import { SimulationConfig } from './SimulationConfig';
 import { useColors } from '@theme/useTheme';
 
 interface StorageIslandProps {
@@ -70,7 +71,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
         }}
       >
         {/* Energy ambient glow */}
-        {fraction > 0.15 && (
+        {fraction > SimulationConfig.THRESHOLDS.storage.low && (
           <motion.div
             animate={{ opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 3, repeat: Infinity }}
@@ -230,7 +231,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
             />
 
             {/* Glowing energy surface line */}
-            {fraction > 0.02 && (
+            {fraction > SimulationConfig.THRESHOLDS.storage.empty && (
               <motion.line
                 x1={tankX + 30}
                 x2={tankX + tankW - 30}
@@ -245,7 +246,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
             )}
 
             {/* Rising energy sparks */}
-            {fraction > 0.1 &&
+            {fraction > SimulationConfig.THRESHOLDS.storage.low &&
               [0, 1, 2, 3].map((i) => (
                 <motion.circle
                   key={`spark-${i}`}
