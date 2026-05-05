@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
     type ChartsData,
-    type Duration,
     type HistoryYears,
 } from '@services/UIService';
 import { uiService } from '@services/serviceContainer';
@@ -13,11 +12,10 @@ interface UseChartsDataResult {
 }
 
 /**
- * Loads the historical-comparison chart data for the requested duration
- * (in weeks) and number of historical years.
+ * Loads the historical-comparison chart data for the requested
+ * number of historical years.
  */
 export function useChartsData(
-    duration: Duration,
     historyYears: HistoryYears
 ): UseChartsDataResult {
     const [data, setData] = useState<ChartsData | null>(null);
@@ -31,7 +29,7 @@ export function useChartsData(
         setError(null);
 
         uiService
-            .getChartsData(duration, historyYears)
+            .getChartsData(historyYears)
             .then((d) => {
                 if (cancelled) return;
                 setData(d);
@@ -46,7 +44,7 @@ export function useChartsData(
         return () => {
             cancelled = true;
         };
-    }, [duration, historyYears]);
+    }, [historyYears]);
 
     return { data, loading, error };
 }
