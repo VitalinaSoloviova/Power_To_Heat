@@ -48,24 +48,24 @@ describe('ForecastService', () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        // Jan 1 00:00 UTC: (-2 + 2) / 2 = 0
+        // Jan 1 00:00 UTC: (MIN(-5,-1) + MAX(1,5)) / 2 = (-5 + 5) / 2 = 0
         expect(result.hours[0].weather.temp).toBeCloseTo(0);
     });
 
-    it('averages minTemp correctly across years', async () => {
+    it('takes the minimum of all minTemps across years', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        // (-5 + -1) / 2 = -3
-        expect(result.hours[0].weather.minTemp).toBeCloseTo(-3);
+        // MIN(-5, -1) = -5
+        expect(result.hours[0].weather.minTemp).toBeCloseTo(-5);
     });
 
-    it('averages maxTemp correctly across years', async () => {
+    it('takes the maximum of all maxTemps across years', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
-        // (1 + 5) / 2 = 3
-        expect(result.hours[0].weather.maxTemp).toBeCloseTo(3);
+        // MAX(1, 5) = 5
+        expect(result.hours[0].weather.maxTemp).toBeCloseTo(5);
     });
 
     it('sets weather description from most recent entry', async () => {
