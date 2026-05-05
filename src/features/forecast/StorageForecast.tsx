@@ -55,8 +55,6 @@ const StorageForecast = () => {
       <ControlsBar
         storageLevel={storageLevel}
         onStorageLevelChange={setStorageLevel}
-        duration={duration}
-        onDurationChange={setDuration}
         historyYears={historyYears}
         onHistoryYearsChange={setHistoryYears}
       />
