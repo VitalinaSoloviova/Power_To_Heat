@@ -1,35 +1,60 @@
-import { useState } from 'react';
-import { Paper, Box } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Paper, Box, Typography } from '@mui/material';
 import EnergyIsland from './EnergyIsland';
-import Storage from './Storage';
-import City from './City';
+import CityIsland from './CityIsland';
 import EnergyFlow from './EnergyFlow';
+import SimulationSlider from './SimulationSlider';
+import WeatherBackdrop from './WeatherBackdrop';
+import { useSimulationData } from './hooks/useSimulationData';
 import { useColors } from '@theme/useTheme';
-
-interface EnergyState {
-  windProduction: number;
-  solarProduction: number;
-  consumption: number;
-  storageLevel: number;
-}
+import type { SimulationRange } from './simulationTypes';
+import StorageIsland from './StorageIsland';
+import { SimulationConfig } from './SimulationConfig';
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
-  const [state] = useState<EnergyState>({
-    windProduction: 0.65,
-    solarProduction: 0.55,
-    consumption: 0.45,
-    storageLevel: 0.5,
-  });
+  const [range, setRange] = useState<SimulationRange>('day');
+  const [index, setIndex] = useState(0);
+  const { series, loading } = useSimulationData(range);
 
-  const production = (state.windProduction + state.solarProduction) / 2;
-  const balance = production - state.consumption;
-  const isCharging = balance > 0.02;
-  const isDischarging = balance < -0.02 && state.storageLevel > 0.02;  
-  const flow1Active = production > 0.05;
-  const flow1Intensity = Math.min(1, production);
-  const flow2Active = state.consumption > 0.05 && (state.storageLevel > 0.02 || production > 0);
-  const flow2Intensity = Math.min(1, state.consumption);
+  // Reset / clamp the slider when the series length changes.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setIndex((i) => Math.min(i, Math.max(0, series.length - 1)));
+  }, [series.length]);
+
+  const point = series[index] ?? series[0];
+  if (!point) {
+    return (
+      <Paper
+        elevation={0}
+        sx={{
+          mx: 3,
+          mb: 2,
+          p: 4,
+          borderRadius: 3,
+          border: `1px solid ${colors.border}`,
+          color: colors.textSecondary,
+          fontSize: 13,
+        }}
+      >
+        Loading simulation…
+      </Paper>
+    );
+  }
+
+  // Derive flow / charge state from the current frame.
+  const generatedKw = point.energy.generated;
+  const demandKw = point.demand.current;
+  const storageFraction = point.storage.level / point.storage.capacity;
+  const balance = generatedKw - demandKw;
+  const { chargeThreshold, dischargeThreshold, maxIntensityKw, storage: storageCfg } =
+    SimulationConfig.THRESHOLDS;
+  const isCharging = balance > chargeThreshold;
+  const isDischarging = balance < dischargeThreshold && storageFraction > storageCfg.empty;
+
+  const productionIntensity = Math.min(1, generatedKw / maxIntensityKw);
+  const consumptionIntensity = Math.min(1, demandKw / maxIntensityKw);
 
   return (
     <Paper
@@ -39,19 +64,44 @@ const SimulationComponent: React.FC = () => {
         mx: 3,
         mb: 2,
         borderRadius: 3,
-        background: `radial-gradient(ellipse at 30% 30%, ${colors.bgSurface} 0%, ${colors.bgBase} 70%)`,
+        background: colors.bgBase,
         border: `1px solid ${colors.border}`,
         display: 'flex',
         flexDirection: 'column',
         gap: 0,
-        minHeight: 360,
+        minHeight: 600,
         overflow: 'hidden',
       }}
     >
-      
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          px: 3,
+          pt: 2,
+        }}
+      >
+        <Typography
+          sx={{
+            color: colors.textPrimary,
+            fontSize: 18,
+            fontWeight: 700,
+            letterSpacing: 1.2,
+            py: 2,
+            textTransform: 'uppercase',
+          }}
+        >
+          Energy Flow Simulation
+        </Typography>
+        {loading && (
+          <Typography sx={{ color: colors.textMuted, fontSize: 11 }}>
+            Loading data…
+          </Typography>
+        )}
+      </Box>
 
       <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch' }}>
-        {/* Canvas with islands and flows */}
         <Box
           sx={{
             flex: 1,
@@ -60,59 +110,70 @@ const SimulationComponent: React.FC = () => {
             alignItems: 'center',
             justifyContent: 'space-between',
             px: 4,
-            py: 4,
+            py: 3,
             overflow: 'hidden',
           }}
         >
-          {/* subtle dot grid */}
+          {/* Full-width sky / weather behind everything */}
+          <WeatherBackdrop timestamp={point.timestamp} weather={point.weather} />
+
+          {/* subtle dot grid on top of the sky */}
           <Box
             sx={{
               position: 'absolute',
               inset: 0,
+              zIndex: 0,
               backgroundImage:
-                'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.04) 1px, transparent 0)',
+                'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0)',
               backgroundSize: '24px 24px',
               maskImage:
-                'radial-gradient(ellipse at center, black 40%, transparent 80%)',
+                'radial-gradient(ellipse at center, black 40%, transparent 85%)',
+              pointerEvents: 'none',
             }}
           />
 
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <EnergyIsland
-              windProduction={state.windProduction}
-              solarProduction={state.solarProduction}
-            />
+            <EnergyIsland point={point} />
           </Box>
 
-          <Box sx={{ flex: 1, position: 'relative', zIndex: 1 }}>
+          <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
-              intensity={flow1Intensity}
-              active={flow1Active}
-              color="#10b981"
+              intensity={productionIntensity}
+              color="#16a34a"
             />
           </Box>
 
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <Storage
-              storageLevel={state.storageLevel}
+            <StorageIsland
+              point={point}
               isCharging={isCharging}
               isDischarging={isDischarging}
             />
           </Box>
 
-          <Box sx={{ flex: 1, position: 'relative', zIndex: 1 }}>
+          <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
-              intensity={flow2Intensity}
-              active={flow2Active}
-              color="#ec4899"
+              intensity={consumptionIntensity}
+              color="#0ea5e9"
             />
           </Box>
 
           <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <City consumption={state.consumption} />
+            <CityIsland point={point} />
           </Box>
         </Box>
       </Box>
+
+      <SimulationSlider
+        range={range}
+        onRangeChange={(r) => {
+          setRange(r);
+          setIndex(0);
+        }}
+        index={index}
+        onIndexChange={setIndex}
+        series={series}
+      />
     </Paper>
   );
 };

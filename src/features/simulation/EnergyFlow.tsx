@@ -2,7 +2,6 @@ import { motion } from 'framer-motion';
 
 interface EnergyFlowProps {
   intensity: number;        // 0..1
-  active: boolean;
   color?: string;
   particleCount?: number;
   height?: number;
@@ -13,13 +12,13 @@ interface EnergyFlowProps {
  */
 const EnergyFlow: React.FC<EnergyFlowProps> = ({
   intensity,
-  active,
   color = '#10b981',
   particleCount = 4,
   height = 120,
 }) => {
-  const opacity = active ? 0.9 : 0.15;
-  const speed = Math.max(1.2, 4 - intensity * 3);
+  const opacity = Math.max(0.2, 0.3 + intensity * 0.7); // Always visible, brighter with intensity
+  const speed = Math.max(0.8, 6 - intensity * 5); // Slower when low intensity
+  const particleOpacity = Math.max(0.4, intensity); // Particles fade with low intensity
   const d = 'M 0 60 C 40 60, 80 60, 120 60';
 
   return (
@@ -52,26 +51,26 @@ const EnergyFlow: React.FC<EnergyFlowProps> = ({
         style={{ filter: `drop-shadow(0 0 ${4 + intensity * 8}px ${color})` }}
       />
       {/* Animated particles along the path */}
-      {active &&
-        [...Array(particleCount)].map((_, i) => (
-          <motion.circle
-            key={i}
-            r={2.5 + intensity * 2}
-            fill={color}
-            initial={{ offsetDistance: '0%' }}
-            animate={{ offsetDistance: '100%' }}
-            transition={{
-              duration: speed,
-              repeat: Infinity,
-              ease: 'linear',
-              delay: (speed / particleCount) * i,
-            }}
-            style={{
-              offsetPath: `path('${d}')`,
-              filter: `drop-shadow(0 0 6px ${color})`,
-            }}
-          />
-        ))}
+      {[...Array(particleCount)].map((_, i) => (
+        <motion.circle
+          key={i}
+          r={1.5 + intensity * 2}
+          fill={color}
+          opacity={particleOpacity}
+          initial={{ offsetDistance: '0%' }}
+          animate={{ offsetDistance: '100%' }}
+          transition={{
+            duration: speed,
+            repeat: Infinity,
+            ease: 'linear',
+            delay: (speed / particleCount) * i,
+          }}
+          style={{
+            offsetPath: `path('${d}')`,
+            filter: `drop-shadow(0 0 ${2 + intensity * 4}px ${color})`,
+          }}
+        />
+      ))}
     </svg>
   );
 };

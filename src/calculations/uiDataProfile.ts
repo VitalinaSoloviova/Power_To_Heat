@@ -20,13 +20,3 @@ export type UiDataProfile = {
     period: UiHourData[]
     selectedDay: Date
 }
-
-
-export type WeatherDescriptions =
-  | "sunny"
-  | "cloudy"
-  | "rainy"
-  | "snowy"
-  | "windy"
-  | "foggy"
-  | "clear";
