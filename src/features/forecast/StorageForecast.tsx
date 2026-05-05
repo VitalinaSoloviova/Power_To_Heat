@@ -60,12 +60,6 @@ const StorageForecast = () => {
         historyYears={historyYears}
         onHistoryYearsChange={setHistoryYears}
       />
-
-      {chartsError && (
-        <Typography sx={{ color: colors.heat, fontSize: 13 }}>
-          Error loading chart data: {chartsError.message}
-        </Typography>
-      )}
       {chartsLoading && !charts && (
         <Typography sx={{ color: colors.textSecondary, fontSize: 13 }}>
           Loading chart data…

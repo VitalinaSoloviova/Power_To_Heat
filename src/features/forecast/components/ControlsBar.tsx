@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import StorageLevelControl from './StorageLevelControl';
-import DurationControl from './DurationControl';
 import HistoryControl from './HistoryControl';
 import type { Duration, HistoryYears } from '@services/UIService';
 
@@ -24,7 +23,6 @@ const ControlsBar = ({
 }: ControlsBarProps) => (
   <Box sx={{ display: 'flex', gap: 3, flexWrap: 'wrap', alignItems: 'center' }}>
     <StorageLevelControl value={storageLevel} onChange={onStorageLevelChange} />
-    <DurationControl value={duration} onChange={onDurationChange} />
     <HistoryControl value={historyYears} onChange={onHistoryYearsChange} />
   </Box>
 );
