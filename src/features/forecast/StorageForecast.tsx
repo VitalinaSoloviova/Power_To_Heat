@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import { 
+import {
   DEFAULT_DURATION,
-  DEFAULT_HISTORY_YEARS, 
+  DEFAULT_HISTORY_YEARS,
   DEFAULT_STORAGE_LEVEL,
-  type Duration, 
-  type HistoryYears 
+  type Duration,
+  type HistoryYears
 } from '@services/UIService';
 import { useBuyRecommendation } from './hooks/useBuyRecommendation';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
@@ -22,27 +22,24 @@ const StorageForecast = () => {
   const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
 
-  // Recommendation card still uses the legacy MOCK.
   const { recommendation, periodLabel } = useBuyRecommendation({
     storageLevel,
     duration,
     historyYears,
   });
 
-  // Real per-day data for the chart section.
   const { data: charts, loading: chartsLoading, error: chartsError } =
     useChartsData(duration, historyYears);
 
   const xLabels = charts?.xLabels ?? [];
-  const historicalPrices = charts?.days.map((d) => d.avgPrice) ?? [];
-  const historicalDemand = charts?.days.map((d) => d.energyDemand) ?? [];
-  // Weather history for the chart section.
+  const historicalPrices = charts?.hours.map((h) => h.price) ?? [];
+  const historicalDemand = charts?.hours.map((h) => h.energyDemand) ?? [];
   const weatherHistory =
-    charts?.days.map((d) => ({
-      month: d.day.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
-      minTemp: d.weather.minTemp,
-      maxTemp: d.weather.maxTemp,
-      avgTemp: d.weather.avgTemp,
+    charts?.hours.map((h) => ({
+      month: h.datetime.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }),
+      minTemp: h.weather.minTemp,
+      maxTemp: h.weather.maxTemp,
+      avgTemp: h.weather.temp,
     })) ?? [];
 
   return (
@@ -100,9 +97,9 @@ const StorageForecast = () => {
         actualWeatherLastDate={charts?.dataYears.weatherLastDate ?? null}
         actualPriceLastDate={charts?.dataYears.priceLastDate ?? null}
         historicalPrices={historicalPrices}
-        forecastPrices={[]} // Forecast data not implemented yet
+        forecastPrices={[]}
         historicalDemand={historicalDemand}
-        forecastDemand={[]} // Forecast data not implemented yet
+        forecastDemand={[]}
         weatherHistory={weatherHistory}
       />
     </Box>
@@ -110,4 +107,3 @@ const StorageForecast = () => {
 };
 
 export default StorageForecast;
-
