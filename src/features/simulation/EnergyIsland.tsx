@@ -67,22 +67,14 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
             <stop offset="0%"   stopColor="#cbd5e1" />
             <stop offset="100%" stopColor="#475569" />
           </linearGradient>
-          <radialGradient id="grassGradient" cx="0.5" cy="0.4">
-            <stop offset="0%" stopColor="#65a30d" />
-            <stop offset="100%" stopColor="#4d7c0f" />
-          </radialGradient>
-          <linearGradient id="treeGradient" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#22c55e" />
-            <stop offset="100%" stopColor="#166534" />
-          </linearGradient>
         </defs>
 
-        <GroundPatch />
+        <GroundPatch gradientId="pwGrassG" />
 
         {/* background trees */}
-        <Tree x={28} y={148} size={12} />
-        <Tree x={172} y={150} size={10} />
-        <Tree x={18} y={154} size={6} />
+        <Tree x={28} y={148} size={12} gradientId="pwTreeG" />
+        <Tree x={172} y={150} size={10} gradientId="pwTreeG" />
+        <Tree x={18} y={154} size={6} gradientId="pwTreeG" />
 
         {/* Wind turbines */}
         <WindTurbine x={60} y={110} scale={0.9} direction={1} delay={0} spinDuration={spinDuration} />
