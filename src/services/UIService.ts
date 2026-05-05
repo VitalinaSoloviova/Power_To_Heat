@@ -1,6 +1,8 @@
 import type { DataResolver } from "../calculations/DataResolver";
 import type { Granularity } from "../calculations/DataResolver";
 import type { UiHourData } from "../calculations/uiDataProfile";
+import type { Granularity } from "../calculations/DataResolver";
+import type { UiHourData } from "../calculations/uiDataProfile";
 import { DataCoverageCalculator } from "./DataCoverageCalculator";
 import type { DataCoverage } from "./DataCoverageCalculator";
 
@@ -25,9 +27,14 @@ export interface ChartsData {
     /** One entry per hour or day depending on granularity (sorted ascending). */
     hours: UiHourData[];
     /** Pre-formatted labels for the chart x-axis. */
+    /** One entry per hour or day depending on granularity (sorted ascending). */
+    hours: UiHourData[];
+    /** Pre-formatted labels for the chart x-axis. */
     xLabels: string[];
     /** How many years of data were actually available in the DB. */
+    /** How many years of data were actually available in the DB. */
     dataYears: DataCoverage;
+    granularity: Granularity;
     granularity: Granularity;
 }
 
@@ -45,12 +52,16 @@ export class UIService {
         const period = this.buildPeriod(historyYears);
 
         const { hours, weatherDates, priceDates } = await this.resolver.getUiDataProfile(
+        const { hours, weatherDates, priceDates } = await this.resolver.getUiDataProfile(
             period.start,
             period.end,
             historyYears,
             granularity
+            historyYears,
+            granularity
         );
 
+        const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
         const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
 
         const xLabels = hours.map((h) =>
@@ -63,8 +74,19 @@ export class UIService {
                 : h.datetime.toLocaleDateString('en-GB', 
                     { day: '2-digit',
                     month: 'short' })
+        const xLabels = hours.map((h) =>
+            granularity === 'hourly'
+                ? h.datetime.toLocaleString('en-GB', 
+                    { day: '2-digit', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' })
+                : h.datetime.toLocaleDateString('en-GB', 
+                    { day: '2-digit',
+                    month: 'short' })
         );
 
+        return { period, hours, xLabels, dataYears, granularity };
         return { period, hours, xLabels, dataYears, granularity };
     }
 
