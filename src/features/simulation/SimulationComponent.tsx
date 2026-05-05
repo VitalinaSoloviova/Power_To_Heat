@@ -139,7 +139,6 @@ const SimulationComponent: React.FC = () => {
             <EnergyFlow
               intensity={productionIntensity}
               color="#16a34a"
-              startPoint="left"
             />
           </Box>
 
