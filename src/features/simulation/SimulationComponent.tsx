@@ -51,9 +51,7 @@ const SimulationComponent: React.FC = () => {
   const isDischarging = balance < -20 && storageFraction > 0.02;
 
   const productionIntensity = Math.min(1, generatedKw / 800);
-  const productionActive = generatedKw > 15; // Reduced from 30
   const consumptionIntensity = Math.min(1, demandKw / 800);
-  const consumptionActive = demandKw > 15 && (storageFraction > 0.02 || generatedKw > 0); // Reduced from 30
 
   return (
     <Paper
