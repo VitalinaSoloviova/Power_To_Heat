@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { uiService } from '@services/serviceContainer';
 import type { SimulationPoint, SimulationRange } from '../simulationTypes';
 import { stepStorage } from '../storageCalculationUtils';
@@ -41,12 +41,11 @@ export function useSimulationData(range: SimulationRange) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [fetchState, setFetchState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
 
-  const setLoading = useCallback(() => setFetchState('loading'), []);
-
   useEffect(() => {
     let cancelled = false;
     
-    setLoading();
+    // Set loading state and start fetch
+    setFetchState('loading');
     
     uiService
       .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
@@ -73,12 +72,11 @@ export function useSimulationData(range: SimulationRange) {
     const stepHours = STEP_HOURS[range];
 
     if (!hours || hours.length === 0) {
-      console.warn(`useSimulationData: No data available for range "${range}". Hours:`, hours);
       return [];
     }
 
     if (hours.length < targetCount) {
-      console.warn(`useSimulationData: Only ${hours.length} hours available, need ${targetCount} for range "${range}"`);
+      // Use available data even if less than target
     }
 
     const slice = hours.slice(0, targetCount);
