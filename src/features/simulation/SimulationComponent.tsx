@@ -138,8 +138,8 @@ const SimulationComponent: React.FC = () => {
           <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
             <EnergyFlow
               intensity={productionIntensity}
-              active={true}
               color="#16a34a"
+              startPoint="left"
             />
           </Box>
 
