@@ -86,7 +86,7 @@ export class DataResolver {
         const res = await fetch(
             `${this.baseUrl}/api/weather-profile/range?date_from=${from}&date_to=${to}`
         )
-        const raw = await res.json() as any[]
+        const raw = await res.json() as unknown[]
         // Postgres NUMERIC values arrive as strings – coerce to numbers.
         // Postgres timestamps may carry UTC offsets – normalise to local YYYY-MM-DD.
         return raw.map((r) => ({
@@ -105,7 +105,7 @@ export class DataResolver {
         const res = await fetch(
             `${this.baseUrl}/api/price-profile/range?date_from=${from}&date_to=${to}`
         )
-        const raw = await res.json() as any[]
+        const raw = await res.json() as unknown[]
         return raw.map((r) => ({
             date: this.formatDate(new Date(r.date)),
             avg_price: Number(r.avg_price),

@@ -83,7 +83,7 @@ export class UIService {
     private buildPeriod(
         historyYears: HistoryYears
     ): ChartsPeriod {
-        const period = 
+        const days = 30; 
         const start = new Date();
         start.setHours(0, 0, 0, 0);
         const end = new Date(start);
