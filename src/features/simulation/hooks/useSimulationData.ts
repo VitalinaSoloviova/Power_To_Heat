@@ -44,6 +44,8 @@ export function useSimulationData(range: SimulationRange) {
   useEffect(() => {
     let cancelled = false;
     
+    setFetchState('loading');
+    
     uiService
       .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
       .then((d) => {
@@ -60,11 +62,6 @@ export function useSimulationData(range: SimulationRange) {
     return () => {
       cancelled = true;
     };
-  }, [range]);
-
-  // Set loading state when range changes
-  useEffect(() => {
-    setFetchState('loading');
   }, [range]);
 
   const loading = fetchState === 'loading';
