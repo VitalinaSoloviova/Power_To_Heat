@@ -246,7 +246,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
             )}
 
             {/* Rising energy sparks */}
-            {fraction > SimulationConfig.THRESHOLDS.storage.low &&
+            {fraction > SimulationConfig.THRESHOLDS.storage.sparks &&
               [0, 1, 2, 3].map((i) => (
                 <motion.circle
                   key={`spark-${i}`}

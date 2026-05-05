@@ -12,6 +12,7 @@ export class SimulationConfig {
     maxIntensityKw: 800,        // kW for 100% intensity calculation
     storage: {
       empty: 0.02,              // 2% considered "empty"
+      sparks: 0.1,              // 10% minimum for rising spark particles
       low: 0.15,                // 15% considered "low"
       high: 0.7,                // 70% considered "high"
       full: 0.95,               // 95% considered "full"
