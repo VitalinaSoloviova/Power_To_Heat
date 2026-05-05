@@ -22,7 +22,7 @@ const StorageForecast = () => {
 
 
   // Real per-day data for the chart section.
-  const { data: charts, loading: chartsLoading, error: chartsError } =
+  const { data: charts, loading: chartsLoading } =
     useChartsData(duration, historyYears);
 
   const xLabels = charts?.xLabels ?? [];

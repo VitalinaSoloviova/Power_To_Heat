@@ -1,13 +1,11 @@
 import { Box } from '@mui/material';
 import StorageLevelControl from './StorageLevelControl';
 import HistoryControl from './HistoryControl';
-import type { Duration, HistoryYears } from '@services/UIService';
+import type { HistoryYears } from '@services/UIService';
 
 interface ControlsBarProps {
   storageLevel: number;
   onStorageLevelChange: (value: number) => void;
-  duration: Duration;
-  onDurationChange: (value: Duration) => void;
   historyYears: HistoryYears;
   onHistoryYearsChange: (value: HistoryYears) => void;
 }
@@ -16,8 +14,6 @@ interface ControlsBarProps {
 const ControlsBar = ({
   storageLevel,
   onStorageLevelChange,
-  duration,
-  onDurationChange,
   historyYears,
   onHistoryYearsChange,
 }: ControlsBarProps) => (
