@@ -2,10 +2,8 @@ import { useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import { 
-  DEFAULT_DURATION,
   DEFAULT_HISTORY_YEARS, 
   DEFAULT_STORAGE_LEVEL,
-  type Duration, 
   type HistoryYears 
 } from '@services/UIService';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
@@ -16,14 +14,11 @@ const StorageForecast = () => {
   const colors = useColors();
 
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
-  const [duration, setDuration] = useState<Duration>(DEFAULT_DURATION);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
-
-
 
   // Real per-day data for the chart section.
   const { data: charts, loading: chartsLoading } =
-    useChartsData(duration, historyYears);
+    useChartsData(historyYears);
 
   const xLabels = charts?.xLabels ?? [];
   const historicalPrices = charts?.days.map((d) => d.avgPrice) ?? [];
