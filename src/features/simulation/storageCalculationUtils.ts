@@ -37,8 +37,9 @@ export const stepStorage = ({
   previous,
   stepHours,
 }: StorageInputs): StorageOutput => {
-  // Use expected demand as a forecast hint: charge a bit faster when
-  // the next hours are expected to be heavier.
+  // Use expected demand as a forecast hint: when the next hours are
+  // expected to be heavier, reduce the current balance a bit to make
+  // charging less aggressive / discharging more aggressive.
   const forecastBias = (demand.expected - demand.current) * 0.15;
   const balanceKw = energy.generated - demand.current - forecastBias;
   const flow = balanceKw * stepHours; // kWh
