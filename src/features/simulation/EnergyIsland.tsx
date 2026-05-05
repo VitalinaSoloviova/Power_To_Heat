@@ -4,7 +4,7 @@ import WindTurbine from './WindTurbine';
 import SolarPanel from './SolarPanel';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
-import { sunElevation, phaseForTimestamp } from './simulationUtils';
+import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from './simulationUtils';
 
 interface EnergyIslandProps {
   point: SimulationPoint;
@@ -22,7 +22,7 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
   const cloud = Math.min(1, Math.max(0, point.weather.cloudCoverage ?? 0));
   const elevation = sunElevation(point.timestamp);
   const phase = phaseForTimestamp(point.timestamp);
-  const isNight = phase === 'night';
+  const isNight = NIGHT_PHASES.has(phase);
 
   const spinDuration = Math.max(0.6, 5 - wind * 0.3);
   const activity = Math.min(1, point.energy.generated / 800);

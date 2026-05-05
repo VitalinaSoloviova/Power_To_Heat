@@ -3,7 +3,7 @@ import IslandFrame from './IslandFrame';
 import GroundPatch from './GroundPatch';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
-import { phaseForTimestamp } from './simulationUtils';
+import { phaseForTimestamp, brightnessForPhase } from './simulationUtils';
 
 interface CityIslandProps {
   point: SimulationPoint;
@@ -118,7 +118,7 @@ const Building: React.FC<{ b: BuildingSpec; demand: number; dim: number; gradId:
 const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
   const demandLevel = Math.min(1, point.demand.current / 800);
   const phase = phaseForTimestamp(point.timestamp);
-  const dim = phase === 'night' ? 0.55 : phase === 'dusk' ? 0.8 : 1;
+  const dim = brightnessForPhase(phase);
 
   return (
     <IslandFrame
