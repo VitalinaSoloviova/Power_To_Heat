@@ -1,6 +1,8 @@
 import type { UiHourData } from "./uiDataProfile";
 import { type CityProfile, city } from "./CityData";
 
+export type Granularity = 'hourly' | 'daily'
+
 type WeatherRow = {
     datetime: string
     temp: number
@@ -25,6 +27,8 @@ type WeatherAvg = {
 
 export interface UiDataProfileResult {
     hours: UiHourData[]
+    weatherDates: string[]
+    priceDates: string[]
 }
 
 export class DataResolver {
@@ -37,7 +41,8 @@ export class DataResolver {
     public async getUiDataProfile(
         periodStart: Date,
         periodEnd: Date,
-        historicalData: number
+        historicalData: number,
+        granularity: Granularity = 'daily'
     ): Promise<UiDataProfileResult> {
         const currentYear = new Date().getFullYear()
         const yearFrom = currentYear - historicalData
@@ -49,29 +54,42 @@ export class DataResolver {
             this.fetchPrice(this.formatDate(dateFrom), this.formatDate(dateTo)),
         ])
 
-        const weatherByHour = this.groupAndAverageWeather(weatherData)
-        const priceByHour   = this.groupAndAveragePrice(priceData)
+        const weatherDates = weatherData.map(r => r.datetime.slice(0, 10))
+        const priceDates   = priceData.map(r => r.datetime.slice(0, 10))
 
-        const hours: UiHourData[] = this.eachHour(periodStart, periodEnd).map((dt) => {
-            const key     = this.calendarHourKey(dt)
-            const weather = weatherByHour.get(key)
-            const price   = priceByHour.get(key) ?? 0
-            if (!weather) return this.emptyHour(dt)
-            return {
-                datetime: dt,
-                weather: {
-                    temp:        weather.temp,
-                    minTemp:     weather.minTemp,
-                    maxTemp:     weather.maxTemp,
-                    wind:        weather.wind,
-                    description: weather.description,
-                },
-                price,
-                energyDemand: this.getEnergyDemand(weather.temp, city),
-            }
-        })
+        if (granularity === 'hourly') {
+            const weatherMap = this.groupWeather(weatherData, this.calendarHourKey.bind(this))
+            const priceMap   = this.groupPrice(priceData,   this.calendarHourKey.bind(this))
+            const hours = this.eachHour(periodStart, periodEnd).map((dt) => {
+                const key = this.calendarHourKey(dt)
+                return this.buildEntry(dt, weatherMap.get(key), priceMap.get(key) ?? 0)
+            })
+            return { hours, weatherDates, priceDates }
+        } else {
+            const weatherMap = this.groupWeather(weatherData, this.calendarDayKey.bind(this))
+            const priceMap   = this.groupPrice(priceData,   this.calendarDayKey.bind(this))
+            const hours = this.eachDay(periodStart, periodEnd).map((dt) => {
+                const key = this.calendarDayKey(dt)
+                return this.buildEntry(dt, weatherMap.get(key), priceMap.get(key) ?? 0)
+            })
+            return { hours, weatherDates, priceDates }
+        }
+    }
 
-        return { hours }
+    private buildEntry(dt: Date, weather: WeatherAvg | undefined, price: number): UiHourData {
+        if (!weather) return this.emptyHour(dt)
+        return {
+            datetime: dt,
+            weather: {
+                temp:        weather.temp,
+                minTemp:     weather.minTemp,
+                maxTemp:     weather.maxTemp,
+                wind:        weather.wind,
+                description: weather.description,
+            },
+            price,
+            energyDemand: this.getEnergyDemand(weather.temp, city),
+        }
     }
 
     private formatDate(date: Date): string {
@@ -81,7 +99,7 @@ export class DataResolver {
         return `${y}-${m}-${d}`
     }
 
-    // "MM-DD-HH" — calendar key for grouping across years (UTC to match DB timestamps)
+    // "MM-DD-HH" — one bucket per calendar hour (UTC)
     private calendarHourKey(dt: Date): string {
         const m  = String(dt.getUTCMonth() + 1).padStart(2, '0')
         const d  = String(dt.getUTCDate()).padStart(2, '0')
@@ -89,27 +107,50 @@ export class DataResolver {
         return `${m}-${d}-${hh}`
     }
 
+    // "MM-DD" — one bucket per calendar day (UTC)
+    private calendarDayKey(dt: Date): string {
+        const m = String(dt.getUTCMonth() + 1).padStart(2, '0')
+        const d = String(dt.getUTCDate()).padStart(2, '0')
+        return `${m}-${d}`
+    }
+
     private eachHour(start: Date, end: Date): Date[] {
-        const hours: Date[] = []
+        const result: Date[] = []
         const cursor = new Date(start)
         cursor.setUTCHours(0, 0, 0, 0)
         const last = new Date(end)
         last.setUTCHours(23, 0, 0, 0)
         while (cursor <= last) {
-            hours.push(new Date(cursor))
+            result.push(new Date(cursor))
             cursor.setUTCHours(cursor.getUTCHours() + 1)
         }
-        return hours
+        return result
+    }
+
+    private eachDay(start: Date, end: Date): Date[] {
+        const result: Date[] = []
+        const cursor = new Date(start)
+        cursor.setUTCHours(0, 0, 0, 0)
+        const last = new Date(end)
+        last.setUTCHours(0, 0, 0, 0)
+        while (cursor <= last) {
+            result.push(new Date(cursor))
+            cursor.setUTCDate(cursor.getUTCDate() + 1)
+        }
+        return result
     }
 
     private average(values: number[]): number {
         return values.reduce((s, v) => s + v, 0) / values.length
     }
 
-    private groupAndAverageWeather(rows: WeatherRow[]): Map<string, WeatherAvg> {
+    private groupWeather(
+        rows: WeatherRow[],
+        keyFn: (dt: Date) => string
+    ): Map<string, WeatherAvg> {
         const groups = new Map<string, WeatherRow[]>()
         for (const row of rows) {
-            const key = this.calendarHourKey(new Date(row.datetime))
+            const key = keyFn(new Date(row.datetime))
             if (!groups.has(key)) groups.set(key, [])
             groups.get(key)!.push(row)
         }
@@ -128,10 +169,13 @@ export class DataResolver {
         return result
     }
 
-    private groupAndAveragePrice(rows: PriceRow[]): Map<string, number> {
+    private groupPrice(
+        rows: PriceRow[],
+        keyFn: (dt: Date) => string
+    ): Map<string, number> {
         const groups = new Map<string, number[]>()
         for (const row of rows) {
-            const key = this.calendarHourKey(new Date(row.datetime))
+            const key = keyFn(new Date(row.datetime))
             if (!groups.has(key)) groups.set(key, [])
             groups.get(key)!.push(Number(row.price_eur_mwhe))
         }

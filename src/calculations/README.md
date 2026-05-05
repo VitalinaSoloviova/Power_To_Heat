@@ -6,7 +6,7 @@ TypeScript modules that fetch hourly data from the REST API, average it across h
 
 | File | Description |
 |------|-------------|
-| `DataResolver.ts` | `DataResolver` class — fetches and processes hourly data for the UI |
+| `DataResolver.ts` | `DataResolver` class — fetches and processes data for the UI |
 | `uiDataProfile.ts` | Type definitions for UI data (`UiHourData`, `UiDataProfile`) |
 | `CityData.ts` | City configuration used for energy demand calculations |
 
@@ -14,7 +14,7 @@ TypeScript modules that fetch hourly data from the REST API, average it across h
 
 ## DataResolver (`DataResolver.ts`)
 
-The central class of this module. It fetches historical hourly weather and price data from the REST API, averages them per calendar hour (`MM-DD-HH`) across multiple years, and returns a list of `UiHourData` objects ready for the UI.
+The central class of this module. It fetches historical hourly weather and price data from the REST API, groups and averages them per calendar bucket across multiple years, and returns a list of `UiHourData` objects ready for the UI.
 
 ### Constructor
 
@@ -29,7 +29,12 @@ new DataResolver(baseUrl: string)
 ### Main method
 
 ```ts
-getUiDataProfile(periodStart: Date, periodEnd: Date, historicalData: number): Promise<UiDataProfileResult>
+getUiDataProfile(
+  periodStart: Date,
+  periodEnd: Date,
+  historicalData: number,
+  granularity?: Granularity   // 'daily' (default) | 'hourly'
+): Promise<UiDataProfileResult>
 ```
 
 | Parameter | Description |
@@ -37,16 +42,26 @@ getUiDataProfile(periodStart: Date, periodEnd: Date, historicalData: number): Pr
 | `periodStart` | Start of the requested period |
 | `periodEnd` | End of the requested period |
 | `historicalData` | Number of past years to average (e.g. `5` uses the last 5 complete years) |
+| `granularity` | `'daily'` — one entry per day (default); `'hourly'` — one entry per hour |
 
-**Returns** `{ hours: UiHourData[] }` — one entry per hour in the period, sorted ascending.
+**Returns** `UiDataProfileResult`:
+
+| Field | Description |
+|-------|-------------|
+| `hours` | `UiHourData[]` — one entry per day or hour in the period, sorted ascending |
+| `weatherDates` | Raw date strings of fetched weather rows (used for data coverage calculation) |
+| `priceDates` | Raw date strings of fetched price rows (used for data coverage calculation) |
 
 #### How it works
 
 1. **Date range** — builds a fetch range from `(currentYear - historicalData)` to `(currentYear - 1)`, covering the same calendar period across multiple years.
 2. **Fetch** — calls `/api/weather/range` and `/api/price/range` in parallel.
-3. **Average by calendar hour** — groups all fetched rows by `MM-DD-HH` (UTC) and averages values across years.
-4. **Energy demand** — calculates heating energy demand per hour using the city profile.
-5. **Return** — generates every hour in the period; hours with no historical data get zero-filled entries.
+3. **Group & average** — groups all fetched rows by calendar bucket (UTC) and averages across years:
+   - `'daily'` → bucket key `MM-DD`, one entry per calendar day
+   - `'hourly'` → bucket key `MM-DD-HH`, one entry per calendar hour
+4. **Temperature range** — `minTemp` = `MIN` of all `temp_min` values in the bucket, `maxTemp` = `MAX` of all `temp_max` values, `temp` = `(minTemp + maxTemp) / 2`.
+5. **Energy demand** — calculated per entry using the city profile (see below).
+6. **Return** — generates every day or hour in the period; entries with no historical data are zero-filled.
 
 ---
 
@@ -54,20 +69,20 @@ getUiDataProfile(periodStart: Date, periodEnd: Date, historicalData: number): Pr
 
 ### `UiHourData`
 
-Represents a single hour in the UI period.
+Represents one entry in the UI period (one hour or one day depending on granularity).
 
 ```ts
 type UiHourData = {
     datetime: Date
     weather: {
-        temp: number       // average temperature in °C
-        minTemp: number    // average of hourly min temperatures in °C
-        maxTemp: number    // average of hourly max temperatures in °C
-        wind: number       // average wind speed in m/s
+        temp: number        // midpoint temperature in °C: (minTemp + maxTemp) / 2
+        minTemp: number     // minimum temperature across all matching historical entries
+        maxTemp: number     // maximum temperature across all matching historical entries
+        wind: number        // average wind speed in m/s
         description: string // weather category, e.g. "Clear", "Rain", "Snow"
     }
-    price: number          // average electricity price in EUR/MWh (0 if unavailable)
-    energyDemand: number   // estimated heating energy demand in kW
+    price: number           // average electricity price in EUR/MWh (0 if unavailable)
+    energyDemand: number    // estimated heating energy demand in kW
 }
 ```
 

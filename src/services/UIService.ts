@@ -1,5 +1,6 @@
 import type { DataResolver } from "../calculations/DataResolver";
-import type { UiDayData } from "../calculations/uiDataProfile";
+import type { Granularity } from "../calculations/DataResolver";
+import type { UiHourData } from "../calculations/uiDataProfile";
 import { DataCoverageCalculator } from "./DataCoverageCalculator";
 import type { DataCoverage } from "./DataCoverageCalculator";
 
@@ -19,15 +20,15 @@ export interface ChartsPeriod {
     historyYears: HistoryYears;
 }
 
-/** Bundle the charts UI section receives in one call. */
 export interface ChartsData {
     period: ChartsPeriod;
-    /** One entry per day in the period (sorted ascending). */
-    days: UiDayData[];
-    /** Pre-formatted day labels for the chart x-axis (e.g. "04 May"). */
+    /** One entry per hour or day depending on granularity (sorted ascending). */
+    hours: UiHourData[];
+    /** Pre-formatted labels for the chart x-axis. */
     xLabels: string[];
-    /** How many years of data were actually available in the DB (may be < historyYears). */
+    /** How many years of data were actually available in the DB. */
     dataYears: DataCoverage;
+    granularity: Granularity;
 }
 
 export class UIService {
@@ -37,48 +38,35 @@ export class UIService {
         this.resolver = resolver;
     }
 
-    /**
-     * Single entry point for the charts section.
-     * Returns one data point per day for the requested duration,
-     * each point being the N-year historical average for that calendar day.
-     */
     public async getChartsData(
-        historyYears: HistoryYears
+        historyYears: HistoryYears,
+        granularity: Granularity = 'daily'
     ): Promise<ChartsData> {
         const period = this.buildPeriod(historyYears);
 
-        const {
-            days: profile,
-            weatherDates,
-            priceDates,
-        } = await this.resolver.getUiDataProfile(
+        const { hours, weatherDates, priceDates } = await this.resolver.getUiDataProfile(
             period.start,
             period.end,
-            historyYears
+            historyYears,
+            granularity
         );
 
-        const coverage = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
+        const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
 
-        // DataResolver returns days keyed by calendar (MM-DD) with year=2000.
-        // Map them back onto every actual day in our requested period.
-        const profileByKey = new Map(
-            profile.map((d) => [this.calendarKey(d.day), d])
+        const xLabels = hours.map((h) =>
+            granularity === 'hourly'
+                ? h.datetime.toLocaleString('en-GB', 
+                    { day: '2-digit', 
+                    month: 'short', 
+                    hour: '2-digit', 
+                    minute: '2-digit' })
+                : h.datetime.toLocaleDateString('en-GB', 
+                    { day: '2-digit',
+                    month: 'short' })
         );
 
-        const wantedDays = this.eachDay(period.start, period.end);
-        const days: UiDayData[] = wantedDays.map((day) => {
-            const found = profileByKey.get(this.calendarKey(day));
-            return found ? { ...found, day } : this.emptyDay(day);
-        });
-
-        const xLabels = wantedDays.map((d) =>
-            d.toLocaleDateString("en-GB", { day: "2-digit", month: "short" })
-        );
-
-        return { period, days, xLabels, dataYears: coverage };
+        return { period, hours, xLabels, dataYears, granularity };
     }
-
-    // Period helpers
 
     private buildPeriod(
         historyYears: HistoryYears
@@ -88,7 +76,7 @@ export class UIService {
         start.setHours(0, 0, 0, 0);
         const end = new Date(start);
         end.setDate(end.getDate() + days - 1);
-        return { start, end, historyYears };
+        return { start, end, durationWeeks: duration, historyYears };
     }
 
     private eachDay(start: Date, end: Date): Date[] {
