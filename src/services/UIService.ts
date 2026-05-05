@@ -5,7 +5,7 @@ import { DataCoverageCalculator } from "./DataCoverageCalculator";
 import type { DataCoverage } from "./DataCoverageCalculator";
 
 /** Number of past years to average for the historical comparison. */
-export const HISTORY_OPTIONS = [5, 10, 20, 30, 50] as const;
+export const HISTORY_OPTIONS = [1, 5, 10, 20, 30, 50] as const;
 export type HistoryYears = (typeof HISTORY_OPTIONS)[number];
 
 export const DEFAULT_STORAGE_LEVEL = 45;
