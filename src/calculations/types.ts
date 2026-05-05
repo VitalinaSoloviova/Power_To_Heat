@@ -21,3 +21,7 @@ export type WeatherDescriptions =
   | "windy"
   | "foggy"
   | "clear";
+
+export type WeatherRangeForMonth = {
+  month: string;
+} & Pick<WeatherData, 'minTemp' | 'maxTemp' | 'avgTemp'>;
