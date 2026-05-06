@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { useColors } from '@theme/useTheme';
 
 interface IslandFrameProps {
   children: ReactNode;
@@ -11,7 +10,6 @@ interface IslandFrameProps {
   accent?: string;
   size?: number;
   topSlot?: ReactNode;
-  badge?: ReactNode;
   delay?: number;
 }
 
@@ -25,10 +23,8 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
   accent = '#94a3b8',
   size = 220,
   topSlot,
-  badge,
   delay = 0,
 }) => {
-  const colors = useColors();
   const glow = Math.min(1, Math.max(0, activity));
 
   return (
@@ -45,6 +41,21 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
         gap: 8,
       }}
     >
+      {/* Label at the top */}
+      <div style={{ textAlign: 'center', marginBottom: 8 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 1.4,
+            color: accent,
+            textTransform: 'uppercase',
+          }}
+        >
+          {label}
+        </div>
+      </div>
+
       {topSlot && <div style={{ minHeight: size * 0.55 }}>{topSlot}</div>}
 
       <motion.div
@@ -127,25 +138,6 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
           {children}
         </div>
       </motion.div>
-
-      <div style={{ textAlign: 'center', marginTop: 6 }}>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 1.4,
-            color: accent,
-            textTransform: 'uppercase',
-          }}
-        >
-          {label}
-        </div>
-        {badge && (
-          <div style={{ fontSize: 12, color: colors.textSecondary, marginTop: 2 }}>
-            {badge}
-          </div>
-        )}
-      </div>
     </motion.div>
   );
 };
