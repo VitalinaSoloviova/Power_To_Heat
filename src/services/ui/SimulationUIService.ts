@@ -9,6 +9,9 @@ import type {
   SimulationInput,
 } from '../types/SimulationTypes';
 
+// Re-export types for external consumption
+export type { SimulationData, SimulationInput };
+
 /**
  * Orchestrates the simulation-related resolvers and returns a single
  * SimulationData object containing generation, demand and storage series.
