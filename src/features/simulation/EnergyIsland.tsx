@@ -34,7 +34,6 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
       accent={ACCENT}
       activity={activity}
       size={size}
-      badge={`${Math.round(point.energy.generated)} kW · ${point.weather.temperature.toFixed(1)}°C`}
     >
       <svg
         width="100%"

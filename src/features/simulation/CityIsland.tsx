@@ -122,11 +122,10 @@ const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
 
   return (
     <IslandFrame
-      label="Demand"
+      label="City"
       accent={ACCENT}
       activity={demandLevel}
       size={size}
-      badge={`${Math.round(point.demand.current)} kW · ${point.energy.price.toFixed(0)} €/MWh`}
       delay={0.1}
     >
       <svg

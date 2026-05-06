@@ -5,14 +5,23 @@ import type { WeatherRangeForMonth } from '@services/UIService';
 import ComparisonChart from './ComparisonChart';
 import TemperatureChart from './TemperatureChart';
 
-interface ComparisonChartsSectionProps {
-  xLabels: string[];
+/**
+ * First/last date and number of years available for the historical price
+ * and weather data feeding the comparison charts.
+ */
+export interface DateCoverage {
   actualPriceYears: number;
   actualWeatherYears: number;
-  actualWeatherFirstDate: string | null;
   actualPriceFirstDate: string | null;
-  actualWeatherLastDate: string | null;
+  actualWeatherFirstDate: string | null;
   actualPriceLastDate: string | null;
+  actualWeatherLastDate: string | null;
+}
+
+interface ComparisonChartsSectionProps {
+  /** Coverage metadata used to build the chart subtitles. */
+  coverage: DateCoverage;
+  xLabels: string[];
   historicalPrices: number[];
   forecastPrices: number[];
   historicalDemand: number[];
@@ -22,13 +31,8 @@ interface ComparisonChartsSectionProps {
 }
 
 const ComparisonChartsSection = ({
+  coverage,
   xLabels,
-  actualPriceYears,
-  actualWeatherYears,
-  actualWeatherFirstDate,
-  actualPriceFirstDate,
-  actualWeatherLastDate,
-  actualPriceLastDate,
   historicalPrices,
   forecastPrices,
   historicalDemand,
@@ -37,6 +41,15 @@ const ComparisonChartsSection = ({
 }: ComparisonChartsSectionProps) => {
   const colors = useColors();
   const [isExpanded, setIsExpanded] = useState(true);
+
+  const {
+    actualPriceYears,
+    actualWeatherYears,
+    actualPriceFirstDate,
+    actualWeatherFirstDate,
+    actualPriceLastDate,
+    actualWeatherLastDate,
+  } = coverage;
 
   const getYearText = (value: string | null): string => {
     if (!value) return 'unknown';

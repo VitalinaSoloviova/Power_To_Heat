@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import {
   DEFAULT_HISTORY_YEARS,
-  DEFAULT_STORAGE_LEVEL,
   type HistoryYears
 } from '@services/UIService';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
@@ -13,7 +12,6 @@ import ComparisonChartsSection from '@features/charts/ComparisonChartsSection';
 const StorageForecast = () => {
   const colors = useColors();
 
-  const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
 
   const { data: charts, loading: chartsLoading } =
@@ -45,8 +43,6 @@ const StorageForecast = () => {
       }}
     >
       <ControlsBar
-        storageLevel={storageLevel}
-        onStorageLevelChange={setStorageLevel}
         historyYears={historyYears}
         onHistoryYearsChange={setHistoryYears}
       />
@@ -59,12 +55,14 @@ const StorageForecast = () => {
 
       <ComparisonChartsSection
         xLabels={xLabels}
-        actualPriceYears={charts?.dataYears.priceYears ?? historyYears}
-        actualWeatherYears={charts?.dataYears.weatherYears ?? historyYears}
-        actualWeatherFirstDate={charts?.dataYears.weatherFirstDate ?? null}
-        actualPriceFirstDate={charts?.dataYears.priceFirstDate ?? null}
-        actualWeatherLastDate={charts?.dataYears.weatherLastDate ?? null}
-        actualPriceLastDate={charts?.dataYears.priceLastDate ?? null}
+        coverage={{
+          actualPriceYears: charts?.dataYears.priceYears ?? historyYears,
+          actualWeatherYears: charts?.dataYears.weatherYears ?? historyYears,
+          actualWeatherFirstDate: charts?.dataYears.weatherFirstDate ?? null,
+          actualPriceFirstDate: charts?.dataYears.priceFirstDate ?? null,
+          actualWeatherLastDate: charts?.dataYears.weatherLastDate ?? null,
+          actualPriceLastDate: charts?.dataYears.priceLastDate ?? null,
+        }}
         historicalPrices={historicalPrices}
         forecastPrices={[]}
         historicalDemand={historicalDemand}
