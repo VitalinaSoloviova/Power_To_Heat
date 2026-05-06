@@ -6,7 +6,6 @@ import SolarPanel from './SolarPanel';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
 import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from './simulationUtils';
-import { useColors } from '@theme/useTheme';
 
 interface EnergyIslandProps {
   point: SimulationPoint;
@@ -20,7 +19,6 @@ const ACCENT = '#86efac';
  * front. Turbine spin is driven by wind; panel sheen pulses with the sun.
  */
 const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
-  const colors = useColors();
   const wind = point.weather.windSpeed ?? 0;
   const cloud = Math.min(1, Math.max(0, point.weather.cloudCoverage ?? 0));
   const elevation = sunElevation(point.timestamp);
@@ -35,8 +33,8 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
     <IslandBadge
       label="Power Generation"
       text={`${Math.round(point.energy.generated)} kW`}
-      color={colors.energy}
-      bgColor={colors.energySoft}
+      color="#ffffff"
+      bgColor="rgba(16, 185, 129, 0.9)"
       icon="⚡"
     />
   );

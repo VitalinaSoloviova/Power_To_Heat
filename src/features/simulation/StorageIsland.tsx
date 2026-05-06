@@ -3,7 +3,6 @@ import IslandBadge from './IslandBadge';
 import type { SimulationPoint } from './simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
-import { useColors } from '@theme/useTheme';
 
 interface StorageIslandProps {
   point: SimulationPoint;
@@ -33,15 +32,14 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
   isDischarging,
   size = 250,
 }) => {
-  const colors = useColors();
   const fraction = storageFraction(point.storage);
 
   const badgeComponent = (
     <IslandBadge
       label="Battery Level"
       text={`${Math.round(point.storage.level)} / ${point.storage.capacity} kWh · ${(fraction * 100).toFixed(0)}%`}
-      color={colors.storage}
-      bgColor={'rgba(168, 85, 247, 0.15)'}
+      color="#ffffff"
+      bgColor="rgba(168, 85, 247, 0.9)"
       icon="🔋"
     />
   );

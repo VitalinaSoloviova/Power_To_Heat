@@ -62,9 +62,10 @@ const IslandBadge: React.FC<IslandBadgeProps> = ({
         display: 'flex',
         alignItems: 'center',
         gap: 6,
-        fontSize: 11,
-        fontWeight: 600,
+        fontSize: 12,
+        fontWeight: 800,
         color: defaultColor,
+        textShadow: `0 1px 2px rgba(0,0,0,0.3)`,
       }}>
         {icon && (
           <div style={{ 

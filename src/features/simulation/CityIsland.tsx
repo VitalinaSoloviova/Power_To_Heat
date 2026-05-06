@@ -5,7 +5,6 @@ import GroundPatch from './GroundPatch';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
 import { phaseForTimestamp, brightnessForPhase } from './simulationUtils';
-import { useColors } from '@theme/useTheme';
 
 interface CityIslandProps {
   point: SimulationPoint;
@@ -118,7 +117,6 @@ const Building: React.FC<{ b: BuildingSpec; demand: number; dim: number; gradId:
  * windows that brighten with consumption and dim with time of day.
  */
 const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
-  const colors = useColors();
   const demandLevel = Math.min(1, point.demand.current / 800);
   const phase = phaseForTimestamp(point.timestamp);
   const dim = brightnessForPhase(phase);
@@ -127,8 +125,8 @@ const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
     <IslandBadge
       label="Demand"
       text={`${Math.round(point.demand.current)} kW`}
-      color={colors.cool}
-      bgColor={colors.coolSoft}
+      color="#ffffff"
+      bgColor="rgba(59, 130, 246, 0.9)"
       icon="🏙️"
     />
   );
