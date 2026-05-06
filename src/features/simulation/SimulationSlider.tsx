@@ -1,24 +1,29 @@
 import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type { SimulationPoint, SimulationRange } from './simulationTypes';
+import type {
+  PlaybackControl,
+  SimulationRange,
+  TimelineControl,
+} from './simulationTypes';
 import { formatTimestamp } from './simulationUtils';
+import SimulationButton from './SimulationButton';
 
 interface SimulationSliderProps {
-  range: SimulationRange;
-  onRangeChange: (r: SimulationRange) => void;
-  index: number;
-  onIndexChange: (i: number) => void;
-  series: SimulationPoint[];
+  /** Range / index / series state. */
+  timeline: TimelineControl;
+  /** Play / pause + speed selection. */
+  playback: PlaybackControl;
+  /** Disabled while data is still loading. */
+  loading: boolean;
 }
 
 const SimulationSlider: React.FC<SimulationSliderProps> = ({
-  range,
-  onRangeChange,
-  index,
-  onIndexChange,
-  series,
+  timeline,
+  playback,
+  loading,
 }) => {
   const colors = useColors();
+  const { range, onRangeChange, index, onIndexChange, series } = timeline;
   const point = series[index];
   const max = Math.max(0, series.length - 1);
 
@@ -59,8 +64,14 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
       >
         <ToggleButton value="day">Day</ToggleButton>
         <ToggleButton value="week">Week</ToggleButton>
-        <ToggleButton value="month">Month</ToggleButton>
+        <ToggleButton value="month" disabled>Month</ToggleButton>
       </ToggleButtonGroup>
+
+      <SimulationButton
+        playback={playback}
+        loading={loading}
+        hasData={series.length > 0}
+      />
 
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Slider
