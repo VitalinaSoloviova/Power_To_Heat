@@ -1,10 +1,12 @@
 import IslandFrame from './IslandFrame';
+import IslandBadge from './IslandBadge';
 import GroundPatch from './GroundPatch';
 import WindTurbine from './WindTurbine';
 import SolarPanel from './SolarPanel';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
 import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from './simulationUtils';
+import { useColors } from '@theme/useTheme';
 
 interface EnergyIslandProps {
   point: SimulationPoint;
@@ -18,6 +20,7 @@ const ACCENT = '#86efac';
  * front. Turbine spin is driven by wind; panel sheen pulses with the sun.
  */
 const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
+  const colors = useColors();
   const wind = point.weather.windSpeed ?? 0;
   const cloud = Math.min(1, Math.max(0, point.weather.cloudCoverage ?? 0));
   const elevation = sunElevation(point.timestamp);
@@ -28,13 +31,23 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
   const activity = Math.min(1, point.energy.generated / 800);
   const sunPower = (1 - cloud * 0.6) * (isNight ? 0.1 : 0.55 + elevation * 0.45);
 
+  const badgeComponent = (
+    <IslandBadge
+      label="Power Generation"
+      text={`${Math.round(point.energy.generated)} kW`}
+      color={colors.energy}
+      bgColor={colors.energySoft}
+      icon="⚡"
+    />
+  );
+
   return (
     <IslandFrame
       label="Power"
       accent={ACCENT}
       activity={activity}
       size={size}
-      badge={`${Math.round(point.energy.generated)} kW · ${point.weather.temperature.toFixed(1)}°C`}
+      badge={badgeComponent}
     >
       <svg
         width="100%"

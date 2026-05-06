@@ -1,9 +1,11 @@
 import { motion } from 'framer-motion';
 import IslandFrame from './IslandFrame';
+import IslandBadge from './IslandBadge';
 import GroundPatch from './GroundPatch';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
 import { phaseForTimestamp, brightnessForPhase } from './simulationUtils';
+import { useColors } from '@theme/useTheme';
 
 interface CityIslandProps {
   point: SimulationPoint;
@@ -116,17 +118,28 @@ const Building: React.FC<{ b: BuildingSpec; demand: number; dim: number; gradId:
  * windows that brighten with consumption and dim with time of day.
  */
 const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
+  const colors = useColors();
   const demandLevel = Math.min(1, point.demand.current / 800);
   const phase = phaseForTimestamp(point.timestamp);
   const dim = brightnessForPhase(phase);
 
+  const badgeComponent = (
+    <IslandBadge
+      label="Demand"
+      text={`${Math.round(point.demand.current)} kW`}
+      color={colors.cool}
+      bgColor={colors.coolSoft}
+      icon="🏙️"
+    />
+  );
+
   return (
     <IslandFrame
-      label="Demand"
+      label="City"
       accent={ACCENT}
       activity={demandLevel}
       size={size}
-      badge={`${Math.round(point.demand.current)} kW · ${point.energy.price.toFixed(0)} €/MWh`}
+      badge={badgeComponent}
       delay={0.1}
     >
       <svg

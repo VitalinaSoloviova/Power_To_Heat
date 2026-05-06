@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import IslandBadge from './IslandBadge';
 import type { SimulationPoint } from './simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
@@ -35,6 +36,16 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
   const colors = useColors();
   const fraction = storageFraction(point.storage);
 
+  const badgeComponent = (
+    <IslandBadge
+      label="Battery Level"
+      text={`${Math.round(point.storage.level)} / ${point.storage.capacity} kWh · ${(fraction * 100).toFixed(0)}%`}
+      color={colors.storage}
+      bgColor={'rgba(168, 85, 247, 0.15)'}
+      icon="🔋"
+    />
+  );
+
   // Tank silhouette in viewBox 200x260
   const tankX = 25;
   const tankW = 150;
@@ -58,6 +69,22 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
         gap: 12,
       }}
     >
+      {/* Label at the top */}
+      <div style={{ textAlign: 'center', marginBottom: 8 }}>
+        <div
+          style={{
+            fontSize: 12,
+            fontWeight: 700,
+            letterSpacing: 1.6,
+            color: ENERGY_HIGH,
+            textTransform: 'uppercase',
+            textShadow: `0 0 8px ${ENERGY_GLOW}`,
+          }}
+        >
+          Energy Storage
+        </div>
+      </div>
+
       <motion.div
         animate={{ y: [0, -3, 0] }}
         transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
@@ -359,33 +386,9 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
          </svg>
       </motion.div>
 
+      {/* Badge at the bottom */}
       <div style={{ textAlign: 'center', marginTop: 4 }}>
-        <div
-          style={{
-            fontSize: 12,
-            fontWeight: 700,
-            letterSpacing: 1.6,
-            color: ENERGY_HIGH,
-            textTransform: 'uppercase',
-            marginBottom: 4,
-            textShadow: `0 0 8px ${ENERGY_GLOW}`,
-          }}
-        >
-          Energy Storage
-        </div>
-        <div
-          style={{
-            fontSize: 12,
-            color: colors.textSecondary,
-            background: 'rgba(0,0,0,0.18)',
-            padding: '4px 10px',
-            borderRadius: 6,
-            border: `1px solid ${colors.border}`,
-            display: 'inline-block',
-          }}
-        >
-          {Math.round(point.storage.level)} / {point.storage.capacity} kWh · {(fraction * 100).toFixed(0)}%
-        </div>
+        {badgeComponent}
       </div>
     </motion.div>
   );

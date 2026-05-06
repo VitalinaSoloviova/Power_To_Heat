@@ -45,6 +45,21 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
         gap: 8,
       }}
     >
+      {/* Label at the top */}
+      <div style={{ textAlign: 'center', marginBottom: 8 }}>
+        <div
+          style={{
+            fontSize: 11,
+            fontWeight: 700,
+            letterSpacing: 1.4,
+            color: accent,
+            textTransform: 'uppercase',
+          }}
+        >
+          {label}
+        </div>
+      </div>
+
       {topSlot && <div style={{ minHeight: size * 0.55 }}>{topSlot}</div>}
 
       <motion.div
@@ -128,24 +143,12 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
         </div>
       </motion.div>
 
-      <div style={{ textAlign: 'center', marginTop: 6 }}>
-        <div
-          style={{
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: 1.4,
-            color: accent,
-            textTransform: 'uppercase',
-          }}
-        >
-          {label}
+      {/* Badge at the bottom */}
+      {badge && (
+        <div style={{ textAlign: 'center', marginTop: 6 }}>
+          {badge}
         </div>
-        {badge && (
-          <div style={{ fontSize: 12, color: colors.textSecondary, marginTop: 2 }}>
-            {badge}
-          </div>
-        )}
-      </div>
+      )}
     </motion.div>
   );
 };
