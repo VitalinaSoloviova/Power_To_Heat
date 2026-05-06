@@ -1,21 +1,35 @@
-import type { SimulationInput, UIData } from '../types/SimulationTypes';
+import type {
+  SimulationInput,
+  UIData,
+  SimulationData,
+  ChartData,
+} from '../types/SimulationTypes';
+
 import { SimulationUIService } from './SimulationUIService';
 import { ChartUIService } from './ChartUIService';
 
-/**
- * Top-level UI service. Single entry point for the UI layer to
- * fetch every piece of data it needs in one call.
- */
 export class UIService {
+  private readonly simulationUIService: SimulationUIService;
+  private readonly chartUIService: ChartUIService;
+
   constructor(
-    private readonly simulationService = new SimulationUIService(),
-    private readonly chartService = new ChartUIService(),
-  ) {}
+    simulationUIService = new SimulationUIService(),
+    chartUIService = new ChartUIService(),
+  ) {
+    this.simulationUIService = simulationUIService;
+    this.chartUIService = chartUIService;
+  }
 
   public getUIData(input: SimulationInput): UIData {
-    const simulationData = this.simulationService.getSimulationData(input);
-    const chartData = this.chartService.getChartData(simulationData);
+    const simulationData: SimulationData =
+      this.simulationUIService.getSimulationData(input);
 
-    return { simulationData, chartData };
+    const chartData: ChartData =
+      this.chartUIService.getChartData(simulationData);
+
+    return {
+      simulationData,
+      chartData,
+    };
   }
 }
