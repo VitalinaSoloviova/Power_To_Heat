@@ -1,41 +1,31 @@
 import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type { SimulationPoint, SimulationRange } from './simulationTypes';
+import type {
+  PlaybackControl,
+  SimulationRange,
+  TimelineControl,
+} from './simulationTypes';
 import { formatTimestamp } from './simulationUtils';
 import SimulationButton from './SimulationButton';
 
 interface SimulationSliderProps {
-  range: SimulationRange;
-  onRangeChange: (r: SimulationRange) => void;
-  index: number;
-  onIndexChange: (i: number) => void;
-  series: SimulationPoint[];
+  /** Range / index / series state. */
+  timeline: TimelineControl;
+  /** Play / pause + speed selection. */
+  playback: PlaybackControl;
+  /** Disabled while data is still loading. */
   loading: boolean;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-  speedMultiplier: number;
-  onSpeedMultiplierChange: (multiplier: number) => void;
 }
 
 const SimulationSlider: React.FC<SimulationSliderProps> = ({
-  range,
-  onRangeChange,
-  index,
-  onIndexChange,
-  series,
+  timeline,
+  playback,
   loading,
-  isPlaying,
-  onTogglePlay,
-  speedMultiplier,
-  onSpeedMultiplierChange,
 }) => {
   const colors = useColors();
+  const { range, onRangeChange, index, onIndexChange, series } = timeline;
   const point = series[index];
   const max = Math.max(0, series.length - 1);
-
-  const handleIndexChange = (i: number) => {
-    onIndexChange(i);
-  };
 
   return (
     <Box
@@ -77,14 +67,11 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
        {/* <ToggleButton value="month">Month</ToggleButton> */}
       </ToggleButtonGroup>
 
-      <SimulationButton 
-          loading={loading}
-          isPlaying={isPlaying}
-          onTogglePlay={onTogglePlay}
-          hasData={series.length > 0}
-          speedMultiplier={speedMultiplier}
-          onSpeedMultiplierChange={onSpeedMultiplierChange}
-        />
+      <SimulationButton
+        playback={playback}
+        loading={loading}
+        hasData={series.length > 0}
+      />
 
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Slider
@@ -92,7 +79,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
           min={0}
           max={max}
           step={1}
-          onChange={(_, v) => handleIndexChange(Array.isArray(v) ? v[0] : v)}
+          onChange={(_, v) => onIndexChange(Array.isArray(v) ? v[0] : v)}
           sx={{
             color: colors.primary,
             '& .MuiSlider-rail': { opacity: 0.3 },

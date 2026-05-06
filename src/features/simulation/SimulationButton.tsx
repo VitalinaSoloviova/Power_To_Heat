@@ -1,24 +1,23 @@
 import { Box, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import { useColors } from '@theme/useTheme';
+import type { PlaybackControl } from './simulationTypes';
 
 interface SimulationButtonProps {
+  /** Play / pause + speed selection. */
+  playback: PlaybackControl;
+  /** Disabled while the underlying data is still loading. */
   loading: boolean;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
+  /** Disabled when there are no frames to play. */
   hasData: boolean;
-  speedMultiplier: number;
-  onSpeedMultiplierChange: (multiplier: number) => void;
 }
 
-const SimulationButton: React.FC<SimulationButtonProps> = ({ 
-  loading, 
-  isPlaying, 
-  onTogglePlay, 
+const SimulationButton: React.FC<SimulationButtonProps> = ({
+  playback,
+  loading,
   hasData,
-  speedMultiplier,
-  onSpeedMultiplierChange,
 }) => {
   const colors = useColors();
+  const { isPlaying, onTogglePlay, speedMultiplier, onSpeedMultiplierChange } = playback;
 
   return (
     <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}> 

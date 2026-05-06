@@ -2,36 +2,28 @@ import { Box } from '@mui/material';
 import SimulationSlider from './SimulationSlider';
 import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
 import { useColors } from '@theme/useTheme';
-import type { SimulationRange, SimulationPoint } from './simulationTypes';
+import type {
+  PlaybackControl,
+  StorageControl,
+  TimelineControl,
+} from './simulationTypes';
 
 interface SimulationControlsProps {
-  currentStoragePercent: number;
-  onStorageChange: (val: number) => void;
-  range: SimulationRange;
-  onRangeChange: (r: SimulationRange) => void;
-  index: number;
-  onIndexChange: (i: number) => void;
-  series: SimulationPoint[];
+  /** Storage-level slider state. */
+  storage: StorageControl;
+  /** Range / index / series state for the timeline slider. */
+  timeline: TimelineControl;
+  /** Play / pause + speed selection. */
+  playback: PlaybackControl;
+  /** Disabled while data is still loading. */
   loading: boolean;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-  speedMultiplier: number;
-  onSpeedMultiplierChange: (multiplier: number) => void;
 }
 
 const SimulationControls: React.FC<SimulationControlsProps> = ({
-  currentStoragePercent,
-  onStorageChange,
-  range,
-  onRangeChange,
-  index,
-  onIndexChange,
-  series,
+  storage,
+  timeline,
+  playback,
   loading,
-  isPlaying,
-  onTogglePlay,
-  speedMultiplier,
-  onSpeedMultiplierChange,
 }) => {
   const colors = useColors();
 
@@ -50,19 +42,15 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           bgcolor: colors.bgCard,
         }}
       >
-        <StorageLevelControl value={currentStoragePercent} onChange={onStorageChange} />
+        <StorageLevelControl
+          value={storage.currentStoragePercent}
+          onChange={storage.onStorageChange}
+        />
       </Box>
       <SimulationSlider
-        range={range}
-        onRangeChange={onRangeChange}
-        index={index}
-        onIndexChange={onIndexChange}
-        series={series}
+        timeline={timeline}
+        playback={playback}
         loading={loading}
-        isPlaying={isPlaying}
-        onTogglePlay={onTogglePlay}
-        speedMultiplier={speedMultiplier}
-        onSpeedMultiplierChange={onSpeedMultiplierChange}
       />
     </>
   );

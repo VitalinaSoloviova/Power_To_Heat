@@ -99,24 +99,30 @@ const SimulationComponent: React.FC = () => {
 
       <SimulationScene point={point} />
 
-      <SimulationControls 
-        currentStoragePercent={currentStoragePercent}
-        onStorageChange={handleStorageLevelChange}
-        range={range}
-        onRangeChange={(r) => {
-          setRange(r);
-          setIndex(0);
-        }}
-        index={index}
-        onIndexChange={(i) => {
-          setIndex(i);
-        }}
-        series={series}
+      <SimulationControls
         loading={loading}
-        isPlaying={isPlaying}
-        onTogglePlay={toggleSimulation}
-        speedMultiplier={speedMultiplier}
-        onSpeedMultiplierChange={setSpeedMultiplier}
+        storage={{
+          currentStoragePercent,
+          onStorageChange: handleStorageLevelChange,
+        }}
+        timeline={{
+          range,
+          onRangeChange: (r) => {
+            setRange(r);
+            setIndex(0);
+          },
+          index,
+          onIndexChange: (i) => {
+            setIndex(i);
+          },
+          series,
+        }}
+        playback={{
+          isPlaying,
+          onTogglePlay: toggleSimulation,
+          speedMultiplier,
+          onSpeedMultiplierChange: setSpeedMultiplier,
+        }}
       />
     </Paper>
   );

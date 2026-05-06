@@ -44,3 +44,33 @@ export interface SimulationFrame {
   total: number;
   range: SimulationRange;
 }
+
+// ---------------------------------------------------------------------------
+// Shared control prop groups for the simulation UI.
+// These let SimulationComponent / SimulationControls / SimulationSlider /
+// SimulationButton share a single, named contract instead of forwarding
+// 8–12 individual props through every layer.
+// ---------------------------------------------------------------------------
+
+/** Play / pause + speed selection for the auto-simulation loop. */
+export interface PlaybackControl {
+  isPlaying: boolean;
+  onTogglePlay: () => void;
+  speedMultiplier: number;
+  onSpeedMultiplierChange: (multiplier: number) => void;
+}
+
+/** Time-range selection and current frame index of the simulation slider. */
+export interface TimelineControl {
+  range: SimulationRange;
+  onRangeChange: (r: SimulationRange) => void;
+  index: number;
+  onIndexChange: (i: number) => void;
+  series: SimulationPoint[];
+}
+
+/** Storage level slider (battery start-of-day percentage). */
+export interface StorageControl {
+  currentStoragePercent: number;
+  onStorageChange: (val: number) => void;
+}

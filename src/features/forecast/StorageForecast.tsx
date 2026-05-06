@@ -55,12 +55,14 @@ const StorageForecast = () => {
 
       <ComparisonChartsSection
         xLabels={xLabels}
-        actualPriceYears={charts?.dataYears.priceYears ?? historyYears}
-        actualWeatherYears={charts?.dataYears.weatherYears ?? historyYears}
-        actualWeatherFirstDate={charts?.dataYears.weatherFirstDate ?? null}
-        actualPriceFirstDate={charts?.dataYears.priceFirstDate ?? null}
-        actualWeatherLastDate={charts?.dataYears.weatherLastDate ?? null}
-        actualPriceLastDate={charts?.dataYears.priceLastDate ?? null}
+        coverage={{
+          actualPriceYears: charts?.dataYears.priceYears ?? historyYears,
+          actualWeatherYears: charts?.dataYears.weatherYears ?? historyYears,
+          actualWeatherFirstDate: charts?.dataYears.weatherFirstDate ?? null,
+          actualPriceFirstDate: charts?.dataYears.priceFirstDate ?? null,
+          actualWeatherLastDate: charts?.dataYears.weatherLastDate ?? null,
+          actualPriceLastDate: charts?.dataYears.priceLastDate ?? null,
+        }}
         historicalPrices={historicalPrices}
         forecastPrices={[]}
         historicalDemand={historicalDemand}
