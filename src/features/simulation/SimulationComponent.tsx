@@ -20,7 +20,7 @@ const SimulationComponent: React.FC = () => {
   const [range, setRange] = useState<SimulationRange>('day');
   const [index, setIndex] = useState(0);
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
-  const { series, loading } = useSimulationData(range);
+  const { series, loading } = useSimulationData(range, storageLevel);
 
   // Reset / clamp the slider when the series length changes.
   useEffect(() => {
@@ -30,6 +30,7 @@ const SimulationComponent: React.FC = () => {
 
   const handleStorageLevelChange = (value: number) => {
     setStorageLevel(value);
+    setIndex(0);
   };
 
   const point = series[index] ?? series[0];

@@ -37,7 +37,7 @@ const normalizeWeatherCondition = (
  * Builds a `SimulationPoint[]` series from the real chart data exposed
  * by `UIService`. Returns an empty array while loading or on error.
  */
-export function useSimulationData(range: SimulationRange) {
+export function useSimulationData(range: SimulationRange, initialStoragePercent: number) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
 
@@ -78,9 +78,10 @@ export function useSimulationData(range: SimulationRange) {
 
     const slice = hours.slice(0, targetCount);
     const capacity = 1000;
-    let level = capacity * 0.5;
+    const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
+    let level = capacity * (clampedInitialStoragePercent / 100);
 
-    return slice.map((h) => {
+    return slice.map((h, pointIndex) => {
       const current = h.energyDemand;
       const expected = current * 0.97;
 
@@ -91,12 +92,14 @@ export function useSimulationData(range: SimulationRange) {
 
       const energy = { generated, price: h.price };
       const demand = { current, expected };
-      const { storage } = stepStorage({
-        energy,
-        demand,
-        previous: { level, capacity },
-        stepHours,
-      });
+      const storage = pointIndex === 0
+        ? { level, capacity }
+        : stepStorage({
+            energy,
+            demand,
+            previous: { level, capacity },
+            stepHours,
+          }).storage;
       level = storage.level;
 
       return {
@@ -113,7 +116,7 @@ export function useSimulationData(range: SimulationRange) {
         storage,
       };
     });
-  }, [hours, range]);
+  }, [hours, range, initialStoragePercent]);
 
   return { series, loading };
 }
