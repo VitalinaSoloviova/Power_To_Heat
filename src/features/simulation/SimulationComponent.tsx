@@ -14,6 +14,7 @@ const SimulationComponent: React.FC = () => {
   const [index, setIndex] = useState(0);
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [speedMultiplier, setSpeedMultiplier] = useState(1);
   const { series, loading } = useSimulationData(range, storageLevel);
 
   // Reset / clamp the slider when the series length changes.
@@ -29,26 +30,29 @@ const SimulationComponent: React.FC = () => {
   };
 
   const toggleSimulation = useCallback(() => {
-    setIsPlaying(!isPlaying);
-  }, [isPlaying]);
+    setIsPlaying(prev => !prev);
+  }, []);
 
-  // Auto-simulation: advance index every 4 seconds when playing
+  // Auto-simulation: advance index every 0.8 second when playing
   useEffect(() => {
     if (!isPlaying || series.length === 0) return;
+
+    const baseInterval = 800;
+    const intervalTime = baseInterval / speedMultiplier;
 
     const interval = setInterval(() => {
       setIndex(current => {
         const next = current + 1;
         if (next >= series.length) {
-          setIsPlaying(false); // Stop at the end
+          setIsPlaying(false);
           return current;
         }
         return next;
       });
-    }, 4000); // 4 seconds per step
+    }, intervalTime);
 
     return () => clearInterval(interval);
-  }, [isPlaying, series.length]);
+  }, [isPlaying, series.length, speedMultiplier]);
 
   const point = series[index] ?? series[0];
   if (!point) {
@@ -91,9 +95,6 @@ const SimulationComponent: React.FC = () => {
     >
       <SimulationHeader 
         loading={loading}
-        isPlaying={isPlaying}
-        onTogglePlay={toggleSimulation}
-        hasData={series.length > 0}
       />
 
       <SimulationScene point={point} />
@@ -105,14 +106,17 @@ const SimulationComponent: React.FC = () => {
         onRangeChange={(r) => {
           setRange(r);
           setIndex(0);
-          setIsPlaying(false);
         }}
         index={index}
         onIndexChange={(i) => {
           setIndex(i);
-          setIsPlaying(false);
         }}
         series={series}
+        loading={loading}
+        isPlaying={isPlaying}
+        onTogglePlay={toggleSimulation}
+        speedMultiplier={speedMultiplier}
+        onSpeedMultiplierChange={setSpeedMultiplier}
       />
     </Paper>
   );

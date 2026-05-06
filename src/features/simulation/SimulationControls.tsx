@@ -12,6 +12,11 @@ interface SimulationControlsProps {
   index: number;
   onIndexChange: (i: number) => void;
   series: SimulationPoint[];
+  loading: boolean;
+  isPlaying: boolean;
+  onTogglePlay: () => void;
+  speedMultiplier: number;
+  onSpeedMultiplierChange: (multiplier: number) => void;
 }
 
 const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -21,7 +26,12 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   onRangeChange,
   index,
   onIndexChange,
-  series
+  series,
+  loading,
+  isPlaying,
+  onTogglePlay,
+  speedMultiplier,
+  onSpeedMultiplierChange,
 }) => {
   const colors = useColors();
 
@@ -48,6 +58,11 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         index={index}
         onIndexChange={onIndexChange}
         series={series}
+        loading={loading}
+        isPlaying={isPlaying}
+        onTogglePlay={onTogglePlay}
+        speedMultiplier={speedMultiplier}
+        onSpeedMultiplierChange={onSpeedMultiplierChange}
       />
     </>
   );

@@ -2,6 +2,7 @@ import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography } from '@mui/m
 import { useColors } from '@theme/useTheme';
 import type { SimulationPoint, SimulationRange } from './simulationTypes';
 import { formatTimestamp } from './simulationUtils';
+import SimulationButton from './SimulationButton';
 
 interface SimulationSliderProps {
   range: SimulationRange;
@@ -9,6 +10,11 @@ interface SimulationSliderProps {
   index: number;
   onIndexChange: (i: number) => void;
   series: SimulationPoint[];
+  loading: boolean;
+  isPlaying: boolean;
+  onTogglePlay: () => void;
+  speedMultiplier: number;
+  onSpeedMultiplierChange: (multiplier: number) => void;
 }
 
 const SimulationSlider: React.FC<SimulationSliderProps> = ({
@@ -17,10 +23,19 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
   index,
   onIndexChange,
   series,
+  loading,
+  isPlaying,
+  onTogglePlay,
+  speedMultiplier,
+  onSpeedMultiplierChange,
 }) => {
   const colors = useColors();
   const point = series[index];
   const max = Math.max(0, series.length - 1);
+
+  const handleIndexChange = (i: number) => {
+    onIndexChange(i);
+  };
 
   return (
     <Box
@@ -62,13 +77,22 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
        {/* <ToggleButton value="month">Month</ToggleButton> */}
       </ToggleButtonGroup>
 
+      <SimulationButton 
+          loading={loading}
+          isPlaying={isPlaying}
+          onTogglePlay={onTogglePlay}
+          hasData={series.length > 0}
+          speedMultiplier={speedMultiplier}
+          onSpeedMultiplierChange={onSpeedMultiplierChange}
+        />
+
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Slider
           value={index}
           min={0}
           max={max}
           step={1}
-          onChange={(_, v) => onIndexChange(Array.isArray(v) ? v[0] : v)}
+          onChange={(_, v) => handleIndexChange(Array.isArray(v) ? v[0] : v)}
           sx={{
             color: colors.primary,
             '& .MuiSlider-rail': { opacity: 0.3 },

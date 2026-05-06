@@ -1,18 +1,12 @@
-import { Box, Typography, IconButton } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 
 interface SimulationHeaderProps {
   loading: boolean;
-  isPlaying: boolean;
-  onTogglePlay: () => void;
-  hasData: boolean;
 }
 
 const SimulationHeader: React.FC<SimulationHeaderProps> = ({ 
-  loading, 
-  isPlaying, 
-  onTogglePlay, 
-  hasData 
+  loading
 }) => {
   const colors = useColors();
 
@@ -44,24 +38,7 @@ const SimulationHeader: React.FC<SimulationHeaderProps> = ({
             Loading data…
           </Typography>
         )}
-        <IconButton
-          onClick={onTogglePlay}
-          disabled={loading || !hasData}
-          sx={{
-            color: isPlaying ? colors.danger : colors.primary,
-            border: `1px solid ${isPlaying ? colors.danger : colors.primary}`,
-            borderRadius: 2,
-            px: 2,
-            py: 0.5,
-            fontSize: 12,
-            fontWeight: 600,
-            '&:hover': {
-              backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.primary}15`,
-            },
-          }}
-        >
-          {isPlaying ? '⏸️ Stop' : '▶️ Auto'}
-        </IconButton>
+        
       </Box>
     </Box>
   );
