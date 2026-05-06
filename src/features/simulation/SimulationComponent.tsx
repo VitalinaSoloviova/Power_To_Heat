@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { Paper, Box, Typography } from '@mui/material';
+import { useEffect, useState, useCallback } from 'react';
+import { Paper, Box, Typography, IconButton } from '@mui/material';
 import EnergyIsland from './EnergyIsland';
 import CityIsland from './CityIsland';
 import EnergyFlow from './EnergyFlow';
@@ -20,6 +20,7 @@ const SimulationComponent: React.FC = () => {
   const [range, setRange] = useState<SimulationRange>('day');
   const [index, setIndex] = useState(0);
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
+  const [isPlaying, setIsPlaying] = useState(false);
   const { series, loading } = useSimulationData(range, storageLevel);
 
   // Reset / clamp the slider when the series length changes.
@@ -31,7 +32,30 @@ const SimulationComponent: React.FC = () => {
   const handleStorageLevelChange = (value: number) => {
     setStorageLevel(value);
     setIndex(0);
+    setIsPlaying(false); // Stop simulation when changing storage level
   };
+
+  const toggleSimulation = useCallback(() => {
+    setIsPlaying(!isPlaying);
+  }, [isPlaying]);
+
+  // Auto-simulation: advance index every 4 seconds when playing
+  useEffect(() => {
+    if (!isPlaying || series.length === 0) return;
+
+    const interval = setInterval(() => {
+      setIndex(current => {
+        const next = current + 1;
+        if (next >= series.length) {
+          setIsPlaying(false); // Stop at the end
+          return current;
+        }
+        return next;
+      });
+    }, 4000); // 4 seconds per step
+
+    return () => clearInterval(interval);
+  }, [isPlaying, series.length]);
 
   const point = series[index] ?? series[0];
   if (!point) {
@@ -105,11 +129,31 @@ const SimulationComponent: React.FC = () => {
         >
           Energy Flow Simulation
         </Typography>
-        {loading && (
-          <Typography sx={{ color: colors.textMuted, fontSize: 11 }}>
-            Loading data…
-          </Typography>
-        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          {loading && (
+            <Typography sx={{ color: colors.textMuted, fontSize: 11 }}>
+              Loading data…
+            </Typography>
+          )}
+          <IconButton
+            onClick={toggleSimulation}
+            disabled={loading || series.length === 0}
+            sx={{
+              color: isPlaying ? colors.danger : colors.primary,
+              border: `1px solid ${isPlaying ? colors.danger : colors.primary}`,
+              borderRadius: 2,
+              px: 2,
+              py: 0.5,
+              fontSize: 12,
+              fontWeight: 600,
+              '&:hover': {
+                backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.primary}15`,
+              },
+            }}
+          >
+            {isPlaying ? '⏸️ Stop' : '▶️ Auto'}
+          </IconButton>
+        </Box>
       </Box>
 
       <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch' }}>
@@ -194,9 +238,13 @@ const SimulationComponent: React.FC = () => {
         onRangeChange={(r) => {
           setRange(r);
           setIndex(0);
+          setIsPlaying(false); // Stop auto-simulation when changing range
         }}
         index={index}
-        onIndexChange={setIndex}
+        onIndexChange={(i) => {
+          setIndex(i);
+          setIsPlaying(false); // Stop auto-simulation when manually changing index
+        }}
         series={series}
       />
 
