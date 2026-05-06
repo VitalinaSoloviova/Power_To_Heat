@@ -130,9 +130,9 @@ export class DataResolver {
     private eachDay(start: Date, end: Date): Date[] {
         const result: Date[] = []
         const cursor = new Date(start)
-        cursor.setUTCHours(0, 0, 0, 0)
+        cursor.setUTCHours(12, 0, 0, 0)
         const last = new Date(end)
-        last.setUTCHours(0, 0, 0, 0)
+        last.setUTCHours(12, 0, 0, 0)
         while (cursor <= last) {
             result.push(new Date(cursor))
             cursor.setUTCDate(cursor.getUTCDate() + 1)

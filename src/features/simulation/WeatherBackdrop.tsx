@@ -90,7 +90,7 @@ const interpolateSky = (hour: number) => {
  */
 const WeatherBackdrop: React.FC<WeatherBackdropProps> = ({ timestamp, weather }) => {
   const date = new Date(timestamp);
-  const h = date.getHours() + date.getMinutes() / 60;
+  const h = date.getUTCHours() + date.getUTCMinutes() / 60;
   const phase = phaseForTimestamp(timestamp);
   const isNight = NIGHT_PHASES.has(phase);
 
@@ -158,6 +158,11 @@ const WeatherBackdrop: React.FC<WeatherBackdropProps> = ({ timestamp, weather })
         <radialGradient id="vignette" cx="50%" cy="55%" r="75%">
           <stop offset="65%" stopColor="rgba(0,0,0,0)" />
           <stop offset="100%" stopColor="rgba(2,6,23,0.5)" />
+        </radialGradient>
+        <radialGradient id="drop-grad" cx="30%" cy="25%" r="75%">
+          <stop offset="0%"   stopColor="rgba(240,249,255,0.98)" />
+          <stop offset="45%"  stopColor="rgba(147,197,253,0.82)" />
+          <stop offset="100%" stopColor="rgba(59,130,246,0.60)"  />
         </radialGradient>
       </defs>
 
@@ -247,27 +252,55 @@ const WeatherBackdrop: React.FC<WeatherBackdropProps> = ({ timestamp, weather })
         </>
       )}
 
-      {/* rain */}
-      {isRain &&
-        [...Array(50)].map((_, i) => {
-          const x = (i * 2.1) % 100;
-          const delay = (i * 0.07) % 1.4;
-          return (
-            <motion.line
-              key={i}
-              x1={x}
-              x2={x - 0.6}
-              y1={20}
-              y2={23}
-              stroke="#7dd3fc"
-              strokeOpacity={0.7}
-              strokeWidth={0.25}
-              strokeLinecap="round"
-              animate={{ y1: [20, 60], y2: [23, 63], opacity: [0, 0.8, 0] }}
-              transition={{ duration: 1.2, repeat: Infinity, delay }}
-            />
-          );
-        })}
+      {/* rain teardrops */}
+      {isRain && [...Array(32)].map((_, i) => {
+        const x = (i * 3.2 + Math.sin(i * 1.1) * 4) % 96 + 2;
+        const sz = 0.28 + (i % 4) * 0.07;
+        const speed = 1.2 + (i % 5) * 0.25;
+        const delay = (i * 0.15) % speed;
+        const startY = -(3 + (i % 6) * 2);
+        return (
+          <motion.g
+            key={i}
+            animate={{ y: [startY, 65] }}
+            transition={{ duration: speed, repeat: Infinity, delay, ease: 'easeIn' }}
+          >
+            <g transform={`translate(${x}, 0) scale(${sz})`}>
+              <path
+                d="M0,-2 C-1,-1.2 -1.2,0 -1.2,0.8 A1.2,1.2 0 0,1 1.2,0.8 C1.2,0 1,-1.2 0,-2 Z"
+                fill="url(#drop-grad)"
+                stroke="rgba(200,230,255,0.55)"
+                strokeWidth={0.3}
+              />
+              {/* upper gloss highlight */}
+              <ellipse cx="-0.3" cy="-1.1" rx="0.32" ry="0.52" fill="rgba(255,255,255,0.7)" />
+              {/* lower refraction — light bending through the drop */}
+              <ellipse cx="0.05" cy="0.5" rx="0.52" ry="0.32" fill="rgba(200,235,255,0.38)" />
+              {/* right-edge rim shimmer */}
+              <ellipse cx="0.75" cy="-0.2" rx="0.13" ry="0.38" fill="rgba(255,255,255,0.32)" />
+            </g>
+          </motion.g>
+        );
+      })}
+
+      {/* rain ripples */}
+      {isRain && [...Array(16)].map((_, i) => {
+        const x = (i * 5.9 + 3) % 95;
+        const speed = 1.2 + (i % 5) * 0.25;
+        const delay = (i * 0.22) % speed;
+        return (
+          <motion.ellipse
+            key={i}
+            cx={x} cy={57.5 + (i % 3) * 0.6}
+            rx={0} ry={0}
+            stroke="rgba(147,197,253,0.65)"
+            strokeWidth={0.18}
+            fill="none"
+            animate={{ rx: [0, 1.8, 0], ry: [0, 0.5, 0], opacity: [0, 0.85, 0] }}
+            transition={{ duration: speed, repeat: Infinity, delay, ease: 'easeOut' }}
+          />
+        );
+      })}
 
       {/* wind streaks */}
       {isWindy &&

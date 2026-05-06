@@ -15,7 +15,11 @@ const SimulationComponent: React.FC = () => {
   const colors = useColors();
   const [range, setRange] = useState<SimulationRange>('day');
   const [index, setIndex] = useState(0);
-  const { series, loading } = useSimulationData(range);
+  const [startDay, setStartDay] = useState<Date>(() => {
+    const now = new Date();
+    return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+  });
+  const { series, loading } = useSimulationData(range, startDay);
 
   // Reset / clamp the slider when the series length changes.
   useEffect(() => {
@@ -173,6 +177,11 @@ const SimulationComponent: React.FC = () => {
         index={index}
         onIndexChange={setIndex}
         series={series}
+        startDay={startDay}
+        onStartDayChange={(d) => {
+          setStartDay(d);
+          setIndex(0);
+        }}
       />
     </Paper>
   );

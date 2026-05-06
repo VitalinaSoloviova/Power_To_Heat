@@ -44,7 +44,7 @@ export const brightnessForPhase = (phase: DayPhase): number => {
 
 /** Maps a timestamp to a fine-grained day phase used by the weather sphere. */
 export const phaseForTimestamp = (timestamp: string): DayPhase => {
-  const h = new Date(timestamp).getHours();
+  const h = new Date(timestamp).getUTCHours();
   if (h < 3) return 'midnight';
   if (h < 5) return 'late-night';
   if (h < 7) return 'dawn';
@@ -64,7 +64,7 @@ export const phaseForTimestamp = (timestamp: string): DayPhase => {
  */
 export const sunElevation = (timestamp: string): number => {
   const d = new Date(timestamp);
-  const h = d.getHours() + d.getMinutes() / 60;
+  const h = d.getUTCHours() + d.getUTCMinutes() / 60;
   if (h <= 6 || h >= 18) return 0;
   return Math.sin(((h - 6) / 12) * Math.PI);
 };
@@ -83,5 +83,6 @@ export const formatTimestamp = (
     month: 'short',
     hour: '2-digit',
     minute: '2-digit',
+    timeZone: 'UTC',
   });
 };
