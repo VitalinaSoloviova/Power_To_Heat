@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import type { ReactNode } from 'react';
-import { useColors } from '@theme/useTheme';
 
 interface IslandFrameProps {
   children: ReactNode;
