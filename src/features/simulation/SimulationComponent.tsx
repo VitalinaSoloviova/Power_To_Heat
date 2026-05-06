@@ -10,11 +10,16 @@ import { useColors } from '@theme/useTheme';
 import type { SimulationRange } from './simulationTypes';
 import StorageIsland from './StorageIsland';
 import { SimulationConfig } from './SimulationConfig';
+import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
+import { DEFAULT_STORAGE_LEVEL } from '@services/UIService';
+
+
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
   const [range, setRange] = useState<SimulationRange>('day');
   const [index, setIndex] = useState(0);
+  const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
   const { series, loading } = useSimulationData(range);
 
   // Reset / clamp the slider when the series length changes.
@@ -22,6 +27,10 @@ const SimulationComponent: React.FC = () => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
     setIndex((i) => Math.min(i, Math.max(0, series.length - 1)));
   }, [series.length]);
+
+  const handleStorageLevelChange = (value: number) => {
+    setStorageLevel(value);
+  };
 
   const point = series[index] ?? series[0];
   if (!point) {
@@ -69,7 +78,7 @@ const SimulationComponent: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         gap: 0,
-        minHeight: 600,
+        minHeight: 700,
         overflow: 'hidden',
       }}
     >
@@ -132,7 +141,7 @@ const SimulationComponent: React.FC = () => {
             }}
           />
 
-          <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
             <EnergyIsland point={point} />
           </Box>
 
@@ -143,7 +152,7 @@ const SimulationComponent: React.FC = () => {
             />
           </Box>
 
-          <Box sx={{ position: 'relative', zIndex: 2 }}>
+          <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
             <StorageIsland
               point={point}
               isCharging={isCharging}
@@ -163,7 +172,21 @@ const SimulationComponent: React.FC = () => {
           </Box>
         </Box>
       </Box>
-
+<Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'stretch', md: 'center' },
+          justifyContent: 'center',
+          gap: 2,
+          px: 3,
+          py: 1.5,
+          borderTop: `1px solid ${colors.border}`,
+          bgcolor: colors.bgCard,
+        }}
+      >
+        <StorageLevelControl value={storageLevel} onChange={handleStorageLevelChange} />
+      </Box>
       <SimulationSlider
         range={range}
         onRangeChange={(r) => {
@@ -174,7 +197,10 @@ const SimulationComponent: React.FC = () => {
         onIndexChange={setIndex}
         series={series}
       />
+
+
     </Paper>
+    
   );
 };
 

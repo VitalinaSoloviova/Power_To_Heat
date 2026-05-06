@@ -3,7 +3,6 @@ import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import {
   DEFAULT_HISTORY_YEARS,
-  DEFAULT_STORAGE_LEVEL,
   type HistoryYears
 } from '@services/UIService';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
@@ -13,7 +12,6 @@ import ComparisonChartsSection from '@features/charts/ComparisonChartsSection';
 const StorageForecast = () => {
   const colors = useColors();
 
-  const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
 
   const { data: charts, loading: chartsLoading } =
@@ -45,8 +43,6 @@ const StorageForecast = () => {
       }}
     >
       <ControlsBar
-        storageLevel={storageLevel}
-        onStorageLevelChange={setStorageLevel}
         historyYears={historyYears}
         onHistoryYearsChange={setHistoryYears}
       />
