@@ -13,15 +13,6 @@ export interface WeatherData {
   cloudCoverage: number; // 0..1
 }
 
-export interface SimulationInput {
-  weather: WeatherData;
-  windTurbineCount: number;
-  solarPanelCount: number;
-  currentStorage: number;   // kWh currently stored
-  cityPopulation: number;
-  forecastHours: number;    // how many hourly points to produce
-}
-
 // ---------------------------------------------------------------------------
 // Per-hour outputs of the resolvers
 // ---------------------------------------------------------------------------
@@ -46,16 +37,6 @@ export interface EnergyStoragePoint {
   storageLevel: number;    // kWh after this hour
   chargedEnergy: number;   // kWh added this hour
   consumedEnergy: number;  // kWh drawn this hour
-}
-
-// ---------------------------------------------------------------------------
-// Aggregated simulation + chart outputs
-// ---------------------------------------------------------------------------
-
-export interface SimulationData {
-  generation: PowerGenerationPoint[];
-  demand: CityDemandPoint[];
-  storage: EnergyStoragePoint[];
 }
 
 export interface ChartSeriesPoint {
