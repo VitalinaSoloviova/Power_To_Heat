@@ -37,7 +37,7 @@ const normalizeWeatherCondition = (
  * Builds a `SimulationPoint[]` series from the real chart data exposed
  * by `UIService`. Returns an empty array while loading or on error.
  */
-export function useSimulationData(range: SimulationRange, initialStoragePercent: number, startDay: Date) {
+export function useSimulationData(range: SimulationRange, startDay: Date, initialStoragePercent: number) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
 

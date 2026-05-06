@@ -103,6 +103,8 @@ const SimulationComponent: React.FC = () => {
 
       <SimulationControls
         loading={loading}
+        startDay={startDay}
+        onStartDayChange={(d) => { setStartDay(d); setIndex(0); }}
         storage={{
           currentStoragePercent,
           onStorageChange: handleStorageLevelChange,
