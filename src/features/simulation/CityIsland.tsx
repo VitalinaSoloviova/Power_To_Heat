@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import IslandFrame from './IslandFrame';
-import IslandBadge from './IslandBadge';
 import GroundPatch from './GroundPatch';
 import Tree from './Tree';
 import type { SimulationPoint } from './simulationTypes';
@@ -121,23 +120,12 @@ const CityIsland: React.FC<CityIslandProps> = ({ point, size = 220 }) => {
   const phase = phaseForTimestamp(point.timestamp);
   const dim = brightnessForPhase(phase);
 
-  const badgeComponent = (
-    <IslandBadge
-      label="Demand"
-      text={`${Math.round(point.demand.current)} kW`}
-      color="#ffffff"
-      bgColor="rgba(59, 130, 246, 0.9)"
-      icon="🏙️"
-    />
-  );
-
   return (
     <IslandFrame
       label="City"
       accent={ACCENT}
       activity={demandLevel}
       size={size}
-      badge={badgeComponent}
       delay={0.1}
     >
       <svg

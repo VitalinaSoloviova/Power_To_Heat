@@ -1,5 +1,4 @@
 import { motion } from 'framer-motion';
-import IslandBadge from './IslandBadge';
 import type { SimulationPoint } from './simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
@@ -33,16 +32,6 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
   size = 250,
 }) => {
   const fraction = storageFraction(point.storage);
-
-  const badgeComponent = (
-    <IslandBadge
-      label="Storage Capacity"
-      text={`${Math.round(point.storage.level)} / ${point.storage.capacity} kWh · ${(fraction * 100).toFixed(0)}%`}
-      color="#ffffff"
-      bgColor="rgba(168, 85, 247, 0.9)"
-      icon="🔋"
-    />
-  );
 
   // Tank silhouette in viewBox 200x260
   const tankX = 25;
@@ -383,11 +372,6 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
 
          </svg>
       </motion.div>
-
-      {/* Badge at the bottom */}
-      <div style={{ textAlign: 'center', marginTop: 4 }}>
-        {badgeComponent}
-      </div>
     </motion.div>
   );
 };

@@ -1,5 +1,4 @@
 import IslandFrame from './IslandFrame';
-import IslandBadge from './IslandBadge';
 import GroundPatch from './GroundPatch';
 import WindTurbine from './WindTurbine';
 import SolarPanel from './SolarPanel';
@@ -29,23 +28,12 @@ const EnergyIsland: React.FC<EnergyIslandProps> = ({ point, size = 220 }) => {
   const activity = Math.min(1, point.energy.generated / 800);
   const sunPower = (1 - cloud * 0.6) * (isNight ? 0.1 : 0.55 + elevation * 0.45);
 
-  const badgeComponent = (
-    <IslandBadge
-      label="Power Generation"
-      text={`${Math.round(point.energy.generated)} kW`}
-      color="#ffffff"
-      bgColor="rgba(16, 185, 129, 0.9)"
-      icon="⚡"
-    />
-  );
-
   return (
     <IslandFrame
       label="Power"
       accent={ACCENT}
       activity={activity}
       size={size}
-      badge={badgeComponent}
     >
       <svg
         width="100%"

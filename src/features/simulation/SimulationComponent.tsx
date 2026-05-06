@@ -1,19 +1,12 @@
 import { useEffect, useState, useCallback } from 'react';
-import { Paper, Box, Typography, IconButton } from '@mui/material';
-import EnergyIsland from './EnergyIsland';
-import CityIsland from './CityIsland';
-import EnergyFlow from './EnergyFlow';
-import SimulationSlider from './SimulationSlider';
-import WeatherBackdrop from './WeatherBackdrop';
+import { Paper } from '@mui/material';
+import SimulationHeader from './SimulationHeader';
+import SimulationScene from './SimulationScene';
+import SimulationControls from './SimulationControls';
 import { useSimulationData } from './hooks/useSimulationData';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRange } from './simulationTypes';
-import StorageIsland from './StorageIsland';
-import { SimulationConfig } from './SimulationConfig';
-import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
 import { DEFAULT_STORAGE_LEVEL } from '@services/UIService';
-
-
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
@@ -77,19 +70,7 @@ const SimulationComponent: React.FC = () => {
     );
   }
 
-  // Derive flow / charge state from the current frame.
-  const generatedKw = point.energy.generated;
-  const demandKw = point.demand.current;
-  const storageFraction = point.storage.level / point.storage.capacity;
-  const currentStoragePercent = storageFraction * 100;
-  const balance = generatedKw - demandKw;
-  const { chargeThreshold, dischargeThreshold, maxIntensityKw, storage: storageCfg } =
-    SimulationConfig.THRESHOLDS;
-  const isCharging = balance > chargeThreshold;
-  const isDischarging = balance < dischargeThreshold && storageFraction > storageCfg.empty;
-
-  const productionIntensity = Math.min(1, generatedKw / maxIntensityKw);
-  const consumptionIntensity = Math.min(1, demandKw / maxIntensityKw);
+  const currentStoragePercent = (point.storage.level / point.storage.capacity) * 100;
 
   return (
     <Paper
@@ -108,150 +89,34 @@ const SimulationComponent: React.FC = () => {
         overflow: 'hidden',
       }}
     >
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          px: 3,
-          pt: 2,
-        }}
-      >
-        <Typography
-          sx={{
-            color: colors.textPrimary,
-            fontSize: 18,
-            fontWeight: 700,
-            letterSpacing: 1.2,
-            py: 2,
-            textTransform: 'uppercase',
-          }}
-        >
-          Energy Flow Simulation
-        </Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-          {loading && (
-            <Typography sx={{ color: colors.textMuted, fontSize: 11 }}>
-              Loading data…
-            </Typography>
-          )}
-          <IconButton
-            onClick={toggleSimulation}
-            disabled={loading || series.length === 0}
-            sx={{
-              color: isPlaying ? colors.danger : colors.primary,
-              border: `1px solid ${isPlaying ? colors.danger : colors.primary}`,
-              borderRadius: 2,
-              px: 2,
-              py: 0.5,
-              fontSize: 12,
-              fontWeight: 600,
-              '&:hover': {
-                backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.primary}15`,
-              },
-            }}
-          >
-            {isPlaying ? '⏸️ Stop' : '▶️ Auto'}
-          </IconButton>
-        </Box>
-      </Box>
+      <SimulationHeader 
+        loading={loading}
+        isPlaying={isPlaying}
+        onTogglePlay={toggleSimulation}
+        hasData={series.length > 0}
+      />
 
-      <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch' }}>
-        <Box
-          sx={{
-            flex: 1,
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            px: 4,
-            py: 3,
-            overflow: 'hidden',
-          }}
-        >
-          {/* Full-width sky / weather behind everything */}
-          <WeatherBackdrop timestamp={point.timestamp} weather={point.weather} />
+      <SimulationScene point={point} />
 
-          {/* subtle dot grid on top of the sky */}
-          <Box
-            sx={{
-              position: 'absolute',
-              inset: 0,
-              zIndex: 0,
-              backgroundImage:
-                'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.06) 1px, transparent 0)',
-              backgroundSize: '24px 24px',
-              maskImage:
-                'radial-gradient(ellipse at center, black 40%, transparent 85%)',
-              pointerEvents: 'none',
-            }}
-          />
-
-          <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
-            <EnergyIsland point={point} />
-          </Box>
-
-          <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
-            <EnergyFlow
-              intensity={productionIntensity}
-              color="#16a34a"
-            />
-          </Box>
-
-          <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
-            <StorageIsland
-              point={point}
-              isCharging={isCharging}
-              isDischarging={isDischarging}
-            />
-          </Box>
-
-          <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
-            <EnergyFlow
-              intensity={consumptionIntensity}
-              color="#0ea5e9"
-            />
-          </Box>
-
-          <Box sx={{ position: 'relative', zIndex: 2 }}>
-            <CityIsland point={point} />
-          </Box>
-        </Box>
-      </Box>
-<Box
-        sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: { xs: 'stretch', md: 'center' },
-          justifyContent: 'center',
-          gap: 2,
-          px: 3,
-          py: 1.5,
-          borderTop: `1px solid ${colors.border}`,
-          bgcolor: colors.bgCard,
-        }}
-      >
-        <StorageLevelControl value={currentStoragePercent} onChange={handleStorageLevelChange} />
-      </Box>
-      <SimulationSlider
+      <SimulationControls 
+        currentStoragePercent={currentStoragePercent}
+        onStorageChange={handleStorageLevelChange}
         range={range}
         onRangeChange={(r) => {
           setRange(r);
           setIndex(0);
-          setIsPlaying(false); // Stop auto-simulation when changing range
+          setIsPlaying(false);
         }}
         index={index}
         onIndexChange={(i) => {
           setIndex(i);
-          setIsPlaying(false); // Stop auto-simulation when manually changing index
+          setIsPlaying(false);
         }}
         series={series}
       />
-
-
     </Paper>
-    
   );
 };
 
 export default SimulationComponent;
+

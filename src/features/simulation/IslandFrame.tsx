@@ -10,7 +10,6 @@ interface IslandFrameProps {
   accent?: string;
   size?: number;
   topSlot?: ReactNode;
-  badge?: ReactNode;
   delay?: number;
 }
 
@@ -24,7 +23,6 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
   accent = '#94a3b8',
   size = 220,
   topSlot,
-  badge,
   delay = 0,
 }) => {
   const glow = Math.min(1, Math.max(0, activity));
@@ -140,13 +138,6 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
           {children}
         </div>
       </motion.div>
-
-      {/* Badge at the bottom */}
-      {badge && (
-        <div style={{ textAlign: 'center', marginTop: 6 }}>
-          {badge}
-        </div>
-      )}
     </motion.div>
   );
 };
