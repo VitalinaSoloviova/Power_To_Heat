@@ -4,22 +4,10 @@
 import { PowerGenerationResolver } from '../resolvers/PowerGenerationResolver';
 import { CityDemandResolver } from '../resolvers/CityDemandResolver';
 import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
-import type { CityDemandPoint, EnergyStoragePoint, PowerGenerationPoint, WeatherData } from '@services/types/SimulationTypes';
-
-export interface SimulationInput {
-  weather: WeatherData;
-  windTurbineCount: number; // ???
-  solarPanelCount: number;  // ???
-  currentStorage: number;   // kWh currently stored
-  cityPopulation: number;
-  forecastHours: number;    // how many hourly points to produce
-}
-
-export interface SimulationData {
-  generation: PowerGenerationPoint[];
-  demand: CityDemandPoint[];
-  storage: EnergyStoragePoint[];
-}
+import type {
+  SimulationData,
+  SimulationInput,
+} from '../types/SimulationTypes';
 
 /**
  * Orchestrates the simulation-related resolvers and returns a single

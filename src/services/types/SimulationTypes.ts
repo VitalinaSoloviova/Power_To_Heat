@@ -2,16 +2,24 @@
  * Shared types for the UI data layer.
  * All inputs and outputs of the UIService and its sub-services live here.
  */
+
 // ---------------------------------------------------------------------------
 // Inputs
 // ---------------------------------------------------------------------------
-
-import type { SimulationData } from "@services/ui/SimulationUIService";
 
 export interface WeatherData {
   temperature: number;   // °C
   windSpeed: number;     // m/s
   cloudCoverage: number; // 0..1
+}
+
+export interface SimulationInput {
+  weather: WeatherData;
+  windTurbineCount: number;
+  solarPanelCount: number;
+  currentStorage: number;   // kWh currently stored
+  cityPopulation: number;
+  forecastHours: number;    // how many hourly points to produce
 }
 
 // ---------------------------------------------------------------------------
@@ -38,6 +46,16 @@ export interface EnergyStoragePoint {
   storageLevel: number;    // kWh after this hour
   chargedEnergy: number;   // kWh added this hour
   consumedEnergy: number;  // kWh drawn this hour
+}
+
+// ---------------------------------------------------------------------------
+// Aggregated simulation + chart outputs
+// ---------------------------------------------------------------------------
+
+export interface SimulationData {
+  generation: PowerGenerationPoint[];
+  demand: CityDemandPoint[];
+  storage: EnergyStoragePoint[];
 }
 
 export interface ChartSeriesPoint {
