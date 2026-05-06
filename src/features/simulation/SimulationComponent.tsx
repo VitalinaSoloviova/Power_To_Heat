@@ -57,6 +57,7 @@ const SimulationComponent: React.FC = () => {
   const generatedKw = point.energy.generated;
   const demandKw = point.demand.current;
   const storageFraction = point.storage.level / point.storage.capacity;
+  const currentStoragePercent = storageFraction * 100;
   const balance = generatedKw - demandKw;
   const { chargeThreshold, dischargeThreshold, maxIntensityKw, storage: storageCfg } =
     SimulationConfig.THRESHOLDS;
@@ -186,7 +187,7 @@ const SimulationComponent: React.FC = () => {
           bgcolor: colors.bgCard,
         }}
       >
-        <StorageLevelControl value={storageLevel} onChange={handleStorageLevelChange} />
+        <StorageLevelControl value={currentStoragePercent} onChange={handleStorageLevelChange} />
       </Box>
       <SimulationSlider
         range={range}
