@@ -1,16 +1,16 @@
-import { useEffect, useState, useCallback } from 'react';
-import { Paper } from '@mui/material';
-import SimulationHeader from './SimulationHeader';
-import SimulationScene from './SimulationScene';
-import SimulationControls from './SimulationControls';
-import { useSimulationData } from './hooks/useSimulationData';
-import { useColors } from '@theme/useTheme';
-import type { SimulationRange } from './simulationTypes';
-import { DEFAULT_STORAGE_LEVEL } from '@services/UIService';
+import { useEffect, useState, useCallback } from "react";
+import { Paper } from "@mui/material";
+import SimulationHeader from "./SimulationHeader";
+import SimulationScene from "./SimulationScene";
+import SimulationControls from "./SimulationControls";
+import { useSimulationData } from "./hooks/useSimulationData";
+import { useColors } from "@theme/useTheme";
+import type { SimulationRange } from "./simulationTypes";
+import { DEFAULT_STORAGE_LEVEL } from "@services/UIService";
 
 const SimulationComponent: React.FC = () => {
   const colors = useColors();
-  const [range, setRange] = useState<SimulationRange>('day');
+  const [range, setRange] = useState<SimulationRange>("day");
   const [index, setIndex] = useState(0);
   const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -30,7 +30,7 @@ const SimulationComponent: React.FC = () => {
   };
 
   const toggleSimulation = useCallback(() => {
-    setIsPlaying(prev => !prev);
+    setIsPlaying((prev) => !prev);
   }, []);
 
   // Auto-simulation: advance index every 0.8 second when playing
@@ -41,7 +41,7 @@ const SimulationComponent: React.FC = () => {
     const intervalTime = baseInterval / speedMultiplier;
 
     const interval = setInterval(() => {
-      setIndex(current => {
+      setIndex((current) => {
         const next = current + 1;
         if (next >= series.length) {
           setIsPlaying(false);
@@ -86,16 +86,14 @@ const SimulationComponent: React.FC = () => {
         borderRadius: 3,
         background: colors.bgBase,
         border: `1px solid ${colors.border}`,
-        display: 'flex',
-        flexDirection: 'column',
+        display: "flex",
+        flexDirection: "column",
         gap: 0,
         minHeight: 700,
-        overflow: 'hidden',
+        overflow: "hidden",
       }}
     >
-      <SimulationHeader 
-        loading={loading}
-      />
+      <SimulationHeader loading={loading} />
 
       <SimulationScene point={point} />
 
@@ -129,4 +127,3 @@ const SimulationComponent: React.FC = () => {
 };
 
 export default SimulationComponent;
-
