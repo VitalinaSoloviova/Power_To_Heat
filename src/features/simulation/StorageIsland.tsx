@@ -36,7 +36,7 @@ const StorageIsland: React.FC<StorageIslandProps> = ({
 
   const badgeComponent = (
     <IslandBadge
-      label="Battery Level"
+      label="Storage Capacity"
       text={`${Math.round(point.storage.level)} / ${point.storage.capacity} kWh · ${(fraction * 100).toFixed(0)}%`}
       color="#ffffff"
       bgColor="rgba(168, 85, 247, 0.9)"
