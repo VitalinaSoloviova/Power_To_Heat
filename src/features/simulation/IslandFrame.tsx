@@ -28,7 +28,6 @@ const IslandFrame: React.FC<IslandFrameProps> = ({
   badge,
   delay = 0,
 }) => {
-  const colors = useColors();
   const glow = Math.min(1, Math.max(0, activity));
 
   return (
