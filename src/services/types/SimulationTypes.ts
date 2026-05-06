@@ -2,10 +2,11 @@
  * Shared types for the UI data layer.
  * All inputs and outputs of the UIService and its sub-services live here.
  */
-
 // ---------------------------------------------------------------------------
 // Inputs
 // ---------------------------------------------------------------------------
+
+import type { SimulationData } from "@services/ui/SimulationUIService";
 
 export interface WeatherData {
   temperature: number;   // °C

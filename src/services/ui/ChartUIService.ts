@@ -1,9 +1,9 @@
 import type {
   ChartData,
-  SimulationData,
 } from '../types/SimulationTypes';
 
 import { ChartDataResolver } from '../resolvers/ChartDataResolver';
+import type { SimulationData } from './SimulationUIService';
 
 /**
  * Orchestrates chart-related resolvers and returns chart-ready data.

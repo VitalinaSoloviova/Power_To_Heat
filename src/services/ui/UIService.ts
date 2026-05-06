@@ -1,12 +1,6 @@
-import type {
-  SimulationInput,
-  UIData,
-  SimulationData,
-  ChartData,
-} from '../types/SimulationTypes';
-
-import { SimulationUIService } from './SimulationUIService';
+import { SimulationUIService, type SimulationData, type SimulationInput } from './SimulationUIService';
 import { ChartUIService } from './ChartUIService';
+import type { UIData, ChartData } from '@services/types/SimulationTypes';
 
 export class UIService {
   private readonly simulationUIService: SimulationUIService;
