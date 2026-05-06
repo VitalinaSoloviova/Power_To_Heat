@@ -7,7 +7,7 @@ interface ControlsBarProps {
   onHistoryYearsChange: (value: HistoryYears) => void;
 }
 
-/** Bar with all the controls (storage level, history years). */
+/** Bar with the history years control. */
 const ControlsBar = ({
   historyYears,
   onHistoryYearsChange,
