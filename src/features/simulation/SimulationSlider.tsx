@@ -64,7 +64,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
       >
         <ToggleButton value="day">Day</ToggleButton>
         <ToggleButton value="week">Week</ToggleButton>
-       {/* <ToggleButton value="month">Month</ToggleButton> */}
+        <ToggleButton value="month" disabled>Month</ToggleButton>
       </ToggleButtonGroup>
 
       <SimulationButton
