@@ -12,6 +12,7 @@ export interface CurrentEnergyPrice {
     fetchedAt: Date;
 }
 
+/** Service interface */
 export interface CurrentEnergyPriceService {
     getCurrent(): Promise<CurrentEnergyPrice>;
 }
@@ -19,7 +20,7 @@ export interface CurrentEnergyPriceService {
 /**
  * Real implementation using aWATTar API (free & reliable for Germany)
  */
-export class CurrentEnergyPriceService implements CurrentEnergyPriceService {
+export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
     private readonly BASE_URL = 'https://api.awattar.de/v1/marketdata';
 
     public async getCurrent(): Promise<CurrentEnergyPrice> {
@@ -38,12 +39,11 @@ export class CurrentEnergyPriceService implements CurrentEnergyPriceService {
                 marketprice: number;   // EUR/MWh
             }>;
 
-            // Find current hour price
             const currentEntry = prices.find(p => 
                 p.start_timestamp <= now && now < p.end_timestamp
             ) || prices[0];
 
-            const valueInCents = currentEntry.marketprice / 10; // EUR/MWh → ct/kWh
+            const valueInCents = currentEntry.marketprice / 10;
 
             return {
                 value: Number(valueInCents.toFixed(2)),
@@ -54,7 +54,6 @@ export class CurrentEnergyPriceService implements CurrentEnergyPriceService {
         } catch (error) {
             console.warn('⚠️ Failed to fetch real price, using fallback', error);
             
-            // Graceful fallback
             const fallbackValue = 28.4;
             return {
                 value: fallbackValue,
@@ -66,7 +65,7 @@ export class CurrentEnergyPriceService implements CurrentEnergyPriceService {
     }
 }
 
-// Keep your existing helper
+// Helper function
 function classify(centsPerKilowattHour: number): EnergyPriceStatus {
     if (centsPerKilowattHour < 20) return "low";
     if (centsPerKilowattHour < 35) return "medium";
