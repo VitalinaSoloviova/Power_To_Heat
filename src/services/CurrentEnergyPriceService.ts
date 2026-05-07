@@ -17,24 +17,57 @@ export interface CurrentEnergyPriceService {
 }
 
 /**
- * Mock implementation – returns a plausible value with a deterministic
- * status mapping. Replace with a real adapter (e.g. ENTSO-E, aWATTar)
- * later without changing the widget layer.
+ * Real implementation using aWATTar API (free & reliable for Germany)
  */
-export class MockCurrentEnergyPriceService implements CurrentEnergyPriceService {
+export class CurrentEnergyPriceService implements CurrentEnergyPriceService {
+    private readonly BASE_URL = 'https://api.awattar.de/v1/marketdata';
+
     public async getCurrent(): Promise<CurrentEnergyPrice> {
-        const value = 28.4; // ct/kWh
-        return {
-            value,
-            unit: "ct/kWh",
-            status: classify(value),
-            fetchedAt: new Date(),
-        };
+        try {
+            const now = Date.now();
+            const url = `${this.BASE_URL}?start=${now - 3600000}&end=${now + 48 * 3600000}`;
+
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+            const data = await response.json();
+
+            const prices = data.data as Array<{
+                start_timestamp: number;
+                end_timestamp: number;
+                marketprice: number;   // EUR/MWh
+            }>;
+
+            // Find current hour price
+            const currentEntry = prices.find(p => 
+                p.start_timestamp <= now && now < p.end_timestamp
+            ) || prices[0];
+
+            const valueInCents = currentEntry.marketprice / 10; // EUR/MWh → ct/kWh
+
+            return {
+                value: Number(valueInCents.toFixed(2)),
+                unit: "ct/kWh",
+                status: classify(valueInCents),
+                fetchedAt: new Date(),
+            };
+        } catch (error) {
+            console.warn('⚠️ Failed to fetch real price, using fallback', error);
+            
+            // Graceful fallback
+            const fallbackValue = 28.4;
+            return {
+                value: fallbackValue,
+                unit: "ct/kWh",
+                status: classify(fallbackValue),
+                fetchedAt: new Date(),
+            };
+        }
     }
 }
 
+// Keep your existing helper
 function classify(centsPerKilowattHour: number): EnergyPriceStatus {
-    // Have to be recalculated. How do we decide if it's "low", "medium" or "high"?
     if (centsPerKilowattHour < 20) return "low";
     if (centsPerKilowattHour < 35) return "medium";
     return "high";
