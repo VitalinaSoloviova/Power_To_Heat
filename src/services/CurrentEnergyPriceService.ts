@@ -51,8 +51,8 @@ export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
                 status: classify(valueInCents),
                 fetchedAt: new Date(),
             };
-        } catch (error) {
-            console.warn('⚠️ Failed to fetch real price, using fallback', error);
+                } catch {
+            // console.warn('⚠️ Failed to fetch real price, using fallback');
             
             const fallbackValue = 28.4;
             return {
