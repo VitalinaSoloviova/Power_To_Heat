@@ -78,7 +78,7 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
     }
 
     const slice = hours.slice(0, targetCount);
-    const capacity = 1000;
+    const capacity = 20000;
     const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
     let level = capacity * (clampedInitialStoragePercent / 100);
 

@@ -10,7 +10,7 @@ export type CityProfile = {
 
 // so far there is only one city but in a scalable version this would not be hard coded
 export const city: CityProfile = {
-    clients: 60000,
+    clients: 55000,
     targetInsideTemp: 20, 
     energyDemandPerPerson: 0.1 // kW / per person per 1 degree celcius
 }
