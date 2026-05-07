@@ -43,7 +43,6 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
           justifyContent: 'space-between',
           px: 4,
           py: 3,
-          overflow: 'hidden',
         }}
       >
         {/* Full-width sky / weather behind everything */}

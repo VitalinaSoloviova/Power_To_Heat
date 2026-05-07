@@ -19,9 +19,9 @@ const MainContent = () => {
       }}
     >
       <ToolbarComponent />
-      <TopWidgetsRow />
+      {/* <TopWidgetsRow /> */}
       <SimulationComponent />
-      <StorageForecast />
+      {/* <StorageForecast /> */}
     </Box>
   );
 };

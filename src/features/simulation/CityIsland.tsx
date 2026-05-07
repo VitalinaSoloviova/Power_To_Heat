@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { motion } from 'framer-motion';
 import IslandFrame from './IslandFrame';
 import GroundPatch from './GroundPatch';
@@ -37,12 +38,12 @@ const FRONT: BuildingSpec[] = [
   { x: 148, w: 22, h: 38, cols: 2, rows: 4 },
 ];
 
-const Building: React.FC<{ b: BuildingSpec; demand: number; dim: number; gradId: string }> = ({
+const Building = memo<{ b: BuildingSpec; demand: number; dim: number; gradId: string }>(function Building({
   b,
   demand,
   dim,
   gradId,
-}) => {
+}) {
   const total = b.rows * b.cols;
   return (
     <g>
@@ -109,7 +110,7 @@ const Building: React.FC<{ b: BuildingSpec; demand: number; dim: number; gradId:
       )}
     </g>
   );
-};
+});
 
 /**
  * Demand island — layered skyline of cool blue/grey towers with warm

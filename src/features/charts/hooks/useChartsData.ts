@@ -3,6 +3,7 @@ import {
     type ChartsData,
     type HistoryYears,
 } from '@services/UIService';
+import type { Granularity } from '@calculations/DataResolver';
 import { uiService } from '@services/serviceContainer';
 
 interface UseChartsDataResult {
@@ -11,16 +12,17 @@ interface UseChartsDataResult {
     error: Error | null;
 }
 
-/**
- * Loads the historical-comparison chart data for the requested
- * number of historical years.
- */
 export function useChartsData(
-    historyYears: HistoryYears
+    historyYears: HistoryYears,
+    startDate?: Date,
+    granularity: Granularity = 'daily',
 ): UseChartsDataResult {
     const [data, setData] = useState<ChartsData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<Error | null>(null);
+
+    // Use a primitive in the dep array so a new Date object with the same value doesn't refetch
+    const startMs = startDate?.getTime();
 
     useEffect(() => {
         let cancelled = false;
@@ -29,7 +31,7 @@ export function useChartsData(
         setError(null);
 
         uiService
-            .getChartsData(historyYears)
+            .getChartsData(historyYears, granularity, startDate)
             .then((d) => {
                 if (cancelled) return;
                 setData(d);
@@ -44,7 +46,8 @@ export function useChartsData(
         return () => {
             cancelled = true;
         };
-    }, [historyYears]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [historyYears, granularity, startMs]);
 
     return { data, loading, error };
 }

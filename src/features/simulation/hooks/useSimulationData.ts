@@ -83,7 +83,7 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
     let level = capacity * (clampedInitialStoragePercent / 100);
 
     return slice.map((h, pointIndex) => {
-      const current = h.energyDemand;
+      const current = h.energyDemand / 100;
       const expected = current * 0.97;
 
       const hour = h.datetime.getUTCHours();
