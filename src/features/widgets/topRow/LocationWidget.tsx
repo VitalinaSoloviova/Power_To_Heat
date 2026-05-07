@@ -21,11 +21,14 @@ const LocationWidget: React.FC = () => {
             >
                 {loading ? "…" : data?.name ?? "—"}
             </Typography>
-            <Box sx={{ display: "flex", gap: 0.6, mt: 0.4 }}>
+            <Box sx={{ mt: 0.6 }}>
                 <Typography sx={{ fontSize: 11, color: colors.textMuted }}>
                     {data
                         ? `${data.countryCode} · ${data.latitude.toFixed(2)}, ${data.longitude.toFixed(2)}`
                         : ""}
+                </Typography>
+                <Typography sx={{ fontSize: 11, color: colors.textMuted }}>
+                    {data ? "55,000 residents" : ""}
                 </Typography>
             </Box>
         </WidgetCard>

@@ -19,6 +19,7 @@ const WidgetCard: React.FC<WidgetCardProps> = ({ label, icon, children }) => {
             sx={{
                 flex: 1,
                 minWidth: 0,
+                minHeight: 140,
                 bgcolor: colors.bgCardSolid,
                 border: `1px solid ${colors.border}`,
                 borderRadius: 2.5,
