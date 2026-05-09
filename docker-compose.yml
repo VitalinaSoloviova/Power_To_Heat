@@ -12,8 +12,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    command: postgres -c config_file=/etc/postgresql/postgresql.conf
-    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build:
@@ -21,10 +24,10 @@ services:
       dockerfile: Dockerfile.backend
     container_name: power_to_heat_backend
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/power_to_heat
-      PORT: 3001
       NODE_ENV: production
     ports:
       - "3001:3001"
