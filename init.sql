@@ -1,7 +1,6 @@
--- Initialize database tables for Power To Heat
-
+-- Power To Heat - Database Initialization
 CREATE TABLE IF NOT EXISTS hourly_weather_data (
-    datetime            TIMESTAMPTZ  PRIMARY KEY,
+    datetime            TIMESTAMPTZ PRIMARY KEY,
     temp                NUMERIC,
     temp_min            NUMERIC,
     temp_max            NUMERIC,
@@ -11,12 +10,12 @@ CREATE TABLE IF NOT EXISTS hourly_weather_data (
 );
 
 CREATE TABLE IF NOT EXISTS hourly_price_data (
-    datetime        TIMESTAMPTZ  PRIMARY KEY,
-    price_eur_mwhe  NUMERIC
+    datetime            TIMESTAMPTZ PRIMARY KEY,
+    price_eur_mwhe      NUMERIC
 );
 
--- Optional: Add indexes for better performance
+-- Indexes for performance
 CREATE INDEX IF NOT EXISTS idx_weather_datetime ON hourly_weather_data(datetime);
-CREATE INDEX IF NOT EXISTS idx_price_datetime ON hourly_price_data(datetime);
+CREATE INDEX IF NOT EXISTS idx_price_datetime   ON hourly_price_data(datetime);
 
-SELECT 'Database tables initialized successfully!' AS message;
+SELECT '✅ Tables created successfully!' as status;
