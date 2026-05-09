@@ -10,7 +10,7 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql   # ← Important line
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 5s
@@ -27,10 +27,8 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/power_to_heat?sslmode=disable
-      NODE_ENV: production
     ports:
       - "3001:3001"
-    restart: unless-stopped
 
   frontend:
     build: .
@@ -39,7 +37,6 @@ services:
       - backend
     ports:
       - "5173:80"
-    restart: unless-stopped
 
 volumes:
   postgres_data:
