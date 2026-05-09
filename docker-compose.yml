@@ -29,6 +29,7 @@ services:
       DATABASE_URL: postgresql://postgres:postgres@postgres:5432/power_to_heat?sslmode=disable
     ports:
       - "3001:3001"
+    restart: unless-stopped
 
   frontend:
     build: .
