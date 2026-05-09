@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -27,7 +25,7 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/power_to_heat
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/power_to_heat?sslmode=disable
       NODE_ENV: production
     ports:
       - "3001:3001"
