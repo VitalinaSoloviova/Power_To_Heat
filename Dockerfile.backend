@@ -1,17 +1,20 @@
+# Backend - Express + TypeScript
 FROM node:20-alpine
 
 WORKDIR /app
 
 # Copy package files first
 COPY package*.json ./
+
+# Install only production dependencies for smaller image
 RUN npm ci --only=production --frozen-lockfile
 
 # Copy backend code
 COPY database ./database
 
-EXPOSE 3001
-
-# Use tsx for running TypeScript directly
+# Install tsx globally for running TypeScript
 RUN npm install -g tsx
+
+EXPOSE 3001
 
 CMD ["tsx", "database/api/rest-server.ts"]
