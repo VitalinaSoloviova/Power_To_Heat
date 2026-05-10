@@ -3,7 +3,6 @@ import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from '@features/simulation/SimulationComponent';
 import TopWidgetsRow from '@features/widgets/topRow/TopWidgetsRow';
 import { useColors } from '@theme/useTheme';
-import StorageForecast from '@features/forecast';
 
 const MainContent = () => {
   const colors = useColors();
@@ -19,7 +18,7 @@ const MainContent = () => {
       }}
     >
       <ToolbarComponent />
-      {/* <TopWidgetsRow /> */}
+      <TopWidgetsRow />
       <SimulationComponent />
       {/* <StorageForecast /> */}
     </Box>
