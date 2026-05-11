@@ -37,15 +37,16 @@ const normalizeWeatherCondition = (
  * Builds a `SimulationPoint[]` series from the real chart data exposed
  * by `UIService`. Returns an empty array while loading or on error.
  */
-export function useSimulationData(range: SimulationRange, initialStoragePercent: number) {
+export function useSimulationData(range: SimulationRange, startDay: Date, initialStoragePercent: number) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
 
   useEffect(() => {
     let cancelled = false;
-    
+    const granularity = range === 'month' ? 'daily' : 'hourly';
+
     uiService
-      .getChartsData(1, range === 'month' ? 'daily' : 'hourly')
+      .getChartsData(1, granularity, startDay)
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
@@ -56,11 +57,11 @@ export function useSimulationData(range: SimulationRange, initialStoragePercent:
         setHours(null);
         setCurrentRange(range);
       });
-    
+
     return () => {
       cancelled = true;
     };
-  }, [range]);
+  }, [range, startDay]);
 
   const loading = range !== currentRange;
 
@@ -77,15 +78,15 @@ export function useSimulationData(range: SimulationRange, initialStoragePercent:
     }
 
     const slice = hours.slice(0, targetCount);
-    const capacity = 1000;
+    const capacity = 20000;
     const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
     let level = capacity * (clampedInitialStoragePercent / 100);
 
     return slice.map((h, pointIndex) => {
-      const current = h.energyDemand;
+      const current = h.energyDemand / 100;
       const expected = current * 0.97;
 
-      const hour = h.datetime.getHours();
+      const hour = h.datetime.getUTCHours();
       const solar = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)) * 700; // Increased from 500
       const wind = Math.max(80, (h.weather.wind ?? 6) * 45); // Minimum 80kW, default 6 m/s wind
       const generated = solar + wind;

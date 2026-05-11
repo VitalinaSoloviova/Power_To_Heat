@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 
@@ -44,4 +45,4 @@ const SimulationHeader: React.FC<SimulationHeaderProps> = ({
   );
 };
 
-export default SimulationHeader;
+export default memo(SimulationHeader);

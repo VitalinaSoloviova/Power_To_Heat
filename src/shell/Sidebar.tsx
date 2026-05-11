@@ -1,7 +1,6 @@
 import { Box, Tooltip } from '@mui/material';
 import {
   HomeRounded,
-  BarChartRounded,
   PieChartRounded,
   SettingsRounded,
 } from '@mui/icons-material';
@@ -18,7 +17,6 @@ interface NavItem {
 
 const navItems: NavItem[] = [
   { id: 'overview', label: 'Overview', icon: <HomeRounded /> },
-  { id: 'simulation', label: 'Simulation', icon: <BarChartRounded /> },
   { id: 'analysis', label: 'Analysis', icon: <PieChartRounded /> },
   { id: 'settings', label: 'Settings', icon: <SettingsRounded /> },
 ];

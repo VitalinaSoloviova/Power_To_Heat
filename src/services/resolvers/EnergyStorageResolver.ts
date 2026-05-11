@@ -11,8 +11,8 @@ import type {
  * by a slider — values are still computed per hour so the UI can scrub.
  */
 export class EnergyStorageResolver {
-  // Simple capacity assumption — in real life this would come from config.
-  private static readonly CAPACITY_KWH = 10_000;
+  // 2 x 10 MW Sand Batteries = 20 MW / 20,000 kWh capacity.
+  private static readonly CAPACITY_KWH = 20_000;
 
   public resolve(
     input: SimulationInput,

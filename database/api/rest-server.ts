@@ -16,6 +16,23 @@ const PORT = process.env.PORT ?? 3001;
 app.use(cors());
 
 
+app.get('/api/energy-price/current', async (_req: Request, res: Response) => {
+    try {
+        const upstream = await fetch(
+            'https://api.awattar.de/v1/marketdata'
+        );
+        if (!upstream.ok) {
+            res.status(upstream.status).json({ error: 'upstream error' });
+            return;
+        }
+        const data = await upstream.json();
+        res.json(data);
+    } catch (error) {
+        console.error('Error proxying corrently.io', error);
+        res.status(500).json({ error: 'proxy error' });
+    }
+});
+
 app.get('/api/weather/range', async (req: Request, res: Response) => {
     const date_from = req.query.date_from as string;
     const date_to = req.query.date_to as string;

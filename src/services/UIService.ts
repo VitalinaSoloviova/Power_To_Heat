@@ -44,9 +44,10 @@ export class UIService {
 
     public async getChartsData(
         historyYears: HistoryYears,
-        granularity: Granularity = 'daily'
+        granularity: Granularity = 'daily',
+        startDate?: Date
     ): Promise<ChartsData> {
-        const period = this.buildPeriod(historyYears);
+        const period = this.buildPeriod(historyYears, startDate);
 
         const { hours, weatherDates, priceDates } = await this.resolver.getUiDataProfile(
             period.start,
@@ -72,12 +73,12 @@ export class UIService {
         return { period, hours, xLabels, dataYears, granularity };
     }
 
-    private buildPeriod(historyYears: HistoryYears): ChartsPeriod {
-        const days = 28; // Fixed 4 weeks duration
-        const start = new Date();
-        start.setHours(0, 0, 0, 0);
+    private buildPeriod(historyYears: HistoryYears, startDate?: Date): ChartsPeriod {
+        const days = 28;
+        const start = startDate ? new Date(startDate) : new Date();
+        start.setUTCHours(0, 0, 0, 0);
         const end = new Date(start);
-        end.setDate(end.getDate() + days - 1);
+        end.setUTCDate(end.getUTCDate() + days - 1);
         return { start, end, historyYears };
     }
 

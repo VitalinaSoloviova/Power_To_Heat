@@ -6,9 +6,8 @@ import {
     AcUnitRounded,
     ThunderstormRounded,
     FilterDramaRounded,
-    AirRounded,
-    HelpOutlineRounded,
     AirRounded as WindIcon,
+    HelpOutlineRounded,
 } from "@mui/icons-material";
 import type { ReactNode } from "react";
 import WidgetCard from "./WidgetCard";
@@ -35,7 +34,7 @@ const conditionIcon = (
         case "foggy":
             return <FilterDramaRounded sx={sx} />;
         case "windy":
-            return <AirRounded sx={sx} />;
+            return <WindIcon sx={sx} />;
         default:
             return <HelpOutlineRounded sx={sx} />;
     }

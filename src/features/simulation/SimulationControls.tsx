@@ -17,6 +17,8 @@ interface SimulationControlsProps {
   playback: PlaybackControl;
   /** Disabled while data is still loading. */
   loading: boolean;
+  startDay: Date;
+  onStartDayChange: (d: Date) => void;
 }
 
 const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -24,6 +26,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   timeline,
   playback,
   loading,
+  startDay,
+  onStartDayChange,
 }) => {
   const colors = useColors();
 
@@ -51,6 +55,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         timeline={timeline}
         playback={playback}
         loading={loading}
+        startDay={startDay}
+        onStartDayChange={onStartDayChange}
       />
     </>
   );

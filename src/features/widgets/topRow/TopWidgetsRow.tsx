@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import LocationWidget from "./LocationWidget";
 import WeatherWidget from "./WeatherWidget";
 import EnergyPriceWidget from "./EnergyPriceWidget";
-import PlaceholderWidget from "./PlaceholderWidget";
+import Next24hPriceWidget from "./Next24hPriceWidget";   // ← Keep this
 
 /** Top dashboard row: 4 horizontally aligned widgets. */
 const TopWidgetsRow: React.FC = () => {
@@ -11,7 +11,7 @@ const TopWidgetsRow: React.FC = () => {
             <LocationWidget />
             <WeatherWidget />
             <EnergyPriceWidget />
-            <PlaceholderWidget />
+            <Next24hPriceWidget />        {/* ← Replaced the placeholder */}
         </Box>
     );
 };

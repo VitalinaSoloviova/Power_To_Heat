@@ -10,32 +10,13 @@ export interface CurrentEnergyPrice {
     status: EnergyPriceStatus;
     /** When this snapshot was produced (UTC). */
     fetchedAt: Date;
+    /** Average price over the next 24 hours (same unit). */
+    avg24h?: number;
+    /** Whether the 24h average is higher, lower, or similar to the current price. */
+    trend?: 'rising' | 'falling' | 'stable';
 }
 
 export interface CurrentEnergyPriceService {
     getCurrent(): Promise<CurrentEnergyPrice>;
 }
 
-/**
- * Mock implementation – returns a plausible value with a deterministic
- * status mapping. Replace with a real adapter (e.g. ENTSO-E, aWATTar)
- * later without changing the widget layer.
- */
-export class MockCurrentEnergyPriceService implements CurrentEnergyPriceService {
-    public async getCurrent(): Promise<CurrentEnergyPrice> {
-        const value = 28.4; // ct/kWh
-        return {
-            value,
-            unit: "ct/kWh",
-            status: classify(value),
-            fetchedAt: new Date(),
-        };
-    }
-}
-
-function classify(centsPerKilowattHour: number): EnergyPriceStatus {
-    // Have to be recalculated. How do we decide if it's "low", "medium" or "high"?
-    if (centsPerKilowattHour < 20) return "low";
-    if (centsPerKilowattHour < 35) return "medium";
-    return "high";
-}

@@ -25,30 +25,9 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
           0 4px 12px rgba(0,0,0,0.25),
           inset 0 1px 0 rgba(255,255,255,0.1)
         `,
-        width: '700px',
+        width: '750px',
       }}
     >
-      {/* Energy Generation */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 90 }}>
-        <Typography sx={{ 
-          fontSize: 9, 
-          fontWeight: 600, 
-          color: colors.textSecondary,
-          textTransform: 'uppercase',
-          letterSpacing: 1,
-          mb: 0.5
-        }}>
-         Generation  
-      </Typography>
-        <Typography sx={{ 
-          fontSize: 14, 
-          fontWeight: 800, 
-          color: colors.textPrimary,
-          textShadow: '0 1px 2px rgba(0,0,0,0.3)'
-        }}>
-          {Math.round(point.energy.generated)} kW
-        </Typography>
-      </Box>
 
       {/* Storage */}
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 100 }}>
@@ -117,7 +96,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
           fontWeight: 800, 
           color: colors.textPrimary
         }}>
-          {point.weather.temperature}°C
+          {point.weather.temperature.toFixed(1)}°C
         </Typography>
       </Box>
 
