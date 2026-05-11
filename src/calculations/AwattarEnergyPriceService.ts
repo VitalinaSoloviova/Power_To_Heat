@@ -44,7 +44,7 @@ export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
                 ? Number((next24.reduce((sum, e) => sum + mwhToCtKwh(e.marketprice), 0) / next24.length).toFixed(1))
                 : undefined;
 
-            const trend = avg24h != null ? deriveTrend(ctPerKwh, avg24h) : undefined;
+            const trend = avg24h !== undefined ? deriveTrend(ctPerKwh, avg24h) : undefined;
 
             return {
                 value: ctPerKwh,

@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography, Popover, IconButton } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import type {
@@ -37,8 +37,8 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
   const point = series[index];
   const max = Math.max(0, series.length - 1);
 
-  const anchorRef = useRef<HTMLButtonElement>(null);
-  const [open, setOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
+  const open = anchorEl !== null;
 
   const selectedMonth = startDay.getMonth();
   const selectedDay = startDay.getDate();
@@ -67,9 +67,8 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
     >
       {/* Date picker chip */}
       <Box
-        ref={anchorRef}
         component="button"
-        onClick={() => setOpen(true)}
+        onClick={(e: React.MouseEvent<HTMLElement>) => setAnchorEl(e.currentTarget)}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -97,8 +96,8 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
 
       <Popover
         open={open}
-        anchorEl={anchorRef.current}
-        onClose={() => setOpen(false)}
+        anchorEl={anchorEl}
+        onClose={() => setAnchorEl(null)}
         anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
         transformOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         slotProps={{
