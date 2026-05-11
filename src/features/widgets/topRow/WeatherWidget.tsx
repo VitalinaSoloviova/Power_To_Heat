@@ -34,7 +34,7 @@ const conditionIcon = (
         case "foggy":
             return <FilterDramaRounded sx={sx} />;
         case "windy":
-            return <AirRounded sx={sx} />;
+            return <WindIcon sx={sx} />;
         default:
             return <HelpOutlineRounded sx={sx} />;
     }

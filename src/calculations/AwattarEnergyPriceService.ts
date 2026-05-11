@@ -12,7 +12,10 @@ interface AwattarResponse {
 }
 
 export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
-    constructor(private readonly baseUrl: string = 'http://localhost:3001') {}
+    private readonly baseUrl: string;
+    constructor(baseUrl: string = 'http://localhost:3001') {
+        this.baseUrl = baseUrl;
+    }
 
     async getCurrent(): Promise<CurrentEnergyPrice> {
         try {
