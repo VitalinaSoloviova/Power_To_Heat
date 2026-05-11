@@ -53,15 +53,14 @@ const SimulationComponent: React.FC = () => {
   const point = series[index] ?? series[0];
 
   return (
-    <Box sx={{ mx: 3, mb: 2, display: 'flex', flexDirection: 'column', gap: 1.5 }}>
-      {/* Chart cards row — above simulation */}
-      <SimulationChartCards startDay={startDay} range={range} />
-
-      {/* Simulation */}
+    <Box sx={{ mx: 3, mb: 2, display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'flex-start' }}>
+      {/* Simulation (left) */}
       {!point ? (
         <Paper
           elevation={0}
           sx={{
+            flex: 1,
+            minWidth: 0,
             p: 4,
             borderRadius: 3,
             border: `1px solid ${colors.border}`,
@@ -75,6 +74,8 @@ const SimulationComponent: React.FC = () => {
         <Paper
           elevation={0}
           sx={{
+            flex: 1,
+            minWidth: 0,
             p: 0,
             borderRadius: 3,
             background: colors.bgBase,
@@ -110,6 +111,11 @@ const SimulationComponent: React.FC = () => {
           />
         </Paper>
       )}
+
+      {/* Chart cards sidebar (right) */}
+      <Box sx={{ width: 300, flexShrink: 0 }}>
+        <SimulationChartCards startDay={startDay} range={range} vertical />
+      </Box>
     </Box>
   );
 };

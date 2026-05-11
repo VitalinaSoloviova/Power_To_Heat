@@ -5,13 +5,13 @@ import { useColors } from '@theme/useTheme';
 import { getChartSx } from '@theme/colors';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
 import { HISTORY_OPTIONS, DEFAULT_HISTORY_YEARS, type HistoryYears } from '@services/UIService';
-import LocationWidget from '@features/widgets/topRow/LocationWidget';
 import type { SimulationRange } from './simulationTypes';
 import type { Granularity } from '@calculations/DataResolver';
 
 interface SimulationChartCardsProps {
   startDay: Date;
   range: SimulationRange;
+  vertical?: boolean;
 }
 
 interface CardSeries {
@@ -62,22 +62,23 @@ const fullChartSx = (base: object) => ({
 const ChartCard = memo<{
   card: CardConfig;
   expanded: boolean;
-  onSetHovered: (id: string | null) => void;
-}>(function ChartCard({ card, expanded, onSetHovered }) {
+  vertical: boolean;
+  onToggle: (id: string | null) => void;
+}>(function ChartCard({ card, expanded, vertical, onToggle }) {
   const colors = useColors();
   const chartSx = getChartSx(colors);
   const hasData = card.series[0]?.data.length > 0;
 
-  const handleEnter = useCallback(() => onSetHovered(card.id), [onSetHovered, card.id]);
-  const handleLeave = useCallback(() => onSetHovered(null), [onSetHovered]);
+  const handleClick = useCallback(
+    () => onToggle(expanded ? null : card.id),
+    [onToggle, expanded, card.id],
+  );
 
   return (
     <Box
-      onMouseEnter={handleEnter}
-      onMouseLeave={handleLeave}
+      onClick={handleClick}
       sx={{
-        flex: 1,
-        minWidth: 0,
+        ...(vertical ? { width: '100%' } : { flex: 1, minWidth: 0 }),
         height: expanded ? EXPANDED_H : COMPACT_H,
         transition: 'height 0.32s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s, border-color 0.25s',
         overflow: 'hidden',
@@ -87,7 +88,7 @@ const ChartCard = memo<{
         p: 2,
         display: 'flex',
         flexDirection: 'column',
-        cursor: 'default',
+        cursor: 'pointer',
         boxShadow: expanded
           ? `0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px ${colors.primary}30`
           : 'none',
@@ -97,7 +98,6 @@ const ChartCard = memo<{
       <Typography sx={{ fontSize: 11, color: colors.textSecondary, fontWeight: 500 }}>
         {card.title}
       </Typography>
-
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5, mt: 0.25 }}>
         <Typography sx={{ fontSize: 28, fontWeight: 700, color: colors.textPrimary, lineHeight: 1 }}>
           {hasData ? card.formatValue(card.mainValue) : '—'}
@@ -106,16 +106,7 @@ const ChartCard = memo<{
           {card.unit}
         </Typography>
       </Box>
-
-      <Box
-        sx={{
-          mt: 'auto',
-          height: 50,
-          mx: -0.5,
-          opacity: expanded ? 0 : 1,
-          transition: 'opacity 0.15s',
-        }}
-      >
+      <Box sx={{ mt: 'auto', height: 50, mx: -0.5, opacity: expanded ? 0 : 1, transition: 'opacity 0.15s' }}>
         {hasData && (
           <LineChart
             xAxis={[{ data: card.xLabels, scaleType: 'point' }]}
@@ -133,7 +124,6 @@ const ChartCard = memo<{
           />
         )}
       </Box>
-
       <Box
         sx={{
           position: 'absolute',
@@ -167,7 +157,7 @@ const ChartCard = memo<{
   );
 });
 
-const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({ startDay, range }) => {
+const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({ startDay, range, vertical = false }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
   const colors = useColors();
@@ -258,17 +248,14 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({ startDay, r
         </ToggleButtonGroup>
       </Box>
 
-      <Box sx={{ display: 'flex', gap: 2, alignItems: 'flex-start' }}>
-        <Box sx={{ width: 200, flexShrink: 0, display: 'flex', alignSelf: 'flex-start' }}>
-          <LocationWidget />
-        </Box>
-
+      <Box sx={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', gap: 1.5, alignItems: 'stretch' }}>
         {cards.map((card) => (
           <ChartCard
             key={card.id}
             card={card}
             expanded={hoveredId === card.id}
-            onSetHovered={setHoveredId}
+            vertical={vertical}
+            onToggle={setHoveredId}
           />
         ))}
       </Box>

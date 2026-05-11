@@ -1,15 +1,10 @@
 import { DataResolver } from "../calculations/DataResolver";
 import { UIService } from "./UIService";
 import { StaticLocationService, type LocationService } from "./LocationService";
-import {
-    MockCurrentWeatherService,
-    OpenWeatherCurrentWeatherService,
-    type CurrentWeatherService,
-} from "./CurrentWeatherService";
-import {
-    MockCurrentEnergyPriceService,
-    type CurrentEnergyPriceService,
-} from "./CurrentEnergyPriceService";
+import { type CurrentWeatherService } from "./CurrentWeatherService";
+import { type CurrentEnergyPriceService } from "./CurrentEnergyPriceService";
+import { OpenWeatherCurrentWeatherService } from "../calculations/OpenWeatherCurrentWeatherService";
+import { AwattarEnergyPriceService } from "../calculations/AwattarEnergyPriceService";
 
 // Backend base URL – override via Vite env when needed (VITE_API_BASE_URL).
 const BASE_URL =
@@ -24,13 +19,8 @@ export const uiService = new UIService(dataResolver);
 
 export const locationService: LocationService = new StaticLocationService();
 
-const openWeatherKey = import.meta.env.VITE_OPENWEATHER_API_KEY as
-    | string
-    | undefined;
-
-export const currentWeatherService: CurrentWeatherService = openWeatherKey
-    ? new OpenWeatherCurrentWeatherService(openWeatherKey)
-    : new MockCurrentWeatherService();
+export const currentWeatherService: CurrentWeatherService =
+    new OpenWeatherCurrentWeatherService();
 
 export const currentEnergyPriceService: CurrentEnergyPriceService =
-    new MockCurrentEnergyPriceService();
+    new AwattarEnergyPriceService(BASE_URL);

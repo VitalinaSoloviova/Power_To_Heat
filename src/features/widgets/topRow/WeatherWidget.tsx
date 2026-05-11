@@ -6,9 +6,8 @@ import {
     AcUnitRounded,
     ThunderstormRounded,
     FilterDramaRounded,
-    AirRounded,
-    HelpOutlineRounded,
     AirRounded as WindIcon,
+    HelpOutlineRounded,
 } from "@mui/icons-material";
 import type { ReactNode } from "react";
 import WidgetCard from "./WidgetCard";

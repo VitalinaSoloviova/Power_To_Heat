@@ -8,8 +8,8 @@ const Next24hPriceWidget: React.FC = () => {
     const colors = useColors();
     const { data: currentPrice, loading } = useCurrentEnergyPrice();
 
-    const avgPrice = currentPrice?.value ?? 0;
-    const trend = "stable"; // TODO: calculate from forecast
+    const avgPrice = currentPrice?.avg24h ?? currentPrice?.value ?? 0;
+    const trend = currentPrice?.trend ?? "stable";
 
     return (
         <WidgetCard
@@ -46,7 +46,7 @@ const Next24hPriceWidget: React.FC = () => {
                     mt: 1.5,
                     height: 6,
                     borderRadius: 1,
-                    bgcolor: colors.bgSurface,           // ← Fixed here
+                    bgcolor: colors.bgSurface,
                     "& .MuiLinearProgress-bar": {
                         background: `linear-gradient(90deg, ${colors.energy}, ${colors.warning})`,
                     },

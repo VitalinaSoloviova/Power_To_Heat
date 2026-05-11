@@ -20,7 +20,6 @@ const MainContent = () => {
       <ToolbarComponent />
       <TopWidgetsRow />
       <SimulationComponent />
-      {/* <StorageForecast /> */}
     </Box>
   );
 };
