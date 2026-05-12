@@ -1,5 +1,4 @@
 import type { UiHourData } from "./uiDataProfile";
-import { type CityProfile, city } from "./CityData";
 
 export type Granularity = 'hourly' | 'daily'
 
@@ -88,7 +87,7 @@ export class DataResolver {
                 description: weather.description,
             },
             price,
-            energyDemand: this.getEnergyDemand(weather.temp, city),
+            energyDemand: 0,
         }
     }
 
@@ -194,13 +193,6 @@ export class DataResolver {
     private async fetchPrice(from: string, to: string): Promise<PriceRow[]> {
         const res = await fetch(`${this.baseUrl}/api/price/range?date_from=${from}&date_to=${to}`)
         return res.json() as Promise<PriceRow[]>
-    }
-
-    private getEnergyDemand(outsideTemp: number, city: CityProfile) {
-        return Math.max(
-            0,
-            city.clients * city.energyDemandPerPerson * (city.targetInsideTemp - outsideTemp)
-        )
     }
 
     private emptyHour(dt: Date): UiHourData {

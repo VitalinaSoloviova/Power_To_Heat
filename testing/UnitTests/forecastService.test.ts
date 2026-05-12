@@ -112,21 +112,11 @@ describe('ForecastService', () => {
         expect(result.hours[0].price).toBe(0);
     });
 
-    it('sets energyDemand to 0 when temperature is above target (20°C)', async () => {
-        mockFetch([
-            { datetime: '2020-01-01T00:00:00Z', temp: 25, temp_min: 20, temp_max: 30, wind_speed: 5, weather_main: 'Clear' },
-        ], []);
+    it('always returns energyDemand of 0 (demand calculation is delegated to UIService/CityDemandResolver)', async () => {
         const result = await service.getUiDataProfile(
             new Date('2000-01-01'), new Date('2000-01-01'), 5
         );
         expect(result.hours[0].energyDemand).toBe(0);
-    });
-
-    it('calculates positive energyDemand when temperature is below target', async () => {
-        const result = await service.getUiDataProfile(
-            new Date('2000-01-01'), new Date('2000-01-01'), 5
-        );
-        expect(result.hours[0].energyDemand).toBeGreaterThan(0);
     });
 
     it('returns empty hours (all zeros) when no weather data is available', async () => {

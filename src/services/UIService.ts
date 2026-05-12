@@ -3,6 +3,8 @@ import type { Granularity } from "../calculations/DataResolver";
 import type { UiHourData } from "../calculations/uiDataProfile";
 import { DataCoverageCalculator } from "./DataCoverageCalculator";
 import type { DataCoverage } from "./DataCoverageCalculator";
+import { CityDemandResolver } from "./resolvers/CityDemandResolver";
+import { city } from "../calculations/CityData";
 
 /** Number of past years to average for the historical comparison. */
 export const HISTORY_OPTIONS = [1, 5, 10, 20, 30, 50] as const;
@@ -58,7 +60,12 @@ export class UIService {
 
         const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
 
-        const xLabels = hours.map((h) =>
+        const enrichedHours: UiHourData[] = hours.map((h) => ({
+            ...h,
+            energyDemand: CityDemandResolver.calculate(h.weather.temp, city),
+        }));
+
+        const xLabels = enrichedHours.map((h) =>
             granularity === 'hourly'
                 ? h.datetime.toLocaleString('en-GB', 
                     { day: '2-digit', 
@@ -70,7 +77,7 @@ export class UIService {
                     month: 'short' })
         );
 
-        return { period, hours, xLabels, dataYears, granularity };
+        return { period, hours: enrichedHours, xLabels, dataYears, granularity };
     }
 
     private buildPeriod(historyYears: HistoryYears, startDate?: Date): ChartsPeriod {

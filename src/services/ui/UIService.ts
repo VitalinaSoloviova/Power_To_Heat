@@ -1,29 +1,25 @@
-import { SimulationUIService, type SimulationData, type SimulationInput } from './SimulationUIService';
-import { ChartUIService } from './ChartUIService';
-import type { UIData, ChartData } from '@services/types/SimulationTypes';
+// TODO: unused service layer — commented out until wired up.
+// Depends on SimulationUIService and ChartUIService which are also currently unused.
 
-export class UIService {
-  private readonly simulationUIService: SimulationUIService;
-  private readonly chartUIService: ChartUIService;
+// import { SimulationUIService, type SimulationData, type SimulationInput } from './SimulationUIService';
+// import { ChartUIService } from './ChartUIService';
+// import type { UIData, ChartData } from '@services/types/SimulationTypes';
 
-  constructor(
-    simulationUIService = new SimulationUIService(),
-    chartUIService = new ChartUIService(),
-  ) {
-    this.simulationUIService = simulationUIService;
-    this.chartUIService = chartUIService;
-  }
+// export class UIService {
+//   private readonly simulationUIService: SimulationUIService;
+//   private readonly chartUIService: ChartUIService;
 
-  public getUIData(input: SimulationInput): UIData {
-    const simulationData: SimulationData =
-      this.simulationUIService.getSimulationData(input);
+//   constructor(
+//     simulationUIService = new SimulationUIService(),
+//     chartUIService = new ChartUIService(),
+//   ) {
+//     this.simulationUIService = simulationUIService;
+//     this.chartUIService = chartUIService;
+//   }
 
-    const chartData: ChartData =
-      this.chartUIService.getChartData(simulationData);
-
-    return {
-      simulationData,
-      chartData,
-    };
-  }
-}
+//   public getUIData(input: SimulationInput): UIData {
+//     const simulationData: SimulationData = this.simulationUIService.getSimulationData(input);
+//     const chartData: ChartData = this.chartUIService.getChartData(simulationData);
+//     return { simulationData, chartData };
+//   }
+// }
