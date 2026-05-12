@@ -46,7 +46,7 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
     const granularity = range === 'month' ? 'daily' : 'hourly';
 
     uiService
-      .getChartsData(1, granularity, startDay)
+      .getChartsData(10, granularity, startDay)
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
