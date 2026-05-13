@@ -7,42 +7,52 @@ const AREA_FILL_OPACITY = 0.35;
 
 interface SparklineProps {
   data: number[];
-  color?: string;
+  color: string;
+  /** Used to build a unique <linearGradient> id per card. */
   gradientKey: string;
 }
 
+/** Returns min/max/range, guarding against a flat series (range = 0). */
 const getDataRange = (data: number[]) => {
   const min = Math.min(...data);
   const max = Math.max(...data);
   return { min, max, range: max - min || 1 };
 };
 
+/** Maps a value to its Y coordinate inside the sparkline box (top = high). */
 const buildScaleY = (min: number, range: number) =>
   (value: number) => SPARKLINE_HEIGHT - ((value - min) / range) * SPARKLINE_HEIGHT;
 
+/** Renders a smooth area+line sparkline. */
 export const SparklineLine: React.FC<SparklineProps> = ({ data, color, gradientKey }) => {
-  const colors = useColors();
-  const lineColor = color || colors.heat;
-
   if (!data.length) return null;
 
   const { min, range } = getDataRange(data);
   const scaleY = buildScaleY(min, range);
-
+  
+  // Handle single data point case
   if (data.length === 1) {
     const y = scaleY(data[0]);
     return (
       <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
         <line
-          x1={0} x2={SPARKLINE_WIDTH} y1={y} y2={y}
-          stroke={lineColor} strokeWidth={1.8} strokeLinecap="round"
+          x1={0}
+          x2={SPARKLINE_WIDTH}
+          y1={y}
+          y2={y}
+          stroke={color}
+          strokeWidth={1.8}
+          strokeLinecap="round"
         />
       </svg>
     );
   }
 
   const stepX = SPARKLINE_WIDTH / (data.length - 1);
-  const linePoints = data.map((value, i) => `${i * stepX},${scaleY(value)}`).join(' ');
+
+  const linePoints = data
+    .map((value, i) => `${i * stepX},${scaleY(value)}`)
+    .join(' ');
   const areaPoints = `0,${SPARKLINE_HEIGHT} ${linePoints} ${SPARKLINE_WIDTH},${SPARKLINE_HEIGHT}`;
   const gradientId = `sparkfill-${gradientKey}`;
 
@@ -50,15 +60,15 @@ export const SparklineLine: React.FC<SparklineProps> = ({ data, color, gradientK
     <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
       <defs>
         <linearGradient id={gradientId} x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stopColor={lineColor} stopOpacity={AREA_FILL_OPACITY} />
-          <stop offset="100%" stopColor={lineColor} stopOpacity={0} />
+          <stop offset="0%" stopColor={color} stopOpacity={AREA_FILL_OPACITY} />
+          <stop offset="100%" stopColor={color} stopOpacity={0} />
         </linearGradient>
       </defs>
       <polygon points={areaPoints} fill={`url(#${gradientId})`} />
       <polyline
         points={linePoints}
         fill="none"
-        stroke={lineColor}
+        stroke={color}
         strokeWidth={1.8}
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -67,11 +77,53 @@ export const SparklineLine: React.FC<SparklineProps> = ({ data, color, gradientK
   );
 };
 
+/** Renders bars that grow from the baseline up to each value. */
 export const SparklineBars: React.FC<Omit<SparklineProps, 'gradientKey'>> = ({ data, color }) => {
-  const colors = useColors();
-  const barColor = color || colors.heat;
-  // ... (rest of the function remains the same)
-  // Just make sure it uses barColor
+  if (!data.length) return null;
+
+  const { min, range } = getDataRange(data);
+  
+  // Handle single data point case
+  if (data.length === 1) {
+    const barHeight = ((data[0] - min) / range) * SPARKLINE_HEIGHT;
+    const barWidth = SPARKLINE_WIDTH * 0.6; // Use 60% of width for single bar
+    const barX = (SPARKLINE_WIDTH - barWidth) / 2; // Center the bar
+    return (
+      <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
+        <rect
+          x={barX}
+          y={SPARKLINE_HEIGHT - barHeight}
+          width={barWidth}
+          height={barHeight}
+          rx={1}
+          fill={color}
+          opacity={0.85}
+        />
+      </svg>
+    );
+  }
+
+  const barWidth = SPARKLINE_WIDTH / data.length - BAR_GAP;
+
+  return (
+    <svg width={SPARKLINE_WIDTH} height={SPARKLINE_HEIGHT} style={{ overflow: 'visible' }}>
+      {data.map((value, i) => {
+        const barHeight = ((value - min) / range) * SPARKLINE_HEIGHT;
+        return (
+          <rect
+            key={i}
+            x={i * (barWidth + BAR_GAP)}
+            y={SPARKLINE_HEIGHT - barHeight}
+            width={barWidth}
+            height={barHeight}
+            rx={1}
+            fill={color}
+            opacity={0.85}
+          />
+        );
+      })}
+    </svg>
+  );
 };
 
 export type SparklineType = 'line' | 'bar';
@@ -83,6 +135,7 @@ interface SparklineProxyProps {
   gradientKey: string;
 }
 
+/** Public entry point: picks the right sparkline renderer. */
 export const Sparkline: React.FC<SparklineProxyProps> = ({
   type,
   data,
@@ -90,8 +143,7 @@ export const Sparkline: React.FC<SparklineProxyProps> = ({
   gradientKey,
 }) => {
   const colors = useColors();
-  const resolvedColor = color ?? colors.heat;   // Default to heat color for right sidebar
-
+  const resolvedColor = color ?? colors.energy;
   if (type === 'bar') return <SparklineBars data={data} color={resolvedColor} />;
   return <SparklineLine data={data} color={resolvedColor} gradientKey={gradientKey} />;
 };

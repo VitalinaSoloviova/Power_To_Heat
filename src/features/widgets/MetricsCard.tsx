@@ -31,77 +31,6 @@ const getBadgeColor = (tone: BadgeTone, colors: AppColors): string => {
   return map[tone];
 };
 
-const CardHeader: React.FC<{ label: string }> = ({ label }) => {
-  const colors = useColors();
-  return (
-    <Typography 
-      sx={{ 
-        fontSize: 11.5, 
-        color: colors.textSecondary, 
-        fontWeight: 600,
-        letterSpacing: '0.25px'
-      }}
-    >
-      {label}
-    </Typography>
-  );
-};
-
-const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = ({
-  value,
-  unit,
-  badge,
-}) => {
-  const colors = useColors();
-  return (
-    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.8, mt: 0.3 }}>
-      <Typography 
-        sx={{ 
-          fontSize: 23, 
-          fontWeight: 700, 
-          color: colors.textPrimary, 
-          lineHeight: 1.05 
-        }}
-      >
-        {value}
-      </Typography>
-      {unit && (
-        <Typography 
-          sx={{ 
-            fontSize: 13, 
-            color: colors.textSecondary, 
-            fontWeight: 500 
-          }}
-        >
-          {unit}
-        </Typography>
-      )}
-      {badge && (
-        <Typography
-          sx={{
-            ml: 'auto',
-            fontSize: 11.5,
-            fontWeight: 700,
-            color: getBadgeColor(badge.color, colors),
-            textTransform: 'uppercase',
-          }}
-        >
-          {badge.text}
-        </Typography>
-      )}
-    </Box>
-  );
-};
-
-const CardTrend: React.FC<{ text: string }> = ({ text }) => {
-  const colors = useColors();
-  return (
-    <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
-      {text}
-    </Typography>
-  );
-};
-
 const MetricsCard: React.FC<StatCardProps> = ({
   label,
   value,
@@ -114,16 +43,16 @@ const MetricsCard: React.FC<StatCardProps> = ({
 }) => {
   const colors = useColors();
 
-  // Smart sparkline color based on card label
-  const getSparklineColor = () => {
-    const labelLower = label.toLowerCase();
-    if (labelLower.includes('heat') || labelLower.includes('demand')) {
+  // Smart color selection based on card type
+  const getSparkColor = (): string => {
+    const lowerLabel = label.toLowerCase();
+    if (lowerLabel.includes('heat') || lowerLabel.includes('demand')) {
       return colors.heat;
     }
-    if (labelLower.includes('temp') || labelLower.includes('temperature')) {
+    if (lowerLabel.includes('temperature') || lowerLabel.includes('temp')) {
       return colors.cool;
     }
-    return sparkColor ?? colors.energy; // Electricity Price default
+    return sparkColor ?? colors.energy; // Electricity price fallback
   };
 
   return (
@@ -138,25 +67,69 @@ const MetricsCard: React.FC<StatCardProps> = ({
         display: 'flex',
         flexDirection: 'column',
         gap: 0.8,
-        position: 'relative',
-        overflow: 'hidden',
       }}
     >
-      <CardHeader label={label} />
-      <CardValueRow value={value} unit={unit} badge={badge} />
+      {/* Header */}
+      <Typography 
+        sx={{ 
+          fontSize: 11.5, 
+          color: colors.textSecondary, 
+          fontWeight: 600 
+        }}
+      >
+        {label}
+      </Typography>
 
+      {/* Value + Badge */}
+      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.8 }}>
+        <Typography 
+          sx={{ 
+            fontSize: 23, 
+            fontWeight: 700, 
+            color: colors.textPrimary, 
+            lineHeight: 1.05 
+          }}
+        >
+          {value}
+        </Typography>
+        {unit && (
+          <Typography sx={{ fontSize: 13, color: colors.textSecondary, fontWeight: 500 }}>
+            {unit}
+          </Typography>
+        )}
+        {badge && (
+          <Typography
+            sx={{
+              ml: 'auto',
+              fontSize: 11.5,
+              fontWeight: 700,
+              color: getBadgeColor(badge.color, colors),
+              textTransform: 'uppercase',
+            }}
+          >
+            {badge.text}
+          </Typography>
+        )}
+      </Box>
+
+      {/* Sparkline */}
       {spark && spark.length > 0 && (
         <Box sx={{ mt: 1, mx: -0.5 }}>
           <Sparkline
             type={sparkType}
             data={spark}
-            color={getSparklineColor()}
+            color={getSparkColor()}
             gradientKey={label.replace(/\s+/g, '-')}
           />
         </Box>
       )}
 
-      {trend && <CardTrend text={trend} />}
+      {/* Trend text */}
+      {trend && (
+        <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
+          {trend}
+        </Typography>
+      )}
     </Box>
   );
 };

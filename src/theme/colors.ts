@@ -1,4 +1,3 @@
-// src/theme/colors.ts
 export interface AppColors {
   bgDeep: string;
   bgBase: string;
@@ -35,17 +34,17 @@ export interface AppColors {
   chartGrid: string;
 }
 
-// Dark
+// Dark Mode
 export const darkColors: AppColors = {
   bgDeep: '#0a1420',
   bgBase: '#0f1c2e',
   bgSurface: '#162338',
   bgSurfaceHover: '#1d2c44',
-  bgCard: 'rgba(22, 35, 56, 0.85)',
+  bgCard: 'rgba(22, 35, 56, 0.9)',
   bgCardSolid: '#162338',
 
-  border: 'rgba(255,255,255,0.08)',
-  borderStrong: 'rgba(255,255,255,0.15)',
+  border: 'rgba(255,255,255,0.1)',
+  borderStrong: 'rgba(255,255,255,0.18)',
 
   textPrimary: '#f1f5f9',
   textSecondary: '#94a3b8',
@@ -58,21 +57,21 @@ export const darkColors: AppColors = {
   energy: '#10b981',
   energySoft: 'rgba(16,185,129,0.15)',
   heat: '#fb923c',
-  heatSoft: 'rgba(251,146,60,0.18)',
+  heatSoft: 'rgba(251,146,60,0.2)',
   storage: '#a855f7',
   warning: '#facc15',
   danger: '#ef4444',
 
   cool: '#60a5fa',
-  coolSoft: 'rgba(96,165,250,0.18)',
+  coolSoft: 'rgba(96,165,250,0.2)',
 
-  chartAxis: 'rgba(241,245,249,0.6)',
+  chartAxis: 'rgba(241,245,249,0.65)',
   chartAxisLabel: '#cbd5e1',
   chartTitle: '#f1f5f9',
   chartGrid: 'rgba(255,255,255,0.08)',
 };
 
-// Light - Improved contrast
+// Light Mode - **Strong contrast fix**
 export const lightColors: AppColors = {
   bgDeep: '#f8fafc',
   bgBase: '#f1f5f9',
@@ -81,8 +80,8 @@ export const lightColors: AppColors = {
   bgCard: 'rgba(255,255,255,0.98)',
   bgCardSolid: '#ffffff',
 
-  border: 'rgba(15,23,42,0.12)',
-  borderStrong: 'rgba(15,23,42,0.22)',
+  border: 'rgba(15,23,42,0.15)',
+  borderStrong: 'rgba(15,23,42,0.25)',
 
   textPrimary: '#0f172a',
   textSecondary: '#334155',
@@ -95,23 +94,27 @@ export const lightColors: AppColors = {
   energy: '#059669',
   energySoft: 'rgba(5,150,105,0.12)',
   **heat: '#e86a00',**           // Strong visible orange
-  heatSoft: 'rgba(232,106,0,0.12)',
+  heatSoft: 'rgba(232,106,0,0.15)',
   storage: '#7c3aed',
   warning: '#d97706',
   danger: '#dc2626',
 
-  cool: '#1e40af',
+  **cool: '#1e40af',**           // Deep blue
   coolSoft: 'rgba(30,64,175,0.12)',
 
-  chartAxis: 'rgba(15,23,42,0.6)',
+  chartAxis: 'rgba(15,23,42,0.65)',
   chartAxisLabel: '#1e2937',
   chartTitle: '#0f172a',
-  chartGrid: 'rgba(15,23,42,0.1)',
+  chartGrid: 'rgba(15,23,42,0.12)',
 };
 
 export type ThemeMode = 'light' | 'dark';
 
-export const palettes: Record<ThemeMode, AppColors> = { dark: darkColors, light: lightColors };
+export const palettes: Record<ThemeMode, AppColors> = {
+  dark: darkColors,
+  light: lightColors,
+};
+
 export const getColors = (theme: ThemeMode): AppColors => palettes[theme];
 
 export const getChartSx = (c: AppColors) => ({
