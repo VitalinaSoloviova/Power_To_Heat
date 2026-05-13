@@ -63,16 +63,16 @@ export const darkColors: AppColors = {
   textMuted: '#64748b',
 
   // Accents
-  primary: '#6366f1',         // purple (active nav, active button)
+  primary: '#6366f1',
   primarySoft: 'rgba(99,102,241,0.18)',
   primaryGlow: 'rgba(99,102,241,0.45)',
 
   // Energy
-  energy: '#10b981',          // green - production
+  energy: '#10b981',
   energySoft: 'rgba(16,185,129,0.15)',
-  heat: '#f97316',            // orange - heat / discharge
+  heat: '#f97316',
   heatSoft: 'rgba(249,115,22,0.15)',
-  storage: '#a855f7',         // violet - storage / forecast
+  storage: '#a855f7',
   warning: '#facc15',
   danger: '#ef4444',
 
@@ -81,55 +81,54 @@ export const darkColors: AppColors = {
   coolSoft: 'rgba(59,130,246,0.18)',
 
   // Chart
-  chartAxis: 'rgba(241,245,249,0.55)',     // light grey lines on dark bg
-  chartAxisLabel: '#cbd5e1',                // tick numbers / dates
-  chartTitle: '#f1f5f9',                    // °C / kW axis titles
-  chartGrid: 'rgba(255,255,255,0.06)',      // background grid
+  chartAxis: 'rgba(241,245,249,0.55)',
+  chartAxisLabel: '#cbd5e1',
+  chartTitle: '#f1f5f9',
+  chartGrid: 'rgba(255,255,255,0.06)',
 };
 
-// Light dashboard palette (same keys, tuned for a bright UI)
+// Light dashboard palette - FIXED & IMPROVED
 export const lightColors: AppColors = {
   // Background layers
-  bgDeep: '#cfd9e6',        
-  bgBase: '#e6edf5',     
-  bgSurface: '#f1f5f9',      
-  bgSurfaceHover: '#e2e8f0', 
-  bgCard: 'rgba(255,255,255,0.7)',
-  bgCardSolid: '#ffffff',    
-
+  bgDeep: '#f8fafc',
+  bgBase: '#f1f5f9',
+  bgSurface: '#ffffff',
+  bgSurfaceHover: '#f8fafc',
+  bgCard: 'rgba(255,255,255,0.95)',
+  bgCardSolid: '#ffffff',
 
   // Borders / dividers
-  border: 'rgba(51,65,85,0.14)',
-  borderStrong: 'rgba(51,65,85,0.24)',
+  border: 'rgba(15,23,42,0.08)',
+  borderStrong: 'rgba(15,23,42,0.16)',
 
   // Text
-  textPrimary: '#102033',
-  textSecondary: '#42526b',
-  textMuted: '#718096',
+  textPrimary: '#0f172a',
+  textSecondary: '#334155',
+  textMuted: '#64748b',
 
   // Accents
   primary: '#4f46e5',
-  primarySoft: 'rgba(79,70,229,0.14)',
-  primaryGlow: 'rgba(79,70,229,0.28)',
+  primarySoft: 'rgba(79,70,229,0.12)',
+  primaryGlow: 'rgba(79,70,229,0.25)',
 
   // Energy
-  energy: '#059669',
-  energySoft: 'rgba(5,150,105,0.14)',
-  heat: '#f97316',
-  heatSoft: 'rgba(249,115,22,0.16)',
-  storage: '#8b5cf6',
+  energy: '#059669',           // Deep emerald
+  energySoft: 'rgba(5,150,105,0.12)',
+  heat: '#ea580c',             // Stronger, more visible orange
+  heatSoft: 'rgba(234,88,12,0.12)',
+  storage: '#7c3aed',
   warning: '#d97706',
   danger: '#dc2626',
 
   // Status
-  cool: '#2563eb',
-  coolSoft: 'rgba(37,99,235,0.14)',
+  cool: '#1e40af',             // Deeper blue for better contrast
+  coolSoft: 'rgba(30,64,175,0.12)',
 
-  // Chart
-  chartAxis: 'rgba(30,41,59,0.5)',
-  chartAxisLabel: '#475569',
-  chartTitle: '#102033',
-  chartGrid: 'rgba(30,41,59,0.1)',
+  // Chart - Much better visibility in light mode
+  chartAxis: 'rgba(15,23,42,0.45)',
+  chartAxisLabel: '#334155',
+  chartTitle: '#0f172a',
+  chartGrid: 'rgba(15,23,42,0.08)',
 };
 
 export type ThemeMode = 'light' | 'dark';
@@ -143,20 +142,31 @@ export const palettes: Record<ThemeMode, AppColors> = {
 export const getColors = (theme: ThemeMode): AppColors => palettes[theme];
 
 /**
- * Reusable chart styling — reads axis/grid colors directly from the palette.
- * Pass it to a chart's `sx` prop: `<LineChart sx={getChartSx(colors)} />`.
+ * Reusable chart styling
  */
 export const getChartSx = (c: AppColors) => ({
-  '& .MuiChartsAxis-line, & .MuiChartsAxis-tick': { stroke: c.chartAxis },
-  '& .MuiChartsAxis-tickLabel': { fill: `${c.chartAxisLabel} !important`, fontSize: 10 },
-  '& .MuiChartsAxis-label': { fill: `${c.chartTitle} !important`, fontSize: 11, fontWeight: 600 },
-  '& .MuiChartsGrid-line': { stroke: c.chartGrid, strokeDasharray: '2 4' },
-  '& .MuiLineElement-series-energyDemand': { strokeDasharray: '4 4' },
+  '& .MuiChartsAxis-line, & .MuiChartsAxis-tick': { 
+    stroke: c.chartAxis 
+  },
+  '& .MuiChartsAxis-tickLabel': { 
+    fill: `${c.chartAxisLabel} !important`, 
+    fontSize: 10 
+  },
+  '& .MuiChartsAxis-label': { 
+    fill: `${c.chartTitle} !important`, 
+    fontSize: 11, 
+    fontWeight: 600 
+  },
+  '& .MuiChartsGrid-line': { 
+    stroke: c.chartGrid, 
+    strokeDasharray: '2 4' 
+  },
+  '& .MuiLineElement-series-energyDemand': { 
+    strokeDasharray: '4 4' 
+  },
 });
 
 /**
- * Default palette used when no theme context is available.
- * Components currently importing `colors` directly keep working (dark theme).
+ * Default fallback (keeps backward compatibility)
  */
 export const colors: AppColors = darkColors;
-
