@@ -43,16 +43,11 @@ const MetricsCard: React.FC<StatCardProps> = ({
 }) => {
   const colors = useColors();
 
-  // Smart color selection based on card type
-  const getSparkColor = (): string => {
-    const lowerLabel = label.toLowerCase();
-    if (lowerLabel.includes('heat') || lowerLabel.includes('demand')) {
-      return colors.heat;
-    }
-    if (lowerLabel.includes('temperature') || lowerLabel.includes('temp')) {
-      return colors.cool;
-    }
-    return sparkColor ?? colors.energy; // Electricity price fallback
+  const getSparkColor = () => {
+    const l = label.toLowerCase();
+    if (l.includes('heat') || l.includes('demand')) return colors.heat;
+    if (l.includes('temp') || l.includes('temperature')) return colors.cool;
+    return sparkColor ?? colors.energy;
   };
 
   return (
@@ -69,50 +64,22 @@ const MetricsCard: React.FC<StatCardProps> = ({
         gap: 0.8,
       }}
     >
-      {/* Header */}
-      <Typography 
-        sx={{ 
-          fontSize: 11.5, 
-          color: colors.textSecondary, 
-          fontWeight: 600 
-        }}
-      >
+      <Typography sx={{ fontSize: 11.5, color: colors.textSecondary, fontWeight: 600 }}>
         {label}
       </Typography>
 
-      {/* Value + Badge */}
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.8 }}>
-        <Typography 
-          sx={{ 
-            fontSize: 23, 
-            fontWeight: 700, 
-            color: colors.textPrimary, 
-            lineHeight: 1.05 
-          }}
-        >
+        <Typography sx={{ fontSize: 23, fontWeight: 700, color: colors.textPrimary }}>
           {value}
         </Typography>
-        {unit && (
-          <Typography sx={{ fontSize: 13, color: colors.textSecondary, fontWeight: 500 }}>
-            {unit}
-          </Typography>
-        )}
+        {unit && <Typography sx={{ fontSize: 13, color: colors.textSecondary }}>{unit}</Typography>}
         {badge && (
-          <Typography
-            sx={{
-              ml: 'auto',
-              fontSize: 11.5,
-              fontWeight: 700,
-              color: getBadgeColor(badge.color, colors),
-              textTransform: 'uppercase',
-            }}
-          >
+          <Typography sx={{ ml: 'auto', fontSize: 11.5, fontWeight: 700, color: getBadgeColor(badge.color, colors) }}>
             {badge.text}
           </Typography>
         )}
       </Box>
 
-      {/* Sparkline */}
       {spark && spark.length > 0 && (
         <Box sx={{ mt: 1, mx: -0.5 }}>
           <Sparkline
@@ -124,12 +91,7 @@ const MetricsCard: React.FC<StatCardProps> = ({
         </Box>
       )}
 
-      {/* Trend text */}
-      {trend && (
-        <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
-          {trend}
-        </Typography>
-      )}
+      {trend && <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>{trend}</Typography>}
     </Box>
   );
 };

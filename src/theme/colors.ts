@@ -1,3 +1,4 @@
+// src/theme/colors.ts
 export interface AppColors {
   bgDeep: string;
   bgBase: string;
@@ -40,38 +41,38 @@ export const darkColors: AppColors = {
   bgBase: '#0f1c2e',
   bgSurface: '#162338',
   bgSurfaceHover: '#1d2c44',
-  bgCard: 'rgba(22, 35, 56, 0.9)',
+  bgCard: 'rgba(22, 35, 56, 0.85)',
   bgCardSolid: '#162338',
 
-  border: 'rgba(255,255,255,0.1)',
-  borderStrong: 'rgba(255,255,255,0.18)',
+  border: 'rgba(255,255,255,0.08)',
+  borderStrong: 'rgba(255,255,255,0.15)',
 
-  textPrimary: '#f1f5f9',
-  textSecondary: '#94a3b8',
-  textMuted: '#64748b',
+  textPrimary: '#f9fafb',
+  textSecondary: '#f1f3f5',
+  textMuted: '#f0f2f5',
 
   primary: '#6366f1',
-  primarySoft: 'rgba(99,102,241,0.18)',
+  primarySoft: 'rgba(225, 225, 230, 0.18)',
   primaryGlow: 'rgba(99,102,241,0.45)',
 
   energy: '#10b981',
   energySoft: 'rgba(16,185,129,0.15)',
   heat: '#fb923c',
-  heatSoft: 'rgba(251,146,60,0.2)',
+  heatSoft: 'rgba(251,146,60,0.18)',
   storage: '#a855f7',
   warning: '#facc15',
   danger: '#ef4444',
 
   cool: '#60a5fa',
-  coolSoft: 'rgba(96,165,250,0.2)',
+  coolSoft: 'rgba(204, 209, 215, 0.18)',
 
-  chartAxis: 'rgba(241,245,249,0.65)',
+  chartAxis: 'rgba(241,245,249,0.6)',
   chartAxisLabel: '#cbd5e1',
   chartTitle: '#f1f5f9',
-  chartGrid: 'rgba(255,255,255,0.08)',
+  chartGrid: 'rgba(255, 255, 255, 0.13)',
 };
 
-// Light Mode - **Strong contrast fix**
+// Light Mode - Strong visibility
 export const lightColors: AppColors = {
   bgDeep: '#f8fafc',
   bgBase: '#f1f5f9',
@@ -80,32 +81,32 @@ export const lightColors: AppColors = {
   bgCard: 'rgba(255,255,255,0.98)',
   bgCardSolid: '#ffffff',
 
-  border: 'rgba(15,23,42,0.15)',
-  borderStrong: 'rgba(15,23,42,0.25)',
+  border: 'rgba(15,23,42,0.12)',
+  borderStrong: 'rgba(219, 221, 226, 0.22)',
 
-  textPrimary: '#0f172a',
-  textSecondary: '#334155',
-  textMuted: '#64748b',
+  textPrimary: '#7e8390',
+  textSecondary: '#abb6c5',
+  textMuted: '#0a0a0a',
 
   primary: '#4f46e5',
-  primarySoft: 'rgba(79,70,229,0.12)',
+  primarySoft: 'rgba(5, 5, 6, 0.12)',
   primaryGlow: 'rgba(79,70,229,0.25)',
 
   energy: '#059669',
   energySoft: 'rgba(5,150,105,0.12)',
-  **heat: '#e86a00',**           // Strong visible orange
-  heatSoft: 'rgba(232,106,0,0.15)',
+  heat: '#e86a00',           // ← Strong orange
+  heatSoft: 'rgba(232,106,0,0.12)',
   storage: '#7c3aed',
   warning: '#d97706',
   danger: '#dc2626',
 
-  **cool: '#1e40af',**           // Deep blue
+  cool: '#1e40af',           // ← Deep blue
   coolSoft: 'rgba(30,64,175,0.12)',
 
   chartAxis: 'rgba(15,23,42,0.65)',
-  chartAxisLabel: '#1e2937',
+  chartAxisLabel: '#2e3744',
   chartTitle: '#0f172a',
-  chartGrid: 'rgba(15,23,42,0.12)',
+  chartGrid: 'rgba(15,23,42,0.1)',
 };
 
 export type ThemeMode = 'light' | 'dark';
