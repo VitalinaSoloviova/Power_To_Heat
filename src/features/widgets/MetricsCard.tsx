@@ -11,21 +11,13 @@ interface Badge {
 }
 
 interface StatCardProps {
-  /** Small label shown above the value, e.g. "Electricity Price". */
   label: string;
-  /** Main numeric value displayed prominently. */
   value: string;
-  /** Optional unit shown next to the value, e.g. "ct/kWh". */
   unit?: string;
-  /** Optional status pill on the right side of the value (e.g. "low"). */
   badge?: Badge;
-  /** Time series for the inline sparkline preview. */
   spark?: number[];
-  /** Stroke / fill color used for the sparkline. */
   sparkColor?: string;
-  /** Sparkline rendering style. */
   sparkType?: SparklineType;
-  /** Optional small caption shown below the sparkline. */
   trend?: string;
 }
 
@@ -42,7 +34,14 @@ const getBadgeColor = (tone: BadgeTone, colors: AppColors): string => {
 const CardHeader: React.FC<{ label: string }> = ({ label }) => {
   const colors = useColors();
   return (
-    <Typography sx={{ fontSize: 11, color: colors.textSecondary, fontWeight: 500 }}>
+    <Typography 
+      sx={{ 
+        fontSize: 11.5, 
+        color: colors.textSecondary, 
+        fontWeight: 600,
+        letterSpacing: '0.3px'
+      }}
+    >
       {label}
     </Typography>
   );
@@ -55,12 +54,25 @@ const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = 
 }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.6, mt: 0.2 }}>
-      <Typography sx={{ fontSize: 22, fontWeight: 700, color: colors.textPrimary, lineHeight: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.8, mt: 0.3 }}>
+      <Typography 
+        sx={{ 
+          fontSize: 23, 
+          fontWeight: 700, 
+          color: colors.textPrimary, 
+          lineHeight: 1.1 
+        }}
+      >
         {value}
       </Typography>
       {unit && (
-        <Typography sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}>
+        <Typography 
+          sx={{ 
+            fontSize: 13, 
+            color: colors.textSecondary, 
+            fontWeight: 500 
+          }}
+        >
           {unit}
         </Typography>
       )}
@@ -68,9 +80,10 @@ const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = 
         <Typography
           sx={{
             ml: 'auto',
-            fontSize: 11,
+            fontSize: 11.5,
             fontWeight: 700,
             color: getBadgeColor(badge.color, colors),
+            textTransform: 'uppercase',
           }}
         >
           {badge.text}
@@ -83,7 +96,15 @@ const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = 
 const CardTrend: React.FC<{ text: string }> = ({ text }) => {
   const colors = useColors();
   return (
-    <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.2 }}>{text}</Typography>
+    <Typography 
+      sx={{ 
+        fontSize: 11, 
+        color: colors.textMuted, 
+        mt: 0.4 
+      }}
+    >
+      {text}
+    </Typography>
   );
 };
 
@@ -98,6 +119,18 @@ const MetricsCard: React.FC<StatCardProps> = ({
   trend,
 }) => {
   const colors = useColors();
+
+  // Smart default color for sparklines based on label
+  const getDefaultSparkColor = (): string => {
+    if (label.toLowerCase().includes('heat') || label.toLowerCase().includes('demand')) {
+      return colors.heat;
+    }
+    if (label.toLowerCase().includes('temp') || label.toLowerCase().includes('temperature')) {
+      return colors.cool;
+    }
+    return colors.energy; // default for electricity price
+  };
+
   return (
     <Box
       sx={{
@@ -106,10 +139,10 @@ const MetricsCard: React.FC<StatCardProps> = ({
         bgcolor: colors.bgCardSolid,
         border: `1px solid ${colors.border}`,
         borderRadius: 2.5,
-        p: 2,
+        p: 2.5,
         display: 'flex',
         flexDirection: 'column',
-        gap: 0.6,
+        gap: 0.8,
         position: 'relative',
         overflow: 'hidden',
       }}
@@ -118,12 +151,12 @@ const MetricsCard: React.FC<StatCardProps> = ({
       <CardValueRow value={value} unit={unit} badge={badge} />
 
       {spark && spark.length > 0 && (
-        <Box sx={{ mt: 0.5, mx: -0.5 }}>
+        <Box sx={{ mt: 1, mx: -0.5 }}>
           <Sparkline
             type={sparkType}
             data={spark}
-            color={sparkColor ?? colors.energy}
-            gradientKey={label}
+            color={sparkColor ?? getDefaultSparkColor()}
+            gradientKey={label.replace(/\s+/g, '')}
           />
         </Box>
       )}
