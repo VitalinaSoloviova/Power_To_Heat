@@ -39,7 +39,7 @@ const CardHeader: React.FC<{ label: string }> = ({ label }) => {
         fontSize: 11.5, 
         color: colors.textSecondary, 
         fontWeight: 600,
-        letterSpacing: '0.3px'
+        letterSpacing: '0.25px'
       }}
     >
       {label}
@@ -60,7 +60,7 @@ const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = 
           fontSize: 23, 
           fontWeight: 700, 
           color: colors.textPrimary, 
-          lineHeight: 1.1 
+          lineHeight: 1.05 
         }}
       >
         {value}
@@ -96,13 +96,7 @@ const CardValueRow: React.FC<{ value: string; unit?: string; badge?: Badge }> = 
 const CardTrend: React.FC<{ text: string }> = ({ text }) => {
   const colors = useColors();
   return (
-    <Typography 
-      sx={{ 
-        fontSize: 11, 
-        color: colors.textMuted, 
-        mt: 0.4 
-      }}
-    >
+    <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
       {text}
     </Typography>
   );
@@ -120,15 +114,16 @@ const MetricsCard: React.FC<StatCardProps> = ({
 }) => {
   const colors = useColors();
 
-  // Smart default color for sparklines based on label
-  const getDefaultSparkColor = (): string => {
-    if (label.toLowerCase().includes('heat') || label.toLowerCase().includes('demand')) {
+  // Smart sparkline color based on card label
+  const getSparklineColor = () => {
+    const labelLower = label.toLowerCase();
+    if (labelLower.includes('heat') || labelLower.includes('demand')) {
       return colors.heat;
     }
-    if (label.toLowerCase().includes('temp') || label.toLowerCase().includes('temperature')) {
+    if (labelLower.includes('temp') || labelLower.includes('temperature')) {
       return colors.cool;
     }
-    return colors.energy; // default for electricity price
+    return sparkColor ?? colors.energy; // Electricity Price default
   };
 
   return (
@@ -155,8 +150,8 @@ const MetricsCard: React.FC<StatCardProps> = ({
           <Sparkline
             type={sparkType}
             data={spark}
-            color={sparkColor ?? getDefaultSparkColor()}
-            gradientKey={label.replace(/\s+/g, '')}
+            color={getSparklineColor()}
+            gradientKey={label.replace(/\s+/g, '-')}
           />
         </Box>
       )}
