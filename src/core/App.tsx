@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
+import styles from './App.module.css';
 import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar.tsx';
 import { ThemeProvider } from '@theme/ThemeContext';
@@ -9,14 +10,7 @@ const AppShell = () => {
   const colors = useColors();
   const [page, setPage] = useState('overview');
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        height: '100vh',
-        width: '100vw',
-        bgcolor: colors.bgBase,
-      }}
-    >
+    <Box className={styles.appShell} style={{ backgroundColor: colors.bgBase }}>
       <Sidebar activePage={page} onPageChange={setPage} />
       <MainContent activePage={page} onPageChange={setPage} />
     </Box>

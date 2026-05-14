@@ -43,7 +43,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
         gap: 1,
       }}
     >
-      {/* Logo */}
       <LogoComponent/>
       {/* Nav */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'center', flex: 1 }}>
@@ -77,7 +76,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
           );
         })}
       </Box>
-      {/* Help */}
          <HelpComponent/>
     </Box>
   );
