@@ -2,8 +2,8 @@ import { DataResolver } from "../calculations/DataResolver";
 import { UIService } from "./UIService";
 import { StaticLocationService, type LocationService } from "./LocationService";
 import { type CurrentEnergyPriceService } from "./currentData/CurrentEnergyPriceService";
-import { OpenWeatherCurrentWeatherService } from "../features/widgets/topRow/OpenWeatherCurrentWeatherService";
-import { AwattarEnergyPriceService } from "../features/widgets/topRow/AwattarEnergyPriceService";
+import { OpenWeatherCurrentWeatherService } from "../features/topRow/OpenWeatherCurrentWeatherService";
+import { AwattarEnergyPriceService } from "../features/topRow/AwattarEnergyPriceService";
 
 // Backend base URL – override via Vite env when needed (VITE_API_BASE_URL).
 const BASE_URL =

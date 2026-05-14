@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 import { BoltRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
-import { useCurrentEnergyPrice } from "./hooks/useCurrentEnergyPrice";
+import { useCurrentEnergyPrice } from "../hooks/useCurrentEnergyPrice";
 import type { EnergyPriceStatus } from "@services/currentData/CurrentEnergyPriceService";
 import type { AppColors } from "@theme/colors";
 

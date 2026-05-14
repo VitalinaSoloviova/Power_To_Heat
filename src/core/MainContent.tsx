@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box } from '@mui/material';
 import ToolbarComponent from './ToolbarComponent';
 import SimulationComponent from '@features/simulation/SimulationComponent';
-import TopWidgetsRow from '@features/widgets/topRow/TopWidgetsRow';
+import TopWidgetsRow from '@features/topRow/widgets/TopWidgetsRow';
 import AnalyticsPage from '@features/analytics/AnalyticsPage';
 import { useSimulationHistory } from '@features/analytics/useSimulationHistory';
 import { useColors } from '@theme/useTheme';

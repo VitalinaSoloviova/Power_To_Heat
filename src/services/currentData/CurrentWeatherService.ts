@@ -22,7 +22,3 @@ export interface CurrentWeather {
     fetchedAt: Date;
 }
 
-export interface CurrentWeatherService {
-    getCurrent(location: Location): Promise<CurrentWeather>;
-}
-

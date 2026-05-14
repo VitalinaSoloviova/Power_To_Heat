@@ -1,8 +1,8 @@
-import type { CurrentWeatherService, CurrentWeather, WeatherCondition } from '@services/CurrentWeatherService';
+import type {CurrentWeather, WeatherCondition } from "@services/currentData/CurrentWeatherService";
 import type { Location } from '@services/LocationService';
 
-export class OpenWeatherCurrentWeatherService implements CurrentWeatherService {
-    async getCurrent(location: Location): Promise<CurrentWeather> {
+export class OpenWeatherCurrentWeatherService {
+    public async getCurrent(location: Location): Promise<CurrentWeather> {
         try {
             const url =
                 `https://api.open-meteo.com/v1/forecast` +
