@@ -6,7 +6,7 @@ import {
 } from "@services/serviceContainer";
 import type { Location } from "@services/LocationService";
 import type { CurrentWeather } from "@services/CurrentWeatherService";
-import type { CurrentEnergyPrice } from "@services/CurrentEnergyPriceService";
+import type { CurrentEnergyPrice } from "@services/currentData/CurrentEnergyPriceService";
 
 interface AsyncState<T> {
     data: T | null;

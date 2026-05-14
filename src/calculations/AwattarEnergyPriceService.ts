@@ -1,4 +1,4 @@
-import type { CurrentEnergyPriceService, CurrentEnergyPrice, EnergyPriceStatus } from '@services/CurrentEnergyPriceService';
+import type { CurrentEnergyPriceService, CurrentEnergyPrice, EnergyPriceStatus } from '@services/currentData/CurrentEnergyPriceService';
 
 interface AwattarEntry {
     start_timestamp: number;

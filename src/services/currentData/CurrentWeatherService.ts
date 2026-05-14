@@ -1,5 +1,3 @@
-import type { Location } from "./LocationService";
-
 /** Coarse weather buckets used by the UI for icons & labels. */
 export type WeatherCondition =
     | "sunny"

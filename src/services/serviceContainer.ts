@@ -1,8 +1,7 @@
 import { DataResolver } from "../calculations/DataResolver";
 import { UIService } from "./UIService";
 import { StaticLocationService, type LocationService } from "./LocationService";
-import { type CurrentWeatherService } from "./CurrentWeatherService";
-import { type CurrentEnergyPriceService } from "./CurrentEnergyPriceService";
+import { type CurrentEnergyPriceService } from "./currentData/CurrentEnergyPriceService";
 import { OpenWeatherCurrentWeatherService } from "../calculations/OpenWeatherCurrentWeatherService";
 import { AwattarEnergyPriceService } from "../calculations/AwattarEnergyPriceService";
 
@@ -19,8 +18,7 @@ export const uiService = new UIService(dataResolver);
 
 export const locationService: LocationService = new StaticLocationService();
 
-export const currentWeatherService: CurrentWeatherService =
-    new OpenWeatherCurrentWeatherService();
+export const currentWeatherService = new OpenWeatherCurrentWeatherService();
 
 export const currentEnergyPriceService: CurrentEnergyPriceService =
     new AwattarEnergyPriceService(BASE_URL);

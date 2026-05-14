@@ -3,7 +3,8 @@ import { uiService } from '@services/serviceContainer';
 import type { SimulationPoint, SimulationRange } from '../simulationTypes';
 import { stepStorage } from '../storageCalculationUtils';
 import type { UiHourData } from '@calculations/uiDataProfile';
-import type { WeatherCondition } from '@services/CurrentWeatherService';
+import type { WeatherCondition } from '@services/currentData/CurrentWeatherService';
+
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {
   day: 24,

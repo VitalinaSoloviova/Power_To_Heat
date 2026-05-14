@@ -3,7 +3,7 @@ import { BoltRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
 import { useCurrentEnergyPrice } from "./hooks/useTopWidgetData";
-import type { EnergyPriceStatus } from "@services/CurrentEnergyPriceService";
+import type { EnergyPriceStatus } from "@services/currentData/CurrentEnergyPriceService";
 import type { AppColors } from "@theme/colors";
 
 const statusColor = (status: EnergyPriceStatus, colors: AppColors): string => {
