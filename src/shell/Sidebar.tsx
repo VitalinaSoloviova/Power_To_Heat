@@ -4,7 +4,7 @@ import {
   PieChartRounded,
   SettingsRounded,
 } from '@mui/icons-material';
-import { useState } from 'react';
+
 import { useColors } from '@theme/useTheme';
 import { LogoComponent } from './LogoComponent';
 import { HelpComponent } from './HelpComponent';
@@ -21,9 +21,13 @@ const navItems: NavItem[] = [
   { id: 'settings', label: 'Settings', icon: <SettingsRounded /> },
 ];
 
-const Sidebar = () => {
+interface SidebarProps {
+  activePage: string;
+  onPageChange: (page: string) => void;
+}
+
+const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
   const colors = useColors();
-  const [active, setActive] = useState('overview');
 
   return (
     <Box
@@ -44,11 +48,11 @@ const Sidebar = () => {
       {/* Nav */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'center', flex: 1 }}>
         {navItems.map((item) => {
-          const isActive = active === item.id;
+          const isActive = activePage === item.id;
           return (
             <Tooltip key={item.id} title={item.label} placement="right" arrow>
               <Box
-                onClick={() => setActive(item.id)}
+                onClick={() => onPageChange(item.id)}
                 sx={{
                   width: 56,
                   height: 56,

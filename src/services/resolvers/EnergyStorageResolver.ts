@@ -1,53 +1,69 @@
-import type {
-  CityDemandPoint,
-  EnergyStoragePoint,
-  PowerGenerationPoint,
-  SimulationInput,
-} from '../types/SimulationTypes';
+export interface StorageStepInput {
+    price: number;                          // EUR/MWh — day-ahead market price
+    demandKw: number;                       // kW — heating demand this step
+    previous: { level: number; capacity: number };
+    stepHours: number;                      // 1 for hourly, 24 for daily
+}
 
-/**
- * Produces mocked hourly storage state by walking through generation
- * and demand and accumulating the battery level. Will later be driven
- * by a slider — values are still computed per hour so the UI can scrub.
- */
+export interface StorageStepOutput {
+    storage: { level: number; capacity: number };
+    flow: number;                           // kWh, positive = charging, negative = discharging
+    mode: 'charging' | 'discharging' | 'direct';
+}
+
+// Price thresholds (EUR/MWh)
+const LOW_PRICE_THRESHOLD  = 60;   // below → cheap enough to charge storage
+const HIGH_PRICE_THRESHOLD = 100;  // above → too expensive, drain storage instead
+
+// Maximum Power-to-Heat input power in kW
+const MAX_P2H_KW = 3_000;
+
 export class EnergyStorageResolver {
-  // 2 x 10 MW Sand Batteries = 20 MW / 20,000 kWh capacity.
-  private static readonly CAPACITY_KWH = 20_000;
+    static readonly CAPACITY_KWH = 20_000; // 2 × 10 MWh sand batteries
 
-  public resolve(
-    input: SimulationInput,
-    generation: PowerGenerationPoint[],
-    demand: CityDemandPoint[],
-  ): EnergyStoragePoint[] {
-    const points: EnergyStoragePoint[] = [];
-    let level = input.currentStorage;
+    /**
+     * Price-aware P2H storage strategy.
+     * Assumes unlimited grid access — price determines WHEN to buy, not whether.
+     *
+     * LOW price  → buy at full P2H power, charge storage with surplus
+     * HIGH price → switch P2H off, drain storage to cover demand
+     *              (if storage empty: P2H must run regardless — emergency mode)
+     * MEDIUM     → buy just enough to cover current demand, storage unchanged
+     */
+    static step({ price, demandKw, previous, stepHours }: StorageStepInput): StorageStepOutput {
+        const { level, capacity } = previous;
+        const demandKwh = demandKw * stepHours;
 
-    const length = Math.min(generation.length, demand.length);
-    for (let h = 0; h < length; h++) {
-      const gen = generation[h];
-      const dem = demand[h];
-      const balance = gen.totalGenerated - dem.demand; // kWh per hour (1h step)
+        if (price < LOW_PRICE_THRESHOLD) {
+            // Cheap: run P2H at max, store the surplus heat
+            const p2hKwh   = MAX_P2H_KW * stepHours;
+            const surplus  = p2hKwh - demandKwh;
+            const charged  = Math.min(Math.max(0, surplus), capacity - level);
+            return {
+                storage: { level: level + charged, capacity },
+                flow: charged,
+                mode: 'charging',
+            };
+        }
 
-      let chargedEnergy = 0;
-      let consumedEnergy = 0;
+        if (price > HIGH_PRICE_THRESHOLD) {
+            // Expensive: turn P2H off, cover demand from storage
+            const discharged = Math.min(demandKwh, level);
+            const shortfall  = demandKwh - discharged; // > 0 only if storage empty
+            // If storage can't cover all demand, P2H must run for the shortfall (emergency)
+            const emergencyCharge = shortfall > 0 ? 0 : 0; // shortfall is met by P2H but not stored
+            return {
+                storage: { level: level - discharged, capacity },
+                flow: -(discharged + emergencyCharge),
+                mode: discharged >= demandKwh ? 'discharging' : 'discharging',
+            };
+        }
 
-      if (balance >= 0) {
-        chargedEnergy = Math.min(balance, EnergyStorageResolver.CAPACITY_KWH - level);
-        level += chargedEnergy;
-      } else {
-        consumedEnergy = Math.min(-balance, level);
-        level -= consumedEnergy;
-      }
-
-      points.push({
-        hour: h,
-        timestamp: gen.timestamp,
-        storageLevel: level,
-        chargedEnergy,
-        consumedEnergy,
-      });
+        // Medium price: P2H covers demand directly, no net storage change
+        return {
+            storage: { level, capacity },
+            flow: 0,
+            mode: 'direct',
+        };
     }
-
-    return points;
-  }
 }

@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { uiService } from '@services/serviceContainer';
 import type { SimulationPoint, SimulationRange } from '../simulationTypes';
-import { stepStorage } from '../storageCalculationUtils';
+import { EnergyStorageResolver } from '@services/resolvers/EnergyStorageResolver';
 import type { UiHourData } from '@calculations/uiDataProfile';
 import type { WeatherCondition } from '@services/currentData/CurrentWeatherService';
+import type { HistoryYears } from '@services/UIService';
+import type { DataCoverage } from '@services/DataCoverageCalculator';
 
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {
@@ -38,31 +40,39 @@ const normalizeWeatherCondition = (
  * Builds a `SimulationPoint[]` series from the real chart data exposed
  * by `UIService`. Returns an empty array while loading or on error.
  */
-export function useSimulationData(range: SimulationRange, startDay: Date, initialStoragePercent: number) {
+export function useSimulationData(
+  range: SimulationRange,
+  startDay: Date,
+  initialStoragePercent: number,
+  historyYears: HistoryYears = 10,
+) {
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
+  const [dataYears, setDataYears] = useState<DataCoverage | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     const granularity = range === 'month' ? 'daily' : 'hourly';
 
     uiService
-      .getChartsData(10, granularity, startDay)
+      .getChartsData(historyYears, granularity, startDay)
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
+        setDataYears(d.dataYears);
         setCurrentRange(range);
       })
       .catch(() => {
         if (cancelled) return;
         setHours(null);
+        setDataYears(null);
         setCurrentRange(range);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [range, startDay]);
+  }, [range, startDay, historyYears]);
 
   const loading = range !== currentRange;
 
@@ -79,7 +89,7 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
     }
 
     const slice = hours.slice(0, targetCount);
-    const capacity = 20000;
+    const capacity = EnergyStorageResolver.CAPACITY_KWH;
     const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
     let level = capacity * (clampedInitialStoragePercent / 100);
 
@@ -87,18 +97,19 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
       const current = h.energyDemand / 100;
       const expected = current * 0.97;
 
-      const hour = h.datetime.getUTCHours();
-      const solar = Math.max(0, Math.sin(((hour - 6) / 12) * Math.PI)) * 700; // Increased from 500
-      const wind = Math.max(80, (h.weather.wind ?? 6) * 45); // Minimum 80kW, default 6 m/s wind
-      const generated = solar + wind;
+      // P2H output: full power when cheap, zero when expensive, demand-only at medium price
+      const p2hMax = 3_000; // kW
+      const generated = h.price < 60  ? p2hMax
+                      : h.price > 100 ? 0
+                      : current; // medium: just enough to cover demand
 
       const energy = { generated, price: h.price };
       const demand = { current, expected };
       const storage = pointIndex === 0
         ? { level, capacity }
-        : stepStorage({
-            energy,
-            demand,
+        : EnergyStorageResolver.step({
+            price: h.price,
+            demandKw: current,
             previous: { level, capacity },
             stepHours,
           }).storage;
@@ -120,5 +131,5 @@ export function useSimulationData(range: SimulationRange, startDay: Date, initia
     });
   }, [hours, range, initialStoragePercent]);
 
-  return { series, loading };
+  return { series, loading, dataYears };
 }

@@ -1,26 +1,36 @@
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Paper } from "@mui/material";
 import SimulationHeader from "./SimulationHeader";
 import SimulationScene from "./SimulationScene";
 import SimulationControls from "./SimulationControls";
 import SimulationChartCards from "./SimulationChartCards";
+import SimulationPriceTicker from "./SimulationPriceTicker";
 import { useSimulationData } from "./hooks/useSimulationData";
 import { useColors } from "@theme/useTheme";
-import type { SimulationRange } from "./simulationTypes";
-import { DEFAULT_STORAGE_LEVEL } from "@services/UIService";
+import type { SimulationRange, ReplayParams } from "./simulationTypes";
+import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/UIService";
+import type { SimulationRun } from "@features/analytics/analyticsTypes";
 
-const SimulationComponent: React.FC = () => {
+interface Props {
+  onRunComplete?: (run: SimulationRun) => void;
+  initialParams?: ReplayParams;
+}
+
+const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) => {
   const colors = useColors();
-  const [range, setRange] = useState<SimulationRange>("day");
+  const [range, setRange] = useState<SimulationRange>(initialParams?.range ?? "day");
   const [index, setIndex] = useState(0);
-  const [startDay, setStartDay] = useState<Date>(() => {
-    const now = new Date();
-    return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-  });
-  const [storageLevel, setStorageLevel] = useState<number>(DEFAULT_STORAGE_LEVEL);
+  const [startDay, setStartDay] = useState<Date>(
+    () => initialParams?.startDay ?? (() => {
+      const now = new Date();
+      return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+    })()
+  );
+  const [storageLevel, setStorageLevel] = useState<number>(initialParams?.storageLevel ?? DEFAULT_STORAGE_LEVEL);
+  const [historyYears, setHistoryYears] = useState<HistoryYears>(initialParams?.historyYears ?? DEFAULT_HISTORY_YEARS);
   const [isPlaying, setIsPlaying] = useState(false);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
-  const { series, loading } = useSimulationData(range, startDay, storageLevel);
+  const { series, loading, dataYears } = useSimulationData(range, startDay, storageLevel, historyYears);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -36,6 +46,29 @@ const SimulationComponent: React.FC = () => {
   const toggleSimulation = useCallback(() => {
     setIsPlaying((prev) => !prev);
   }, []);
+
+  // Auto-save when simulation plays to the last frame
+  const wasPlayingRef = useRef(false);
+  useEffect(() => {
+    if (wasPlayingRef.current && !isPlaying && index === series.length - 1 && series.length > 0) {
+      onRunComplete?.({
+        id: crypto.randomUUID(),
+        savedAt: new Date().toISOString(),
+        params: {
+          startDay: startDay.toISOString(),
+          range,
+          storageLevel,
+          historyYears,
+          dataYears: {
+            weather: dataYears?.weatherYears ?? 0,
+            price: dataYears?.priceYears ?? 0,
+          },
+        },
+        series,
+      });
+    }
+    wasPlayingRef.current = isPlaying;
+  }, [isPlaying]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!isPlaying || series.length === 0) return;
@@ -113,8 +146,15 @@ const SimulationComponent: React.FC = () => {
       )}
 
       {/* Chart cards sidebar (right) */}
-      <Box sx={{ width: 300, flexShrink: 0 }}>
-        <SimulationChartCards startDay={startDay} range={range} vertical />
+      <Box sx={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 720, maxHeight: 'clamp(500px, 72vh, 920px)', overflow: 'hidden' }}>
+        <SimulationChartCards
+          startDay={startDay}
+          range={range}
+          vertical
+          historyYears={historyYears}
+          onHistoryYearsChange={setHistoryYears}
+        />
+        <SimulationPriceTicker series={series} currentIndex={index} />
       </Box>
     </Box>
   );
