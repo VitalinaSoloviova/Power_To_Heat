@@ -40,7 +40,7 @@ const RunCard: React.FC<Props> = ({ run, selected, onSelect, onDelete }) => {
 
   const infos = [
     `Storage: ${run.params.storageLevel} %`,
-    ...(historyYears != null ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
+    ...(historyYears !== null && historyYears !== undefined ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
     `Cost: ${stats.totalCost.toFixed(2)} €`,
     `Cheap / Expensive: ${stats.cheapCount} / ${stats.expensiveCount}`,
     `Savings: ${stats.savings >= 0 ? '+' : ''}${stats.savings.toFixed(0)} €`,

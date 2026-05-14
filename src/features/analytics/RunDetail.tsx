@@ -208,7 +208,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
         >
           Replay
         </Button>
-        {run.params.historyYears != null && run.params.dataYears && (
+        {run.params.historyYears !== null && run.params.historyYears !== undefined && run.params.dataYears && (
           <Typography sx={{ fontSize: 11, color: colors.textMuted }}>
             {run.params.historyYears}Y requested ·{' '}
             <Typography component="span" sx={{ color: run.params.dataYears.weather >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: 600, fontSize: 11 }}>
