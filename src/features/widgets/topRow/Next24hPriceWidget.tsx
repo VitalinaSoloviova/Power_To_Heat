@@ -2,7 +2,7 @@ import { Box, Typography, LinearProgress } from "@mui/material";
 import { TrendingUpRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
-import { useCurrentEnergyPrice } from "./hooks/useTopWidgetData";
+import { useCurrentEnergyPrice } from "./hooks/useCurrentEnergyPrice";
 
 const Next24hPriceWidget: React.FC = () => {
     const colors = useColors();

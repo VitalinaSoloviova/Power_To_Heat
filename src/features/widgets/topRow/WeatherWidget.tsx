@@ -12,7 +12,8 @@ import {
 import type { ReactNode } from "react";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
-import { useCurrentWeather, useLocation } from "./hooks/useTopWidgetData";
+import { useCurrentWeather } from "./hooks/useCurrentWeather";
+import { useLocation } from "./hooks/useLocation";
 import type { WeatherCondition } from "@services/CurrentWeatherService";
 
 const conditionIcon = (
