@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { uiService } from '@services/serviceContainer';
+import { uiService } from '@services/serviceRegistry';
 import type { SimulationPoint, SimulationRange } from '../simulationTypes';
 import { EnergyStorageResolver } from '@services/resolvers/EnergyStorageResolver';
 import type { UiHourData } from '@calculations/uiDataProfile';

@@ -3,7 +3,7 @@ import {
     locationService,
     currentWeatherService,
     currentEnergyPriceService,
-} from "@services/serviceContainer";
+} from "@services/serviceRegistry";
 import type { Location } from "@services/LocationService";
 import type { CurrentWeather } from "@services/CurrentWeatherService";
 import type { CurrentEnergyPrice } from "@services/currentData/CurrentEnergyPriceService";

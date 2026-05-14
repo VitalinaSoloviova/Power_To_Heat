@@ -28,7 +28,7 @@
       "@services/*": ["./src/services/*"],
       "@calculations/*": ["./src/calculations/*"],
       "@theme/*": ["./src/theme/*"],
-      "@shell/*": ["./src/shell/*"]
+      "@core/*": ["./src/core/*"]
     }
   },
   "include": ["src"]

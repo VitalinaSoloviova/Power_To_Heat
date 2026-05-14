@@ -4,7 +4,7 @@ import {
     type HistoryYears,
 } from '@services/UIService';
 import type { Granularity } from '@calculations/DataResolver';
-import { uiService } from '@services/serviceContainer';
+import { uiService } from '@services/serviceRegistry';
 
 interface UseChartsDataResult {
     data: ChartsData | null;
