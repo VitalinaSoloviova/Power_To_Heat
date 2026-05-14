@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Box } from '@mui/material';
 import ToolbarComponent from './ToolbarComponent';
-import SimulationComponent from '@features/simulationSection/SimulationComponent';
 import TopWidgetsRow from '@features/topRow/widgets/TopWidgetsRow';
 import AnalyticsPage from '@features/analytics/AnalyticsPage';
 import { useSimulationHistory } from '@features/analytics/useSimulationHistory';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRun } from '@features/analytics/analyticsTypes';
 import { DEFAULT_HISTORY_YEARS, type HistoryYears } from '@services/UIService';
+import SimulationComponent from '@features/simulationSection/simulation/SimulationComponent';
 import type { ReplayParams } from '@features/simulationSection/simulationTypes';
 
 interface MainContentProps {

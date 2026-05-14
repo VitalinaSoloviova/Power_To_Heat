@@ -1,10 +1,11 @@
-import IslandFrame from './IslandFrame';
-import GroundPatch from './GroundPatch';
-import WindTurbine from './WindTurbine';
-import SolarPanel from './SolarPanel';
-import Tree from './Tree';
+
 import type { SimulationPoint } from '../simulationTypes';
 import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from '../simulationUtils';
+import GroundPatch from './GroundPatch';
+import IslandFrame from './IslandFrame';
+import SolarPanel from './SolarPanel';
+import Tree from './Tree';
+import WindTurbine from './WindTurbine';
 
 interface EnergyIslandProps {
   point: SimulationPoint;
