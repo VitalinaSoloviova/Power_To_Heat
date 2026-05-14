@@ -6,7 +6,7 @@ import type {
   PlaybackControl,
   StorageControl,
   TimelineControl,
-} from './simulationTypes';
+} from '../simulationTypes';
 
 interface SimulationControlsProps {
   /** Storage-level slider state. */

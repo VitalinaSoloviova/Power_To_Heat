@@ -3,8 +3,8 @@ import GroundPatch from './GroundPatch';
 import WindTurbine from './WindTurbine';
 import SolarPanel from './SolarPanel';
 import Tree from './Tree';
-import type { SimulationPoint } from './simulationTypes';
-import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from './simulationUtils';
+import type { SimulationPoint } from '../simulationTypes';
+import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from '../simulationUtils';
 
 interface EnergyIslandProps {
   point: SimulationPoint;

@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 import IslandFrame from './IslandFrame';
 import GroundPatch from './GroundPatch';
 import Tree from './Tree';
-import type { SimulationPoint } from './simulationTypes';
-import { phaseForTimestamp, brightnessForPhase } from './simulationUtils';
+import type { SimulationPoint } from '../simulationTypes';
+import { phaseForTimestamp, brightnessForPhase } from '../simulationUtils';
 
 interface CityIslandProps {
   point: SimulationPoint;

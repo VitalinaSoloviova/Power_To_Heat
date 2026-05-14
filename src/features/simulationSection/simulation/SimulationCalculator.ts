@@ -1,4 +1,4 @@
-import type { SimulationPoint } from './simulationTypes';
+import type { SimulationPoint } from '../simulationTypes';
 import { SimulationConfig } from './SimulationConfig';
 
 /**

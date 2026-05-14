@@ -2,7 +2,7 @@ import type {
   SimulationDemand,
   SimulationEnergy,
   SimulationStorage,
-} from './simulationTypes';
+} from '../simulationTypes';
 
 export interface StorageInputs {
   /** Energy currently produced by renewables. */

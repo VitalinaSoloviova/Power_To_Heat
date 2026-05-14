@@ -1,7 +1,7 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMemo, useRef, useEffect, useState } from 'react';
-import type { SimulationWeather } from './simulationTypes';
-import { phaseForTimestamp, sunElevation, NIGHT_PHASES } from './simulationUtils';
+import type { SimulationWeather } from '../simulationTypes';
+import { phaseForTimestamp, sunElevation, NIGHT_PHASES } from '../simulationUtils';
 
 interface WeatherBackdropProps {
   timestamp: string;

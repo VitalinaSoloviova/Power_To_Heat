@@ -2,7 +2,7 @@ import { useRef, useEffect, memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useColors } from '@theme/useTheme';
-import type { SimulationPoint } from './simulationTypes';
+import type { SimulationPoint } from '../simulationTypes';
 
 interface Props {
     series: SimulationPoint[];

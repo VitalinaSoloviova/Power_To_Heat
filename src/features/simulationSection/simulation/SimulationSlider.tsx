@@ -1,13 +1,10 @@
 import { useState } from 'react';
 import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography, Popover, IconButton } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type {
-  PlaybackControl,
-  SimulationRange,
-  TimelineControl,
-} from './simulationTypes';
-import { formatTimestamp } from './simulationUtils';
+
+import { formatTimestamp } from '../simulationUtils';
 import SimulationButton from './SimulationButton';
+import type { TimelineControl, PlaybackControl, SimulationRange } from '../simulationTypes';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 

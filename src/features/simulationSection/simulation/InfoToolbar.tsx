@@ -1,6 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import type { SimulationPoint } from './simulationTypes';
+import type { SimulationPoint } from '../simulationTypes';
 
 interface InfoToolbarProps {
   point: SimulationPoint;

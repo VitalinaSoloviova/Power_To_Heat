@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { uiService } from '@services/serviceRegistry';
-import type { SimulationPoint, SimulationRange } from '../simulationTypes';
 import { EnergyStorageResolver } from '@services/resolvers/EnergyStorageResolver';
 import type { UiHourData } from '@calculations/uiDataProfile';
 import type { WeatherCondition } from '@services/currentData/CurrentWeatherService';
 import type { HistoryYears } from '@services/UIService';
 import type { DataCoverage } from '@services/DataCoverageCalculator';
+import type { SimulationRange, SimulationPoint } from '../simulationTypes';
 
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {

@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import type { SimulationPoint } from './simulationTypes';
+import type { SimulationPoint } from '../simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
 
