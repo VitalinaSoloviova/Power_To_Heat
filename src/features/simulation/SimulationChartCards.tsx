@@ -12,6 +12,8 @@ interface SimulationChartCardsProps {
   startDay: Date;
   range: SimulationRange;
   vertical?: boolean;
+  historyYears?: HistoryYears;
+  onHistoryYearsChange?: (v: HistoryYears) => void;
 }
 
 interface CardSeries {
@@ -157,9 +159,19 @@ const ChartCard = memo<{
   );
 });
 
-const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({ startDay, range, vertical = false }) => {
+const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
+  startDay, range, vertical = false,
+  historyYears: historyYearsProp,
+  onHistoryYearsChange,
+}) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [historyYears, setHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
+  const [localHistoryYears, setLocalHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
+  // Use prop if provided (controlled by parent), otherwise fall back to local state
+  const historyYears = historyYearsProp ?? localHistoryYears;
+  const setHistoryYears = (v: HistoryYears) => {
+    setLocalHistoryYears(v);
+    onHistoryYearsChange?.(v);
+  };
   const colors = useColors();
 
   const { data: charts } = useChartsData(historyYears, startDay, GRANULARITY[range]);

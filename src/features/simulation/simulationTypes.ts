@@ -2,7 +2,8 @@
 // Keeping these in one place makes the islands, slider and calculation
 // utilities easy to extend without coupling them to a specific data source.
 
-import type { WeatherCondition } from "@services/CurrentWeatherService";
+import type { WeatherCondition } from "../../services/currentData/CurrentWeatherService";
+import type { HistoryYears } from "@services/UIService";
 
 export type SimulationRange = 'day' | 'week' | 'month';
 
@@ -73,4 +74,12 @@ export interface TimelineControl {
 export interface StorageControl {
   currentStoragePercent: number;
   onStorageChange: (val: number) => void;
+}
+
+/** Parameters needed to replay a saved SimulationRun from scratch. */
+export interface ReplayParams {
+  startDay: Date;
+  range: SimulationRange;
+  storageLevel: number;
+  historyYears: HistoryYears;
 }

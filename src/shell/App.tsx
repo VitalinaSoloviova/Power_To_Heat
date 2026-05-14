@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar';
@@ -6,6 +7,7 @@ import { useColors } from '@theme/useTheme';
 
 const AppShell = () => {
   const colors = useColors();
+  const [page, setPage] = useState('overview');
   return (
     <Box
       sx={{
@@ -15,8 +17,8 @@ const AppShell = () => {
         bgcolor: colors.bgBase,
       }}
     >
-      <Sidebar />
-      <MainContent />
+      <Sidebar activePage={page} onPageChange={setPage} />
+      <MainContent activePage={page} onPageChange={setPage} />
     </Box>
   );
 };
