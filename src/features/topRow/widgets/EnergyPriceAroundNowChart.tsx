@@ -22,15 +22,16 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
   const svgRef = useRef<SVGSVGElement | null>(null);
 
   const now = Date.now();
-  const rangeStart = now - 24 * 60 * 60 * 1000;
-  const rangeEnd = now + 24 * 60 * 60 * 1000;
-  const total = rangeEnd - rangeStart;
 
   const prepared = useMemo<(PriceGraphPoint & { x: number })[]>(() => {
     if (!points || points.length === 0) return [] as (PriceGraphPoint & { x: number })[];
-    // Map timestamps into x [0, VIEW_W]
-    return points.map(p => ({ ...p, x: ((p.timestamp - rangeStart) / total) * VIEW_W })) as (PriceGraphPoint & { x: number })[];
-  }, [points, rangeStart, total]);
+    // sort and compute min/max timestamps, then map into x [0, VIEW_W]
+    const sorted = [...points].sort((a, b) => a.timestamp - b.timestamp);
+    const minTs = sorted[0].timestamp;
+    const maxTs = sorted[sorted.length - 1].timestamp;
+    const totalTs = maxTs - minTs || 1;
+    return sorted.map(p => ({ ...p, x: ((p.timestamp - minTs) / totalTs) * VIEW_W })) as (PriceGraphPoint & { x: number })[];
+  }, [points]);
 
   const ys = useMemo(() => prepared.map(p => p.priceCtKwh), [prepared]);
   const minY = ys.length ? Math.min(...ys) : 0;
@@ -47,7 +48,13 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
     return `M ${coords.join(' L ')} `;
   }, [prepared, minY, maxY]);
 
-  const nowX = ((now - rangeStart) / total) * VIEW_W;
+  const nowX = useMemo(() => {
+    if (prepared.length === 0) return VIEW_W / 2;
+    const minTs = prepared[0].timestamp;
+    const maxTs = prepared[prepared.length - 1].timestamp;
+    const totalTs = maxTs - minTs || 1;
+    return ((now - minTs) / totalTs) * VIEW_W;
+  }, [prepared, now]);
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -76,15 +83,27 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
             {/* now marker */}
             <line x1={nowX} x2={nowX} y1={6} y2={VIEW_H-6} stroke={colors.primary} strokeWidth={1.5} strokeDasharray="4 4" />
 
-            {/* points */}
-            {prepared.map((p, i) => {
+            {/* points: draw non-current first, then current on top for visibility */}
+            {prepared.filter(p => p.period !== 'current').map((p, i) => {
               const cx = p.x; const cy = yOf(p.priceCtKwh);
-              const isCurrent = p.period === 'current';
-              const fill = isCurrent ? colors.primary : (p.period === 'past' ? colors.textMuted : colors.energy);
-              const r = isCurrent ? pointRadius + 2 : pointRadius;
+              const fill = p.period === 'past' ? colors.textMuted : colors.energy;
               return (
-                <g key={p.timestamp} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
-                  <circle cx={cx} cy={cy} r={r} fill={fill} stroke={colors.bgCardSolid} strokeWidth={isCurrent ? 2 : 1} />
+                <g key={`p-${p.timestamp}`} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
+                  <circle cx={cx} cy={cy} r={pointRadius} fill={fill} stroke={colors.bgCardSolid} strokeWidth={1} />
+                </g>
+              );
+            })}
+
+            {prepared.filter(p => p.period === 'current').map((p, idx) => {
+              // compute index for hover mapping: find original index in prepared
+              const i = prepared.findIndex(pp => pp.timestamp === p.timestamp);
+              const cx = p.x; const cy = yOf(p.priceCtKwh);
+              const innerR = pointRadius + 3;
+              const outerR = innerR + 4;
+              return (
+                <g key={`current-${p.timestamp}`} onMouseEnter={() => setHover(i)} onMouseLeave={() => setHover(null)}>
+                  <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth={3} />
+                  <circle cx={cx} cy={cy} r={innerR} fill={colors.primary} stroke={colors.bgCardSolid} strokeWidth={2} />
                 </g>
               );
             })}
