@@ -26,11 +26,11 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
   const rangeEnd = now + 24 * 60 * 60 * 1000;
   const total = rangeEnd - rangeStart;
 
-  const prepared = useMemo(() => {
-    if (!points || points.length === 0) return [] as PriceGraphPoint[];
+  const prepared = useMemo<(PriceGraphPoint & { x: number })[]>(() => {
+    if (!points || points.length === 0) return [] as (PriceGraphPoint & { x: number })[];
     // Map timestamps into x [0, VIEW_W]
-    return points.map(p => ({ ...p, x: ((p.timestamp - rangeStart) / total) * VIEW_W })) as unknown as (PriceGraphPoint & { x: number })[];
-  }, [points]);
+    return points.map(p => ({ ...p, x: ((p.timestamp - rangeStart) / total) * VIEW_W })) as (PriceGraphPoint & { x: number })[];
+  }, [points, rangeStart, total]);
 
   const ys = useMemo(() => prepared.map(p => p.priceCtKwh), [prepared]);
   const minY = ys.length ? Math.min(...ys) : 0;
