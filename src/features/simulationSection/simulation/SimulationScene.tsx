@@ -3,7 +3,7 @@ import EnergyIsland from './islands/energyIsland/EnergyIsland';
 import CityIsland from './islands/cityIsland/CityIsland';
 import EnergyFlow from './EnergyFlow';
 import StorageIsland from './islands/storageIsland/StorageIsland';
-import WeatherBackdrop from './WeatherBackdrop';
+import WeatherBackdrop from './weather/WeatherBackdrop';
 import InfoToolbar from './InfoToolbar';
 import { SimulationConfig } from './SimulationConfig';
 import type { SimulationPoint } from '@services/types';
