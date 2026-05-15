@@ -3,6 +3,8 @@ import { TrendingUpRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
 import { useCurrentEnergyPrice } from "../hooks/useCurrentEnergyPrice";
+import type React from "react";
+import EnergyPriceAroundNowChart from "./EnergyPriceAroundNowChart";
 
 const Next24hPriceWidget: React.FC = () => {
     const colors = useColors();
@@ -10,6 +12,15 @@ const Next24hPriceWidget: React.FC = () => {
 
     const avgPrice = currentPrice?.avg24h ?? currentPrice?.value ?? 0;
     const trend = currentPrice?.trend ?? "stable";
+
+    // Map a price in ct/kWh to a 0-100 percentage for the progress bar.
+    // Defaults: 0 ct/kWh => 0%, 40 ct/kWh => 100% (clamped).
+    const mapPriceToPercent = (price: number, min = 0, max = 40) => {
+        if (max <= min) return 0;
+        const pct = ((price - min) / (max - min)) * 100;
+        return Math.min(100, Math.max(0, pct));
+    };
+    const progress = mapPriceToPercent(avgPrice, 0, 40);
 
     return (
         <WidgetCard
@@ -37,21 +48,9 @@ const Next24hPriceWidget: React.FC = () => {
             <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
                 Average next 24 hours • {trend}
             </Typography>
-
-            {/* Simple visual bar */}
-            <LinearProgress
-                variant="determinate"
-                value={Math.min(Math.max((avgPrice - 10) * 3, 0), 100)}
-                sx={{
-                    mt: 1.5,
-                    height: 6,
-                    borderRadius: 1,
-                    bgcolor: colors.bgSurface,
-                    "& .MuiLinearProgress-bar": {
-                        background: `linear-gradient(90deg, ${colors.energy}, ${colors.warning})`,
-                    },
-                }}
-            />
+            <Box sx={{ mt: 1.2 }}>
+                <EnergyPriceAroundNowChart height={84} />
+            </Box>
         </WidgetCard>
     );
 };

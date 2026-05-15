@@ -15,7 +15,7 @@ const PORT = process.env.PORT ?? 3001;
 
 app.use(cors());
 
-
+// API endpoint for current energy price (proxied from corrently.io)
 app.get('/api/energy-price/current', async (_req: Request, res: Response) => {
     try {
         const upstream = await fetch(
@@ -33,6 +33,7 @@ app.get('/api/energy-price/current', async (_req: Request, res: Response) => {
     }
 });
 
+// API endpoint for weather data in a date range
 app.get('/api/weather/range', async (req: Request, res: Response) => {
     const date_from = req.query.date_from as string;
     const date_to = req.query.date_to as string;
@@ -51,6 +52,7 @@ app.get('/api/weather/range', async (req: Request, res: Response) => {
     }
 });
 
+// 
 app.get('/api/price/range', async (req: Request, res: Response) => {
     const date_from = req.query.date_from as string;
     const date_to = req.query.date_to as string;
