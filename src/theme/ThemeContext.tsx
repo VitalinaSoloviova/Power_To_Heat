@@ -3,7 +3,6 @@ import { darkColors, lightColors, type ThemeMode } from './colors';
 import { ThemeContext, type ThemeContextValue } from './useTheme';
 
 interface ThemeProviderProps {
-  /** Theme used on first render. Defaults to `'dark'`. */
   defaultTheme?: ThemeMode;
   children: React.ReactNode;
 }

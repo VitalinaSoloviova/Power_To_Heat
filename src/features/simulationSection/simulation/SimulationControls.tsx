@@ -1,12 +1,9 @@
 import { Box } from '@mui/material';
 import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
 import { useColors } from '@theme/useTheme';
-import type {
-  PlaybackControl,
-  StorageControl,
-  TimelineControl,
-} from '../simulationTypes';
+
 import SimulationSlider from './SimulationSlider';
+import type { StorageControl, TimelineControl, PlaybackControl } from '@services/types/SimulationTypes';
 
 interface SimulationControlsProps {
   /** Storage-level slider state. */

@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
-import type { SimulationPoint } from '../simulationTypes';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
+import type { SimulationPoint } from '@services/types/SimulationTypes';
 
 interface StorageIslandProps {
   point: SimulationPoint;
@@ -11,11 +11,11 @@ interface StorageIslandProps {
 }
 
 // Energy palette — yellow → pink → violet → red
-const ENERGY_LOW = '#fde047';     // yellow
-const ENERGY_MID = '#f472b6';     // pink
-const ENERGY_HIGH = '#a855f7';    // violet
-const ENERGY_TOP = '#ef4444';     // red
-const ENERGY_GLOW = '#f9a8d4';    // soft pink for glow
+const ENERGY_LOW = '#fde047';    
+const ENERGY_MID = '#f472b6';     
+const ENERGY_HIGH = '#a855f7';   
+const ENERGY_TOP = '#ef4444';     
+const ENERGY_GLOW = '#f9a8d4';    
 const CHARGE = '#22c55e';
 const DISCHARGE = '#ef4444';
 

@@ -1,4 +1,4 @@
-import type { SimulationRange } from '../simulationTypes';
+import type { SimulationRange } from '@services/types/SimulationTypes';
 
 export type DayPhase =
   | 'midnight'    // 0-3   tiefste Nacht

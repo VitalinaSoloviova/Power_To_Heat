@@ -1,6 +1,6 @@
 import { Box, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import type { PlaybackControl } from '@services/types/SimulationTypes';
 import { useColors } from '@theme/useTheme';
-import type { PlaybackControl } from '../simulationTypes';
 
 interface SimulationButtonProps {
   /** Play / pause + speed selection. */

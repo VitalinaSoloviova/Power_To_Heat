@@ -2,7 +2,6 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Paper } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
-import type { SimulationRange, ReplayParams } from "../simulationTypes";
 import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/UIService";
 import type { SimulationRun } from "@features/analytics/analyticsTypes";
 import SimulationChartCards from "../charts/SimulationChartCards";
@@ -11,6 +10,7 @@ import SimulationControls from "./SimulationControls";
 import SimulationHeader from "./SimulationHeader";
 import SimulationPriceTicker from "./SimulationPriceTicker";
 import SimulationScene from "./SimulationScene";
+import type { ReplayParams, SimulationRange } from "@services/types/SimulationTypes";
 
 interface Props {
   onRunComplete?: (run: SimulationRun) => void;

@@ -6,7 +6,7 @@ import { type HistoryYears, DEFAULT_HISTORY_YEARS, HISTORY_OPTIONS } from '@serv
 import { useColors } from '@theme/useTheme';
 import { useState, useMemo, memo } from 'react';
 import { ChartCard, type CardConfig } from './ChartCard';
-import type { SimulationRange } from '../simulationTypes';
+import type { SimulationRange } from '@services/types/SimulationTypes';
 
 interface SimulationChartCardsProps {
   startDay: Date;
