@@ -2,36 +2,14 @@
 // this could easily be scaled to have city data as user input
 
 export type CityProfile = {
-<<<<<<< HEAD
-  clients: number;
+  households: number;
   targetInsideTemp: number;
-  energyDemandPerPerson: number; // kW / per person per 1 degree celsius
+  heatloss_coefficent_kWperK: number; // kW / per person per 1 degree celsius
 };
 
 // so far there is only one city but in a scalable version this would not be hard coded
 export const city: CityProfile = {
-  clients: 60000,
+  households: 4100,
   targetInsideTemp: 20,
-  energyDemandPerPerson: 0.1, // kW / per person per 1 degree celcius
+  heatloss_coefficent_kWperK:  0.12 // kW / per person per 1 degree celcius
 };
-=======
-    clients: number
-    targetInsideTemp: number
-    energyDemandPerPerson: number // kW / per person per 1 degree celsius
-
-}
-
-// so far there is only one city but in a scalable version this would not be hard coded
-export const city: CityProfile = {
-    clients: 60000,
-    targetInsideTemp: 20, 
-    energyDemandPerPerson: 0.1 // kW / per person per 1 degree celcius
-}
-
-
-
-
-
-
- 
->>>>>>> main

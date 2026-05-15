@@ -199,7 +199,7 @@ export class DataResolver {
     private getEnergyDemand(outsideTemp: number, city: CityProfile) {
         return Math.max(
             0,
-            city.clients * city.energyDemandPerPerson * (city.targetInsideTemp - outsideTemp)
+            city.households * city.heatloss_coefficent_kWperK * (city.targetInsideTemp - outsideTemp)
         )
     }
 
