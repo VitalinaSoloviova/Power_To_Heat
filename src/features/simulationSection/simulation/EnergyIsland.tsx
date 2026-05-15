@@ -12,7 +12,7 @@ interface EnergyIslandProps {
   size?: number;
 }
 
-const ACCENT = '#86efac';
+const ACCENT = '#2684dc';
 
 /**
  * Power island — three wind turbines on a grass patch with solar panels in
