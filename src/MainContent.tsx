@@ -8,7 +8,7 @@ import { useColors } from '@theme/useTheme';
 import type { SimulationRun } from '@features/analytics/analyticsTypes';
 import { DEFAULT_HISTORY_YEARS, type HistoryYears } from '@services/UIService';
 import SimulationComponent from '@features/simulationSection/simulation/SimulationComponent';
-import type { ReplayParams } from '@services/types/SimulationTypes';
+import type { ReplayParams } from '@services/types';
 
 interface MainContentProps {
   activePage: string;

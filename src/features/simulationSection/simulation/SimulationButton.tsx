@@ -1,5 +1,5 @@
 import { Box, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
-import type { PlaybackControl } from '@services/types/SimulationTypes';
+import type { PlaybackControl } from '@services/types';
 import { useColors } from '@theme/useTheme';
 
 interface SimulationButtonProps {

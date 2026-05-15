@@ -10,7 +10,7 @@ import SimulationControls from "./SimulationControls";
 import SimulationHeader from "./SimulationHeader";
 import SimulationPriceTicker from "./SimulationPriceTicker";
 import SimulationScene from "./SimulationScene";
-import type { ReplayParams, SimulationRange } from "@services/types/SimulationTypes";
+import type { ReplayParams, SimulationRange } from "@services/types";
 
 interface Props {
   onRunComplete?: (run: SimulationRun) => void;

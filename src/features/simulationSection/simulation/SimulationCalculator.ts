@@ -1,4 +1,4 @@
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types';
 import { SimulationConfig } from './SimulationConfig';
 
 /**

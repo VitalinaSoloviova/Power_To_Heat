@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { storageFraction } from './storageCalculationUtils';
 import { SimulationConfig } from './SimulationConfig';
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types/index';
 
 interface StorageIslandProps {
   point: SimulationPoint;

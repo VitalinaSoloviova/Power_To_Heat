@@ -3,7 +3,7 @@ import StorageLevelControl from '@features/forecast/components/StorageLevelContr
 import { useColors } from '@theme/useTheme';
 
 import SimulationSlider from './SimulationSlider';
-import type { StorageControl, TimelineControl, PlaybackControl } from '@services/types/SimulationTypes';
+import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
 
 interface SimulationControlsProps {
   /** Storage-level slider state. */

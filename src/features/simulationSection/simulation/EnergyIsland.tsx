@@ -1,5 +1,5 @@
 
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types';
 import { sunElevation, phaseForTimestamp, NIGHT_PHASES } from '../simulationUtils';
 import GroundPatch from './GroundPatch';
 import IslandFrame from './IslandFrame';

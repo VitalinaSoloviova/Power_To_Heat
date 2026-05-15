@@ -5,7 +5,7 @@ import { phaseForTimestamp, brightnessForPhase } from '../simulationUtils';
 import GroundPatch from './GroundPatch';
 import IslandFrame from './IslandFrame';
 import Tree from './Tree';
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types';
 
 interface CityIslandProps {
   point: SimulationPoint;

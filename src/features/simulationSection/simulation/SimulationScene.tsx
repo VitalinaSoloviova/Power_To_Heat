@@ -6,7 +6,7 @@ import StorageIsland from './StorageIsland';
 import WeatherBackdrop from './WeatherBackdrop';
 import InfoToolbar from './InfoToolbar';
 import { SimulationConfig } from './SimulationConfig';
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types';
 
 interface SimulationSceneProps {
   point: SimulationPoint;
