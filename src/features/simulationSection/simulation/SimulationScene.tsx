@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
-import EnergyIsland from './EnergyIsland';
-import CityIsland from './CityIsland';
+import EnergyIsland from './islands/energyIsland/EnergyIsland';
+import CityIsland from './islands/cityIsland/CityIsland';
 import EnergyFlow from './EnergyFlow';
-import StorageIsland from './storageIsland/StorageIsland';
+import StorageIsland from './islands/storageIsland/StorageIsland';
 import WeatherBackdrop from './WeatherBackdrop';
 import InfoToolbar from './InfoToolbar';
 import { SimulationConfig } from './SimulationConfig';

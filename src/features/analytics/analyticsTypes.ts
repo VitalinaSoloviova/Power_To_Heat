@@ -11,7 +11,8 @@
  * savings, purchase counts — without touching state or storage.
  */
 
-import type { SimulationPoint, SimulationRange } from '@services/types/SimulationTypes';
+import type { SimulationPoint, SimulationRange } from "@services/types";
+
 
 // One completed simulation saved to history.
 export interface SimulationRun {

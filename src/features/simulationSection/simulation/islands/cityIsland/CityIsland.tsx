@@ -1,10 +1,10 @@
 import { memo } from 'react';
 import { motion } from 'framer-motion';
 
-import { phaseForTimestamp, brightnessForPhase } from '../simulationUtils';
-import GroundPatch from './islandComponents/GroundPatch';
-import IslandFrame from './islandComponents/IslandFrame';
-import Tree from './islandComponents/Tree';
+import { phaseForTimestamp, brightnessForPhase } from '../../simulationUtils';
+import GroundPatch from '../islandComponents/GroundPatch';
+import IslandFrame from '../islandComponents/IslandFrame';
+import Tree from '../islandComponents/Tree';
 import type { SimulationPoint } from '@services/types';
 
 interface CityIslandProps {

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Box, Slider, ToggleButton, ToggleButtonGroup, Typography, Popover, IconButton } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 
-import { formatTimestamp } from '../simulationUtils';
+import { formatTimestamp } from './simulationUtils';
 import SimulationButton from './SimulationButton';
 import type { PlaybackControl, SimulationRange, TimelineControl } from '@services/types';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { SimulationConfig } from '../SimulationConfig';
+import { SimulationConfig } from '../../SimulationConfig';
 
 interface StorageTankProps {
   fraction: number;

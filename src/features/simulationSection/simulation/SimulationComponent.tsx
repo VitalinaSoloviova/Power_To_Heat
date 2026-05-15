@@ -5,7 +5,7 @@ import { useColors } from "@theme/useTheme";
 import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/UIService";
 import type { SimulationRun } from "@features/analytics/analyticsTypes";
 import SimulationChartCards from "../charts/SimulationChartCards";
-import { useSimulationData } from "../hooks/useSimulationData";
+import { useSimulationData } from "./useSimulationData";
 import SimulationControls from "./SimulationControls";
 import SimulationHeader from "./SimulationHeader";
 import SimulationPriceTicker from "./SimulationPriceTicker";
