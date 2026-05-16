@@ -44,6 +44,8 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         bgcolor: colors.bgCard,
       }}
     >
+      <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
+
       <DateSelector
         startDay={startDay}
         onStartDayChange={onStartDayChange}
@@ -52,7 +54,6 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         daysInMonth={daysInMonth}
       />
       <SimulationRangeToggleGroup range={range} onRangeChange={onRangeChange} />
-      <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
     </Box>
   );
 };

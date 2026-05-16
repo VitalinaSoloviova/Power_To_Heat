@@ -1,4 +1,5 @@
-import { Box, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { InfoOutlineRounded } from '@mui/icons-material';
+import { Box, IconButton, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import { HISTORY_OPTIONS, type HistoryYears } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
 
@@ -10,10 +11,25 @@ interface HistoryPeriodSelectorProps {
 const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYears, setHistoryYears }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mb: 1.5, gap: 1.5 }}>
-      <Typography sx={{ fontSize: 12, fontWeight: 500, color: colors.textSecondary }}>
-        Historical period
-      </Typography>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 1.5, gap: 0.75 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+        <Typography sx={{ fontSize: 12, fontWeight: 500, color: colors.textSecondary }}>
+          Historical period
+        </Typography>
+        <Tooltip
+          arrow
+          placement="top"
+          title="Historical average data range used for simulation generation"
+        >
+          <IconButton
+            size="small"
+            aria-label="Historical period information"
+            sx={{ color: colors.textMuted, p: 0.25 }}
+          >
+            <InfoOutlineRounded sx={{ fontSize: 15 }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <ToggleButtonGroup
         exclusive
         size="small"
@@ -30,7 +46,8 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
               fontSize: 12,
               px: 1.25,
               py: 0.5,
-              minWidth: 36,
+              minWidth: 60,
+              minHeight: 60, 
               '&.Mui-selected': {
                 color: colors.textPrimary,
                 bgcolor: colors.primarySoft,
