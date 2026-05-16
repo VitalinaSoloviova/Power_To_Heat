@@ -1,17 +1,8 @@
-import type { UiHourData } from '@calculations/uiDataProfile';
 import type { DataCoverage } from '../DataCoverageCalculator';
 import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
-import type {
-	CityDemandPoint,
-	PowerGenerationPoint,
-	SimulationData,
-	SimulationInput,
-	SimulationPoint,
-	SimulationRange,
-} from '../types';
+import type { SimulationPoint, SimulationRange } from '../types';
+import type { UiHourData } from '@calculations/uiDataProfile';
 import type { ChartsData } from './ChartUIService';
-
-export type { SimulationData, SimulationInput };
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {
 	day: 24,
@@ -36,15 +27,13 @@ export interface SimulationSeriesData {
 	dataYears: DataCoverage;
 }
 
+/**
+ * Pure simulation series computation. Takes already-loaded chart data and
+ * produces a time-series of `SimulationPoint` for the simulation UI.
+ *
+ * No I/O, no side effects — safe to call on every storage-slider change.
+ */
 export class SimulationUIService {
-	public getSimulationData(input: SimulationInput): SimulationData {
-		const generation = this.buildGeneration(input);
-		const demand = this.buildDemand(input);
-		const storage = this.buildStorage(input, demand);
-
-		return { generation, demand, storage };
-	}
-
 	public getSimulationSeries(input: SimulationSeriesInput): SimulationSeriesData {
 		const { chartsData, range, initialStoragePercent } = input;
 		const targetCount = POINTS_PER_RANGE[range];
@@ -85,58 +74,6 @@ export class SimulationUIService {
 		return { series, dataYears: chartsData.dataYears };
 	}
 
-	private buildGeneration(input: SimulationInput): PowerGenerationPoint[] {
-		return Array.from({ length: input.forecastHours }, (_, hour) => {
-			const timestamp = this.timestampForHour(hour);
-			const windPower = input.windTurbineCount * input.weather.windSpeed * 120;
-			const daylightFactor = hour % 24 >= 7 && hour % 24 <= 18 ? 1 : 0;
-			const solarPower = input.solarPanelCount * (1 - input.weather.cloudCoverage) * daylightFactor * 0.4;
-
-			return {
-				hour,
-				timestamp,
-				windPower,
-				solarPower,
-				totalGenerated: windPower + solarPower,
-			};
-		});
-	}
-
-	private buildDemand(input: SimulationInput): CityDemandPoint[] {
-		const baseDemand = Math.max(0, input.cityPopulation * (21 - input.weather.temperature) * 0.08);
-
-		return Array.from({ length: input.forecastHours }, (_, hour) => ({
-			hour,
-			timestamp: this.timestampForHour(hour),
-			demand: baseDemand,
-		}));
-	}
-
-	private buildStorage(input: SimulationInput, demand: CityDemandPoint[]): SimulationData['storage'] {
-		const capacity = EnergyStorageResolver.CAPACITY_KWH;
-		let level = Math.min(capacity, Math.max(0, input.currentStorage));
-
-		return demand.map((point) => {
-			const next = EnergyStorageResolver.step({
-				price: 80,
-				demandKw: point.demand,
-				previous: { level, capacity },
-				stepHours: 1,
-			}).storage;
-			const chargedEnergy = Math.max(0, next.level - level);
-			const consumedEnergy = Math.max(0, level - next.level);
-			level = next.level;
-
-			return {
-				hour: point.hour,
-				timestamp: point.timestamp,
-				storageLevel: next.level,
-				chargedEnergy,
-				consumedEnergy,
-			};
-		});
-	}
-
 	private calculatePowerToHeatGeneration(hour: UiHourData, currentDemand: number): number {
 		const p2hMax = 3_000;
 
@@ -159,11 +96,5 @@ export class SimulationUIService {
 		if (windSpeed >= 8) return 'windy';
 		if (normalizedDescription.includes('clear') || normalizedDescription.includes('sun')) return 'sunny';
 		return 'unknown';
-	}
-
-	private timestampForHour(hour: number): string {
-		const timestamp = new Date();
-		timestamp.setUTCHours(timestamp.getUTCHours() + hour, 0, 0, 0);
-		return timestamp.toISOString();
 	}
 }

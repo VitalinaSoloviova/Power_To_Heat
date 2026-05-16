@@ -2,9 +2,7 @@ import type { DataResolver, Granularity } from '@calculations/DataResolver';
 import type { UiHourData } from '@calculations/uiDataProfile';
 import { city } from '@calculations/CityData';
 import { DataCoverageCalculator, type DataCoverage } from '../DataCoverageCalculator';
-import { ChartDataResolver } from '../resolvers/ChartDataResolver';
 import { CityDemandResolver } from '../resolvers/CityDemandResolver';
-import type { ChartData, SimulationData } from '@services/types';
 
 /** Number of past years to average for the historical comparison. */
 export const HISTORY_OPTIONS = [1, 5, 10, 20, 30, 50] as const;
@@ -12,13 +10,6 @@ export type HistoryYears = (typeof HISTORY_OPTIONS)[number];
 
 export const DEFAULT_STORAGE_LEVEL = 45;
 export const DEFAULT_HISTORY_YEARS: HistoryYears = 5;
-
-export interface WeatherRangeForMonth {
-  month: string;
-  minTemp: number;
-  maxTemp: number;
-  avgTemp: number;
-}
 
 export interface ChartsPeriod {
   start: Date;
@@ -39,30 +30,57 @@ export interface ChartsData {
 
 /**
  * Orchestrates chart-related resolvers and returns chart-ready data.
+ *
+ * Caches results and in-flight requests by (historyYears, granularity, startDay)
+ * so concurrent consumers (e.g. simulation hook + chart-cards) share the same
+ * network fetch instead of triggering duplicate requests.
  */
 export class ChartUIService {
   private readonly dataResolver: DataResolver;
-  private readonly chartResolver: ChartDataResolver;
+  private readonly resultCache = new Map<string, ChartsData>();
+  private readonly inFlight = new Map<string, Promise<ChartsData>>();
 
-  constructor(
-    dataResolver: DataResolver,
-    chartResolver = new ChartDataResolver(),
-  ) {
+  constructor(dataResolver: DataResolver) {
     this.dataResolver = dataResolver;
-    this.chartResolver = chartResolver;
   }
 
-  public async getChartsData(
+  public getChartsData(
     historyYears: HistoryYears,
     granularity: Granularity = 'daily',
     startDate?: Date,
   ): Promise<ChartsData> {
     const period = this.buildPeriod(historyYears, startDate);
+    const cacheKey = `${historyYears}|${granularity}|${period.start.getTime()}`;
 
+    const cached = this.resultCache.get(cacheKey);
+    if (cached) return Promise.resolve(cached);
+
+    const pending = this.inFlight.get(cacheKey);
+    if (pending) return pending;
+
+    const request = this.fetchChartsData(period, granularity)
+      .then((data) => {
+        this.resultCache.set(cacheKey, data);
+        this.inFlight.delete(cacheKey);
+        return data;
+      })
+      .catch((error) => {
+        this.inFlight.delete(cacheKey);
+        throw error;
+      });
+
+    this.inFlight.set(cacheKey, request);
+    return request;
+  }
+
+  private async fetchChartsData(
+    period: ChartsPeriod,
+    granularity: Granularity,
+  ): Promise<ChartsData> {
     const { hours, weatherDates, priceDates } = await this.dataResolver.getUiDataProfile(
       period.start,
       period.end,
-      historyYears,
+      period.historyYears,
       granularity,
     );
 
@@ -71,12 +89,6 @@ export class ChartUIService {
     const xLabels = this.buildXLabels(enrichedHours, granularity);
 
     return { period, hours: enrichedHours, xLabels, dataYears, granularity };
-  }
-
-  public getChartData(
-    simulation: SimulationData,
-  ): ChartData {
-    return this.chartResolver.resolve(simulation);
   }
 
   public buildPeriod(historyYears: HistoryYears, startDate?: Date): ChartsPeriod {

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Box, Paper } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
@@ -38,11 +38,21 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     setIndex((i) => Math.min(i, Math.max(0, series.length - 1)));
   }, [series.length]);
 
-  const handleStorageLevelChange = (value: number) => {
+  const handleStorageLevelChange = useCallback((value: number) => {
     setStorageLevel(value);
     setIndex(0);
     setIsPlaying(false);
-  };
+  }, []);
+
+  const handleStartDayChange = useCallback((d: Date) => {
+    setStartDay(d);
+    setIndex(0);
+  }, []);
+
+  const handleRangeChange = useCallback((r: SimulationRange) => {
+    setRange(r);
+    setIndex(0);
+  }, []);
 
   const toggleSimulation = useCallback(() => {
     setIsPlaying((prev) => !prev);
@@ -86,6 +96,32 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
 
   const point = series[index] ?? series[0];
 
+  const storageProp = useMemo(
+    () => ({ currentStoragePercent: storageLevel, onStorageChange: handleStorageLevelChange }),
+    [storageLevel, handleStorageLevelChange],
+  );
+
+  const timelineProp = useMemo(
+    () => ({
+      range,
+      onRangeChange: handleRangeChange,
+      index,
+      onIndexChange: setIndex,
+      series,
+    }),
+    [range, handleRangeChange, index, series],
+  );
+
+  const playbackProp = useMemo(
+    () => ({
+      isPlaying,
+      onTogglePlay: toggleSimulation,
+      speedMultiplier,
+      onSpeedMultiplierChange: setSpeedMultiplier,
+    }),
+    [isPlaying, toggleSimulation, speedMultiplier],
+  );
+
   return (
     <Box sx={{ mx: 3, mb: 2, display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'flex-start' }}>
       {/* Simulation (left) */}
@@ -124,24 +160,10 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           <SimulationControls
             loading={loading}
             startDay={startDay}
-            onStartDayChange={(d) => { setStartDay(d); setIndex(0); }}
-            storage={{
-              currentStoragePercent: storageLevel,
-              onStorageChange: handleStorageLevelChange,
-            }}
-            timeline={{
-              range,
-              onRangeChange: (r) => { setRange(r); setIndex(0); },
-              index,
-              onIndexChange: setIndex,
-              series,
-            }}
-            playback={{
-              isPlaying,
-              onTogglePlay: toggleSimulation,
-              speedMultiplier,
-              onSpeedMultiplierChange: setSpeedMultiplier,
-            }}
+            onStartDayChange={handleStartDayChange}
+            storage={storageProp}
+            timeline={timelineProp}
+            playback={playbackProp}
           />
         </Paper>
       )}
