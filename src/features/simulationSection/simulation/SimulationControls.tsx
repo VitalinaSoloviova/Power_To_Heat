@@ -4,15 +4,12 @@ import { useColors } from '@theme/useTheme';
 
 import SimulationSlider from './SimulationSlider';
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
+import DateSimulationControlComponent from './DateSimulationControlComponent';
 
 interface SimulationControlsProps {
-  /** Storage-level slider state. */
   storage: StorageControl;
-  /** Range / index / series state for the timeline slider. */
   timeline: TimelineControl;
-  /** Play / pause + speed selection. */
   playback: PlaybackControl;
-  /** Disabled while data is still loading. */
   loading: boolean;
   startDay: Date;
   onStartDayChange: (d: Date) => void;
@@ -48,6 +45,12 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           onChange={storage.onStorageChange}
         />
       </Box>
+      <DateSimulationControlComponent
+        timeline={timeline}
+        playback={playback}
+        startDay={startDay}
+        onStartDayChange={onStartDayChange}
+      />
       <SimulationSlider
         timeline={timeline}
         playback={playback}

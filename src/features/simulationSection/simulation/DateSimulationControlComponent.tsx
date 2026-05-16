@@ -1,29 +1,56 @@
-import { Box } from "@mui/material";
-import { useState } from "react";
-import SimulationRangeToggleGroup from "./SimulationRangeToggleGroup";
-import DayPicker from "./DayPicker";
+import React from 'react';
+import { Box } from '@mui/material';
+import DateSelector from './dateSelector/DateSelector';
+import { useDateState } from './dateSelector/useDateState';
+import { useColors } from '@theme/useTheme';
+import type { PlaybackControl, TimelineControl } from '@services/types';
 
-const DateSimulationControlComponent = () => {
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [selectedDay, setSelectedDay] = useState(new Date().getDate());
+import SimulationRangeToggleGroup from './SimulationRangeToggleGroup';
 
-  const daysInMonth = (month: number) => new Date(2024, month + 1, 0).getDate();
-  const applyDate = (month: number, day: number) => {
-    setSelectedMonth(month);
-    setSelectedDay(day);
-  };
+const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const daysInMonth = (month: number) => new Date(2024, month + 1, 0).getDate();
+
+interface SimulationSliderProps {
+  timeline: TimelineControl;
+  playback: PlaybackControl;
+  startDay: Date;
+  onStartDayChange: (d: Date) => void;
+}
+
+const SimulationSlider: React.FC<SimulationSliderProps> = ({
+  timeline,
+  startDay,
+  onStartDayChange,
+}) => {
+  const colors = useColors();
+  const { range, onRangeChange } = timeline;
+  const dateState = useDateState(startDay);
+
+  React.useEffect(() => { dateState.sync(startDay); }, [startDay]);
 
   return (
-    <Box sx={{ width: "100%", minHeight: 48, bgcolor: "#287dd8", borderRadius: 2, mt: 1, mb: 2, display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>
-      <DayPicker
-        selectedMonth={selectedMonth}
-        selectedDay={selectedDay}
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: { xs: 'column', md: 'row' },
+        alignItems: { xs: 'stretch', md: 'center' },
+        gap: 2,
+        px: 3,
+        py: 1.5,
+        borderTop: `1px solid ${colors.border}`,
+        bgcolor: colors.bgCard,
+      }}
+    >
+      <DateSelector
+        startDay={startDay}
+        onStartDayChange={onStartDayChange}
+        colors={colors}
+        MONTHS={MONTHS}
         daysInMonth={daysInMonth}
-        applyDate={applyDate}
       />
-      <SimulationRangeToggleGroup range={"day"} onRangeChange={() => {}} />
+     <SimulationRangeToggleGroup range={range} onRangeChange={onRangeChange} />
     </Box>
   );
 };
 
-export default DateSimulationControlComponent;
+export default SimulationSlider;

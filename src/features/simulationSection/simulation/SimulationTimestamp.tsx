@@ -17,6 +17,7 @@ const SimulationTimestamp: React.FC<SimulationTimestampProps> = ({ timestamp, ra
         fontSize: 12,
         minWidth: 100,
         textAlign: 'right',
+        
       }}
     >
       {timestamp ? formatTimestamp(timestamp, range) : '—'}
