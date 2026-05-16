@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { uiService } from "@services/serviceRegistry";
-import type { Location } from "@services/LocationService";
+import type { Location } from "@features/topRow/LocationService";
 import type { CurrentWeather } from "@features/topRow/currentData/CurrentWeatherService";
 
 interface AsyncState<T> {

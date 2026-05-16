@@ -1,6 +1,6 @@
 import { DataResolver } from "../calculations/DataResolver";
 import { UIService } from "./ui/UIService";
-import { StaticLocationService, type LocationService } from "./LocationService";
+import { StaticLocationService, type LocationService } from "../features/topRow/LocationService";
 import { OpenWeatherCurrentWeatherService } from "../features/topRow/OpenWeatherCurrentWeatherService";
 import { AwattarEnergyPriceService } from "../features/topRow/AwattarEnergyPriceService";
 

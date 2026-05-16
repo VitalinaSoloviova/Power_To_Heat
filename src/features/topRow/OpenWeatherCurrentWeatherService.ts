@@ -1,5 +1,5 @@
 import type {CurrentWeather, WeatherCondition } from "@features/topRow/currentData/CurrentWeatherService";
-import type { Location } from '@services/LocationService';
+import type { Location } from '@features/topRow/LocationService';
 
 export class OpenWeatherCurrentWeatherService {
     public async getCurrent(location: Location): Promise<CurrentWeather> {

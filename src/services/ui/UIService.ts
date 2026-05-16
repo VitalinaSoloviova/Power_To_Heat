@@ -1,5 +1,5 @@
 import type { DataResolver, Granularity } from '@calculations/DataResolver';
-import type { Location } from '@services/LocationService';
+import type { Location } from '@features/topRow/LocationService';
 import type {
 	CurrentEnergyPrice,
 	CurrentEnergyPriceService,
