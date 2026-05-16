@@ -6,7 +6,7 @@
  *
  *   ┌─────────────────┬──────────────────────────────────┐
  *   │  Pie chart      │  Electricity Price │  Heat Demand │
- *   │  VS. Always On  ├────────────────────┼──────────────┤
+ *   │  VS. Direct Buy ├────────────────────┼──────────────┤
  *   │  Purchase Log   │  Temperature       │  Storage Lvl │
  *   └─────────────────┴──────────────────────────────────┘
  *
@@ -257,11 +257,11 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
             flexShrink: 0,
           }}>
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 1.5 }}>
-              VS. ALWAYS ON
+              VS. DIRECT BUY
             </Typography>
             {([
               { label: 'Our Cost',  value: `${stats.totalCost.toFixed(2)} €`,  color: colors.textPrimary },
-              { label: 'Always On', value: `${stats.alwaysCost.toFixed(2)} €`, color: colors.textMuted   },
+              { label: 'Direct Buy', value: `${stats.alwaysCost.toFixed(2)} €`, color: colors.textMuted   },
               { label: 'Savings',
                 value: `${stats.savings >= 0 ? '+' : ''}${stats.savings.toFixed(2)} €`,
                 color: stats.savings >= 0 ? colors.cool : colors.warning },

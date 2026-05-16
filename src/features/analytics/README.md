@@ -58,23 +58,18 @@ All numbers are derived from the saved `SimulationPoint[]` series.
 
 ### Cost formula (per time step)
 ```
-cost (€) = energy.generated (kW) × energy.price (€/MWh) ÷ 1 000
+cost (€) = energy.generated (kWh) × energy.price (€/MWh) ÷ 1 000
 ```
 
-### Price thresholds (mirror `EnergyStorageResolver`)
-| Price | Strategy | Label |
-|---|---|---|
-| < 60 €/MWh | P2H at max power (3 000 kW), storage charges | **Cheap** |
-| 60–100 €/MWh | P2H covers demand only, storage unchanged | Medium |
-| > 100 €/MWh | P2H off, storage discharges to cover demand | **Expensive** |
-
-### Always-On baseline
-The comparison strategy runs P2H at full power (3 000 kW) every hour regardless
-of price:
+### Direct-buy baseline
+The comparison strategy buys exactly the heat demand in the hour/day where it
+occurs, without shifting cheap energy into storage. The demand per step is
+derived from the storage balance:
 ```
-alwaysCost = Σ (3 000 kW × price[h] ÷ 1 000)  for all hours h
+demandServed = previousStorage + purchasedEnergy - currentStorage
+directBuyCost = Σ (demandServed[h] × price[h] ÷ 1 000)
 ```
-`Savings = alwaysCost − totalCost`
+`Savings = directBuyCost − totalCost`
 
 ---
 

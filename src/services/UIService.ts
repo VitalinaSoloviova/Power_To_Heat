@@ -30,6 +30,8 @@ export interface ChartsData {
     period: ChartsPeriod;
     /** One entry per hour or day depending on granularity (sorted ascending). */
     hours: UiHourData[];
+    /** Optional price history before the period, used for percentile-based charging. */
+    historicalPrices: number[];
     /** Pre-formatted labels for the chart x-axis. */
     xLabels: string[];
     /** How many years of data were actually available in the DB. */
@@ -47,12 +49,18 @@ export class UIService {
     public async getChartsData(
         historyYears: HistoryYears,
         granularity: Granularity = 'daily',
-        startDate?: Date
+        startDate?: Date,
+        historicalPriceDays = 0
     ): Promise<ChartsData> {
         const period = this.buildPeriod(historyYears, startDate);
+        const queryStart = new Date(period.start);
+
+        if (historicalPriceDays > 0) {
+            queryStart.setUTCDate(queryStart.getUTCDate() - historicalPriceDays);
+        }
 
         const { hours, weatherDates, priceDates } = await this.resolver.getUiDataProfile(
-            period.start,
+            queryStart,
             period.end,
             historyYears,
             granularity
@@ -60,7 +68,17 @@ export class UIService {
 
         const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
 
-        const enrichedHours: UiHourData[] = hours.map((h) => ({
+        const historicalPrices = historicalPriceDays > 0
+            ? hours
+                .filter((h) => h.datetime < period.start)
+                .map((h) => h.price)
+            : [];
+
+        const periodHours = historicalPriceDays > 0
+            ? hours.filter((h) => h.datetime >= period.start)
+            : hours;
+
+        const enrichedHours: UiHourData[] = periodHours.map((h) => ({
             ...h,
             energyDemand: CityDemandResolver.calculate(h.weather.temp, city),
         }));
@@ -77,7 +95,7 @@ export class UIService {
                     month: 'short' })
         );
 
-        return { period, hours: enrichedHours, xLabels, dataYears, granularity };
+        return { period, hours: enrichedHours, historicalPrices, xLabels, dataYears, granularity };
     }
 
     private buildPeriod(historyYears: HistoryYears, startDate?: Date): ChartsPeriod {

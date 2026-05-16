@@ -48,22 +48,25 @@ export function useSimulationData(
   const [hours, setHours] = useState<UiHourData[] | null>(null);
   const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
   const [dataYears, setDataYears] = useState<DataCoverage | null>(null);
+  const [historicalPrices, setHistoricalPrices] = useState<number[]>([]);
 
   useEffect(() => {
     let cancelled = false;
     const granularity = range === 'month' ? 'daily' : 'hourly';
 
     uiService
-      .getChartsData(historyYears, granularity, startDay)
+      .getChartsData(historyYears, granularity, startDay, 90)
       .then((d) => {
         if (cancelled) return;
         setHours(d.hours);
+        setHistoricalPrices(d.historicalPrices);
         setDataYears(d.dataYears);
         setCurrentRange(range);
       })
       .catch(() => {
         if (cancelled) return;
         setHours(null);
+        setHistoricalPrices([]);
         setDataYears(null);
         setCurrentRange(range);
       });
@@ -96,23 +99,27 @@ export function useSimulationData(
       const current = h.energyDemand / 100;
       const expected = current * 0.97;
 
-      // P2H output: full power when cheap, zero when expensive, demand-only at medium price
-      const p2hMax = 3_000; // kW
-      const generated = h.price < 60  ? p2hMax
-                      : h.price > 100 ? 0
-                      : current; // medium: just enough to cover demand
+      let generated: number;
+      let storage: { level: number; capacity: number };
+
+      if (pointIndex === 0) {
+        storage = { level, capacity };
+        generated = 0;
+      } else {
+        const result = EnergyStorageResolver.step({
+          price: h.price,
+          tempOut: h.weather.temp,
+          previous: { level, capacity },
+          stepHours,
+          historicalPrices,
+        });
+        storage = result.storage;
+        generated = result.generated;
+      }
+      level = storage.level;
 
       const energy = { generated, price: h.price };
       const demand = { current, expected };
-      const storage = pointIndex === 0
-        ? { level, capacity }
-        : EnergyStorageResolver.step({
-            price: h.price,
-            demandKw: current,
-            previous: { level, capacity },
-            stepHours,
-          }).storage;
-      level = storage.level;
 
       return {
         timestamp: h.datetime.toISOString(),
@@ -128,7 +135,7 @@ export function useSimulationData(
         storage,
       };
     });
-  }, [hours, range, initialStoragePercent]);
+  }, [hours, range, initialStoragePercent, historicalPrices]);
 
   return { series, loading, dataYears };
 }
