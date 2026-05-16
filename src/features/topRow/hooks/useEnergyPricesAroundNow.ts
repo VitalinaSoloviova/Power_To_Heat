@@ -42,7 +42,10 @@ export const useEnergyPricesAroundNow = () => {
         const rangeStart = now - 24 * 60 * 60 * 1000;
         const rangeEnd = now + 24 * 60 * 60 * 1000;
 
-        const window = entries.filter(e => e.start_timestamp >= rangeStart && e.start_timestamp <= rangeEnd + 60 * 60 * 1000);
+        // First filter out entries that start before the range start,
+        // then keep only those that start at or before the (range end + 1h) boundary.
+        const windowStartFiltered = entries.filter(e => e.start_timestamp >= rangeStart);
+        const window = windowStartFiltered.filter(e => e.start_timestamp <= rangeEnd + 60 * 60 * 1000);
 
         // ensure ordering
         window.sort((a, b) => a.start_timestamp - b.start_timestamp);
