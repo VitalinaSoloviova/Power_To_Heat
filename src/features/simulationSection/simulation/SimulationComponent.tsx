@@ -124,10 +124,8 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
 
   return (
     <Box sx={{ mx: 3, mb: 2, display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'flex-start' }}>
-      {/* Simulation (left) */}
       {!point ? (
-        <Paper
-          elevation={0}
+        <Box
           sx={{
             flex: 1,
             minWidth: 0,
@@ -139,10 +137,9 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           }}
         >
           Loading simulation…
-        </Paper>
+        </Box>
       ) : (
-        <Paper
-          elevation={0}
+        <Box
           sx={{
             flex: 1,
             minWidth: 0,
@@ -165,7 +162,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
             timeline={timelineProp}
             playback={playbackProp}
           />
-        </Paper>
+        </Box>
       )}
 
       {/* Chart cards sidebar (right) */}
