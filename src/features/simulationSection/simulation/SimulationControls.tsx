@@ -37,7 +37,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
           alignItems: { xs: 'stretch', md: 'center' },
-          justifyContent: 'center',
+          justifyContent: 'flex-start',
           gap: 2,
           px: 3,
           py: 1.5,

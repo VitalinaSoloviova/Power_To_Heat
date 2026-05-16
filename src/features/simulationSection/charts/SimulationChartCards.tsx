@@ -4,7 +4,7 @@ import { useChartsData } from '@features/charts/hooks/useChartsData';
 import { Box } from '@mui/material';
 import { type HistoryYears, DEFAULT_HISTORY_YEARS } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { ChartCard, type CardConfig } from './ChartCard';
 import type { SimulationRange } from '@services/types';
 
@@ -30,16 +30,9 @@ const mean = (arr: number[]) =>
 const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
   startDay, range, vertical = false,
   historyYears: historyYearsProp,
-  onHistoryYearsChange,
 }) => {
   const [hoveredId, setHoveredId] = useState<string | null>(null);
-  const [localHistoryYears, setLocalHistoryYears] = useState<HistoryYears>(DEFAULT_HISTORY_YEARS);
-  // Use prop if provided (controlled by parent), otherwise fall back to local state
-  const historyYears = historyYearsProp ?? localHistoryYears;
-  const setHistoryYears = (v: HistoryYears) => {
-    setLocalHistoryYears(v);
-    onHistoryYearsChange?.(v);
-  };
+  const historyYears = historyYearsProp ?? DEFAULT_HISTORY_YEARS;
   const colors = useColors();
 
   const { data: charts } = useChartsData(historyYears, startDay, GRANULARITY[range]);

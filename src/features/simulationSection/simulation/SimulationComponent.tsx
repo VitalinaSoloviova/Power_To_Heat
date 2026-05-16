@@ -129,7 +129,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
   );
 
   return (
-    <Box sx={{ mx: 3, mb: 2, display: 'flex', flexDirection: 'row', gap: 1.5, alignItems: 'flex-start' }}>
+    <Box sx={{ mx: 3, mb: 2 }}>
       {!point ? (
         <Box
           sx={{
@@ -159,31 +159,77 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           }}
         >
           <SimulationHeader loading={loading} />
-          <SimulationScene point={point} />
-          <SimulationControls
-            loading={loading}
-            startDay={startDay}
-            onStartDayChange={handleStartDayChange}
-            storage={storageProp}
-            timeline={timelineProp}
-            playback={playbackProp}
-            historyYears={historyYears}
-            setHistoryYears={handleHistoryYearsChange}
-          />
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: { xs: 'column', lg: 'row' },
+              alignItems: 'stretch',
+              gap: 1.5,
+              flex: 1,
+              minHeight: 0,
+            }}
+          >
+            <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+              <SimulationScene point={point} />
+
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: { xs: 'column', lg: 'row' },
+                  gap: 1.5,
+                  borderTop: `1px solid ${colors.border}`,
+                  bgcolor: colors.bgCard,
+                }}
+              >
+                <Box sx={{ flex: '1 1 50%', minWidth: 0 }}>
+                  <SimulationControls
+                    loading={loading}
+                    startDay={startDay}
+                    onStartDayChange={handleStartDayChange}
+                    storage={storageProp}
+                    timeline={timelineProp}
+                    playback={playbackProp}
+                    historyYears={historyYears}
+                    setHistoryYears={handleHistoryYearsChange}
+                  />
+                </Box>
+
+                <Box
+                  sx={{
+                    flex: '1 1 20%',
+                    minWidth: 0,
+                    p: 1.5,
+                    pl: { xs: 1.5, lg: 0 },
+                  }}
+                >
+                  <SimulationChartCards
+                    startDay={startDay}
+                    range={range}
+                    vertical
+                    historyYears={historyYears}
+                    onHistoryYearsChange={handleHistoryYearsChange}
+                  />
+                </Box>
+              </Box>
+            </Box>
+
+            <Box
+              sx={{
+                width: { xs: '100%', lg: 300 },
+                flexShrink: 0,
+                display: 'flex',
+                flexDirection: 'column',
+                p: 1.5,
+                pl: { xs: 1.5, lg: 0 },
+                bgcolor: colors.bgCard,
+                borderLeft: { xs: 'none', lg: `1px solid ${colors.border}` },
+              }}
+            >
+              <SimulationPriceTicker series={series} currentIndex={index} />
+            </Box>
+          </Box>
         </Box>
       )}
-
-      {/* Chart cards sidebar (right) */}
-      <Box sx={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 720, maxHeight: 'clamp(500px, 72vh, 920px)', overflow: 'hidden' }}>
-        <SimulationChartCards
-          startDay={startDay}
-          range={range}
-          vertical
-          historyYears={historyYears}
-          onHistoryYearsChange={handleHistoryYearsChange}
-        />
-        <SimulationPriceTicker series={series} currentIndex={index} />
-      </Box>
     </Box>
   );
 };
