@@ -11,7 +11,7 @@ interface HistoryPeriodSelectorProps {
 const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYears, setHistoryYears }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', mb: 1.5, gap: 0.75 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
         <Typography sx={{ fontSize: 12, fontWeight: 500, color: colors.textSecondary }}>
           Historical period
@@ -19,7 +19,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
         <Tooltip
           arrow
           placement="top"
-          title="Historical average data range used for simulation generation"
+          title="Historical period that should be used for creating average data for the simulation."
         >
           <IconButton
             size="small"
@@ -46,8 +46,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
               fontSize: 12,
               px: 1.25,
               py: 0.5,
-              minWidth: 60,
-              minHeight: 60, 
+              width: 55,
               '&.Mui-selected': {
                 color: colors.textPrimary,
                 bgcolor: colors.primarySoft,
