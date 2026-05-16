@@ -1,10 +1,10 @@
 import { Box } from '@mui/material';
-import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
 import { useColors } from '@theme/useTheme';
 
 import SimulationSlider from './SimulationSlider';
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
 import DateSimulationControlComponent from './DateSimulationControlComponent';
+import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
 
 interface SimulationControlsProps {
   storage: StorageControl;
