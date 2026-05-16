@@ -1,4 +1,4 @@
-import type {CurrentWeather, WeatherCondition } from "@services/currentData/CurrentWeatherService";
+import type {CurrentWeather, WeatherCondition } from "@features/topRow/currentData/CurrentWeatherService";
 import type { Location } from '@services/LocationService';
 
 export class OpenWeatherCurrentWeatherService {

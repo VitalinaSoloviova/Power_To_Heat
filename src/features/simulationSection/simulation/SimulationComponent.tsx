@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { Box, Paper } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
-import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/UIService";
+import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/ui/ChartUIService";
 import type { SimulationRun } from "@features/analytics/analyticsTypes";
 import SimulationChartCards from "../charts/SimulationChartCards";
 import { useSimulationData } from "./useSimulationData";
@@ -126,7 +126,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
             startDay={startDay}
             onStartDayChange={(d) => { setStartDay(d); setIndex(0); }}
             storage={{
-              currentStoragePercent: (point.storage.level / point.storage.capacity) * 100,
+              currentStoragePercent: storageLevel,
               onStorageChange: handleStorageLevelChange,
             }}
             timeline={{

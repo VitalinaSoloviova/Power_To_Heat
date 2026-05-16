@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { currentEnergyPriceService } from "@services/serviceRegistry";
-import type { CurrentEnergyPrice } from "@services/currentData/CurrentEnergyPriceService";
+import type { CurrentEnergyPrice } from "@features/topRow/currentData/CurrentEnergyPriceService";
 
 interface AsyncState<T> {
     data: T | null;

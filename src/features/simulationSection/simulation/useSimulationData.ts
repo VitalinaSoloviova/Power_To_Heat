@@ -1,39 +1,8 @@
 import { useEffect, useMemo, useState } from 'react';
 import { uiService } from '@services/serviceRegistry';
-import { EnergyStorageResolver } from '@services/resolvers/EnergyStorageResolver';
-import type { UiHourData } from '@calculations/uiDataProfile';
-import type { WeatherCondition } from '@services/currentData/CurrentWeatherService';
-import type { HistoryYears } from '@services/UIService';
+import type { ChartsData, HistoryYears } from '@services/ui/ChartUIService';
 import type { DataCoverage } from '@services/DataCoverageCalculator';
-import type { SimulationPoint, SimulationRange } from '@services/types/index';
-
-const POINTS_PER_RANGE: Record<SimulationRange, number> = {
-  day: 24,
-  week: 7 * 24,
-  month: 30,
-};
-
-const STEP_HOURS: Record<SimulationRange, number> = {
-  day: 1,
-  week: 1,
-  month: 24,
-};
-
-
-const normalizeWeatherCondition = (
-  description: string | undefined,
-  windSpeed = 0,
-): WeatherCondition => {
-  const d = (description ?? '').toLowerCase();
-  if (d.includes('rain') || d.includes('drizzle')) return 'rainy';
-  if (d.includes('snow')) return 'snowy';
-  if (d.includes('storm') || d.includes('thunder')) return 'stormy';
-  if (d.includes('fog') || d.includes('mist')) return 'foggy';
-  if (d.includes('cloud') || d.includes('overcast')) return 'cloudy';
-  if (windSpeed >= 8) return 'windy';
-  if (d.includes('clear') || d.includes('sun')) return 'sunny';
-  return 'unknown';
-};
+import type { SimulationPoint, SimulationRange } from '@services/types';
 
 /**
  * Builds a `SimulationPoint[]` series from the real chart data exposed
@@ -45,9 +14,9 @@ export function useSimulationData(
   initialStoragePercent: number,
   historyYears: HistoryYears = 10,
 ) {
-  const [hours, setHours] = useState<UiHourData[] | null>(null);
-  const [currentRange, setCurrentRange] = useState<SimulationRange>(range);
-  const [dataYears, setDataYears] = useState<DataCoverage | null>(null);
+  const [chartsData, setChartsData] = useState<ChartsData | null>(null);
+  const [loadedRequestKey, setLoadedRequestKey] = useState<string | null>(null);
+  const requestKey = `${range}:${startDay.getTime()}:${historyYears}`;
 
   useEffect(() => {
     let cancelled = false;
@@ -55,80 +24,34 @@ export function useSimulationData(
 
     uiService
       .getChartsData(historyYears, granularity, startDay)
-      .then((d) => {
+      .then((data) => {
         if (cancelled) return;
-        setHours(d.hours);
-        setDataYears(d.dataYears);
-        setCurrentRange(range);
+        setChartsData(data);
+        setLoadedRequestKey(requestKey);
       })
       .catch(() => {
         if (cancelled) return;
-        setHours(null);
-        setDataYears(null);
-        setCurrentRange(range);
+        setChartsData(null);
+        setLoadedRequestKey(requestKey);
       });
 
     return () => {
       cancelled = true;
     };
-  }, [range, startDay, historyYears]);
-
-  const loading = range !== currentRange;
+  }, [range, startDay, historyYears, requestKey]);
 
   const series = useMemo<SimulationPoint[]>(() => {
-    const targetCount = POINTS_PER_RANGE[range];
-    const stepHours = STEP_HOURS[range];
+    if (!chartsData || loadedRequestKey !== requestKey) return [];
 
-    if (!hours || hours.length === 0) {
-      return [];
-    }
+    return uiService.getSimulationSeriesFromCharts({
+      chartsData,
+      range,
+      initialStoragePercent,
+    }).series;
+  }, [chartsData, loadedRequestKey, requestKey, range, initialStoragePercent]);
 
-    if (hours.length < targetCount) {
-      // Use available data even if less than target
-    }
-
-    const slice = hours.slice(0, targetCount);
-    const capacity = EnergyStorageResolver.CAPACITY_KWH;
-    const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
-    let level = capacity * (clampedInitialStoragePercent / 100);
-
-    return slice.map((h, pointIndex) => {
-      const current = h.energyDemand / 100;
-      const expected = current * 0.97;
-
-      // P2H output: full power when cheap, zero when expensive, demand-only at medium price
-      const p2hMax = 3_000; // kW
-      const generated = h.price < 60  ? p2hMax
-                      : h.price > 100 ? 0
-                      : current; // medium: just enough to cover demand
-
-      const energy = { generated, price: h.price };
-      const demand = { current, expected };
-      const storage = pointIndex === 0
-        ? { level, capacity }
-        : EnergyStorageResolver.step({
-            price: h.price,
-            demandKw: current,
-            previous: { level, capacity },
-            stepHours,
-          }).storage;
-      level = storage.level;
-
-      return {
-        timestamp: h.datetime.toISOString(),
-        weather: {
-          temperature: h.weather.temp,
-          condition: normalizeWeatherCondition(h.weather.description, h.weather.wind),
-          cloudCoverage:
-            h.weather.description?.toLowerCase().includes('cloud') ? 0.75 : 0.2,
-          windSpeed: h.weather.wind,
-        },
-        energy,
-        demand,
-        storage,
-      };
-    });
-  }, [hours, range, initialStoragePercent]);
+  const loading = loadedRequestKey !== requestKey;
+  const dataYears: DataCoverage | null = chartsData?.dataYears ?? null;
 
   return { series, loading, dataYears };
 }

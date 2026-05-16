@@ -18,7 +18,7 @@ const ENERGY_GLOW = '#f9a8d4';
 const CHARGE = '#22c55e';
 const DISCHARGE = '#ef4444';
 
-const StorageTank: React.FC<StorageTankProps> = ({ fraction, isCharging, isDischarging, size = 250 }) => {
+const StorageTank: React.FC<StorageTankProps> = ({ fraction, isCharging, isDischarging }) => {
   const tankX = 25;
   const tankW = 150;
   const tankTopY = 45;

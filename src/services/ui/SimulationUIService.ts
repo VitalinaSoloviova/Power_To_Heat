@@ -1,31 +1,169 @@
-// TODO: this service is currently unused and has been commented out
-// because CityDemandResolver was refactored (resolve() → static calculate()).
-// Re-enable once the simulation UI service layer is wired up.
+import type { UiHourData } from '@calculations/uiDataProfile';
+import type { DataCoverage } from '../DataCoverageCalculator';
+import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
+import type {
+	CityDemandPoint,
+	PowerGenerationPoint,
+	SimulationData,
+	SimulationInput,
+	SimulationPoint,
+	SimulationRange,
+} from '../types';
+import type { ChartsData } from './ChartUIService';
 
-// import { CityDemandResolver } from '../resolvers/CityDemandResolver';
-// import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
-// import type {
-//   SimulationData,
-//   SimulationInput,
-// } from '../types/SimulationTypes';
+export type { SimulationData, SimulationInput };
 
-// export type { SimulationData, SimulationInput };
+const POINTS_PER_RANGE: Record<SimulationRange, number> = {
+	day: 24,
+	week: 7 * 24,
+	month: 30,
+};
 
-// export class SimulationUIService {
-//   private readonly demandResolver: CityDemandResolver;
-//   private readonly storageResolver: EnergyStorageResolver;
+const STEP_HOURS: Record<SimulationRange, number> = {
+	day: 1,
+	week: 1,
+	month: 24,
+};
 
-//   constructor(
-//     demandResolver = new CityDemandResolver(),
-//     storageResolver = new EnergyStorageResolver(),
-//   ) {
-//     this.demandResolver = demandResolver;
-//     this.storageResolver = storageResolver;
-//   }
+export interface SimulationSeriesInput {
+	chartsData: ChartsData;
+	range: SimulationRange;
+	initialStoragePercent: number;
+}
 
-//   public getSimulationData(input: SimulationInput): SimulationData {
-//     const demand = this.demandResolver.resolve(input);
-//     const storage = this.storageResolver.resolve(input, demand);
-//     return { demand, storage };
-//   }
-// }
+export interface SimulationSeriesData {
+	series: SimulationPoint[];
+	dataYears: DataCoverage;
+}
+
+export class SimulationUIService {
+	public getSimulationData(input: SimulationInput): SimulationData {
+		const generation = this.buildGeneration(input);
+		const demand = this.buildDemand(input);
+		const storage = this.buildStorage(input, demand);
+
+		return { generation, demand, storage };
+	}
+
+	public getSimulationSeries(input: SimulationSeriesInput): SimulationSeriesData {
+		const { chartsData, range, initialStoragePercent } = input;
+		const targetCount = POINTS_PER_RANGE[range];
+		const stepHours = STEP_HOURS[range];
+		const capacity = EnergyStorageResolver.CAPACITY_KWH;
+		const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
+		let level = capacity * (clampedInitialStoragePercent / 100);
+
+		const series = chartsData.hours.slice(0, targetCount).map((hour, pointIndex) => {
+			const current = hour.energyDemand / 100;
+			const expected = current * 0.97;
+			const generated = this.calculatePowerToHeatGeneration(hour, current);
+			const storage = pointIndex === 0
+				? { level, capacity }
+				: EnergyStorageResolver.step({
+						price: hour.price,
+						demandKw: current,
+						previous: { level, capacity },
+						stepHours,
+					}).storage;
+
+			level = storage.level;
+
+			return {
+				timestamp: hour.datetime.toISOString(),
+				weather: {
+					temperature: hour.weather.temp,
+					condition: this.normalizeWeatherCondition(hour.weather.description, hour.weather.wind),
+					cloudCoverage: hour.weather.description?.toLowerCase().includes('cloud') ? 0.75 : 0.2,
+					windSpeed: hour.weather.wind,
+				},
+				energy: { generated, price: hour.price },
+				demand: { current, expected },
+				storage,
+			};
+		});
+
+		return { series, dataYears: chartsData.dataYears };
+	}
+
+	private buildGeneration(input: SimulationInput): PowerGenerationPoint[] {
+		return Array.from({ length: input.forecastHours }, (_, hour) => {
+			const timestamp = this.timestampForHour(hour);
+			const windPower = input.windTurbineCount * input.weather.windSpeed * 120;
+			const daylightFactor = hour % 24 >= 7 && hour % 24 <= 18 ? 1 : 0;
+			const solarPower = input.solarPanelCount * (1 - input.weather.cloudCoverage) * daylightFactor * 0.4;
+
+			return {
+				hour,
+				timestamp,
+				windPower,
+				solarPower,
+				totalGenerated: windPower + solarPower,
+			};
+		});
+	}
+
+	private buildDemand(input: SimulationInput): CityDemandPoint[] {
+		const baseDemand = Math.max(0, input.cityPopulation * (21 - input.weather.temperature) * 0.08);
+
+		return Array.from({ length: input.forecastHours }, (_, hour) => ({
+			hour,
+			timestamp: this.timestampForHour(hour),
+			demand: baseDemand,
+		}));
+	}
+
+	private buildStorage(input: SimulationInput, demand: CityDemandPoint[]): SimulationData['storage'] {
+		const capacity = EnergyStorageResolver.CAPACITY_KWH;
+		let level = Math.min(capacity, Math.max(0, input.currentStorage));
+
+		return demand.map((point) => {
+			const next = EnergyStorageResolver.step({
+				price: 80,
+				demandKw: point.demand,
+				previous: { level, capacity },
+				stepHours: 1,
+			}).storage;
+			const chargedEnergy = Math.max(0, next.level - level);
+			const consumedEnergy = Math.max(0, level - next.level);
+			level = next.level;
+
+			return {
+				hour: point.hour,
+				timestamp: point.timestamp,
+				storageLevel: next.level,
+				chargedEnergy,
+				consumedEnergy,
+			};
+		});
+	}
+
+	private calculatePowerToHeatGeneration(hour: UiHourData, currentDemand: number): number {
+		const p2hMax = 3_000;
+
+		if (hour.price < 60) return p2hMax;
+		if (hour.price > 100) return 0;
+		return currentDemand;
+	}
+
+	private normalizeWeatherCondition(
+		description: string | undefined,
+		windSpeed = 0,
+	): SimulationPoint['weather']['condition'] {
+		const normalizedDescription = (description ?? '').toLowerCase();
+
+		if (normalizedDescription.includes('rain') || normalizedDescription.includes('drizzle')) return 'rainy';
+		if (normalizedDescription.includes('snow')) return 'snowy';
+		if (normalizedDescription.includes('storm') || normalizedDescription.includes('thunder')) return 'stormy';
+		if (normalizedDescription.includes('fog') || normalizedDescription.includes('mist')) return 'foggy';
+		if (normalizedDescription.includes('cloud') || normalizedDescription.includes('overcast')) return 'cloudy';
+		if (windSpeed >= 8) return 'windy';
+		if (normalizedDescription.includes('clear') || normalizedDescription.includes('sun')) return 'sunny';
+		return 'unknown';
+	}
+
+	private timestampForHour(hour: number): string {
+		const timestamp = new Date();
+		timestamp.setUTCHours(timestamp.getUTCHours() + hour, 0, 0, 0);
+		return timestamp.toISOString();
+	}
+}

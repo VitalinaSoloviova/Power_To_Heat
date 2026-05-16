@@ -2,7 +2,7 @@ import type {
   ChartData,
   ChartSeriesPoint,
   SimulationData,
-} from '../types/SimulationTypes';
+} from '../types';
 
 /**
  * Transforms raw simulation data into a chart-friendly shape.

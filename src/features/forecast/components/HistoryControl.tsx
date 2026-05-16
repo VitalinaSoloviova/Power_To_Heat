@@ -1,6 +1,6 @@
 import { Box, Typography, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { useColors } from '@theme/useTheme';
-import { HISTORY_OPTIONS, type HistoryYears } from '@services/UIService';
+import { HISTORY_OPTIONS, type HistoryYears } from '@services/ui/ChartUIService';
 
 interface HistoryControlProps {
   value: HistoryYears;

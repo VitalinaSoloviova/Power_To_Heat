@@ -1,4 +1,4 @@
-import type { WeatherCondition } from "../currentData/CurrentWeatherService";
+import type { WeatherCondition } from "../../features/topRow/currentData/CurrentWeatherService";
 
 export type SimulationRange = 'day' | 'week' | 'month';
 

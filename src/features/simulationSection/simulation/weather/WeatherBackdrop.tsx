@@ -1,6 +1,6 @@
 import { useMemo, useRef, useEffect, useState } from 'react';
 import { phaseForTimestamp, sunElevation, NIGHT_PHASES } from '../simulationUtils';
-import type { SimulationWeather } from '@services/types/index';
+import type { SimulationWeather } from '@services/types';
 import WeatherDefs from './WeatherDefs';
 import WeatherSkyContent from './WeatherSkyContent';
 import WeatherEffects from './WeatherEffects';

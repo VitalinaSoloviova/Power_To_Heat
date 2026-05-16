@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { currentWeatherService } from "@services/serviceRegistry";
 import type { Location } from "@services/LocationService";
-import type { CurrentWeather } from "@services/currentData/CurrentWeatherService";
+import type { CurrentWeather } from "@features/topRow/currentData/CurrentWeatherService";
 
 interface AsyncState<T> {
     data: T | null;

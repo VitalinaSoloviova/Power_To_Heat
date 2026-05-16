@@ -1,5 +1,5 @@
 import type { SimulationRange, SimulationPoint } from './simulation.types';
-import type { HistoryYears } from '../UIService';
+import type { HistoryYears } from '../ui/ChartUIService';
 
 /** Play / pause + speed selection for the auto-simulation loop. */
 export interface PlaybackControl {

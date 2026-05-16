@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import HistoryControl from './HistoryControl';
-import type { HistoryYears } from '@services/UIService';
+import type { HistoryYears } from '@services/ui/ChartUIService';
 
 interface ControlsBarProps {
   historyYears: HistoryYears;

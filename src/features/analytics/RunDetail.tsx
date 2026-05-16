@@ -31,7 +31,7 @@ import { useColors } from '@theme/useTheme';
 import { getChartSx } from '@theme/colors';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
-import type { SimulationPoint } from '@services/types/SimulationTypes';
+import type { SimulationPoint } from '@services/types';
 
 const mean = (arr: number[]) =>
   arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;

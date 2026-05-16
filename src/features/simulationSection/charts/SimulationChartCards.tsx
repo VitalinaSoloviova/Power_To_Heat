@@ -2,11 +2,11 @@
 import type { Granularity } from '@calculations/DataResolver';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
 import { Box, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { type HistoryYears, DEFAULT_HISTORY_YEARS, HISTORY_OPTIONS } from '@services/UIService';
+import { type HistoryYears, DEFAULT_HISTORY_YEARS, HISTORY_OPTIONS } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
 import { useState, useMemo, memo } from 'react';
 import { ChartCard, type CardConfig } from './ChartCard';
-import type { SimulationRange } from '@services/types/SimulationTypes';
+import type { SimulationRange } from '@services/types';
 
 interface SimulationChartCardsProps {
   startDay: Date;

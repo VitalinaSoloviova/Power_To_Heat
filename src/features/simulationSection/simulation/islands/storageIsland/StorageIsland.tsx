@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { storageFraction } from './storageCalculationUtils';
-import type { SimulationPoint } from '@services/types/index';
+import type { SimulationPoint } from '@services/types';
 import StorageTank from './StorageTank';
 import StorageHeader from './StorageHeader';
 

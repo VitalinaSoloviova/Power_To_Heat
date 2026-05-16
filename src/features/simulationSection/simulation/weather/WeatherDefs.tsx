@@ -17,7 +17,7 @@ const WeatherDefs: React.FC<WeatherDefsProps> = ({ sky, isNight, hazeOpacity, su
       <motion.stop offset="100%" animate={{ stopColor: sky.bottom }} transition={tween} />
     </linearGradient>
     <radialGradient id="sun-glow">
-      <stop offset="0%"   stopColor={isNight ? '#e2e8f0' : '#fde047'} stopOpacity={0.85} />
+      <stop offset="0%"   stopColor={isNight ? '#e2e8f0' : sunCoreColor} stopOpacity={0.85} />
       <stop offset="60%"  stopColor={isNight ? '#cbd5e1' : '#fb923c'} stopOpacity={0.25} />
       <stop offset="100%" stopColor="transparent" />
     </radialGradient>

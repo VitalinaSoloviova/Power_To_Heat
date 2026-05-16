@@ -6,7 +6,7 @@ import AnalyticsPage from '@features/analytics/AnalyticsPage';
 import { useSimulationHistory } from '@features/analytics/useSimulationHistory';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRun } from '@features/analytics/analyticsTypes';
-import { DEFAULT_HISTORY_YEARS, type HistoryYears } from '@services/UIService';
+import { DEFAULT_HISTORY_YEARS, type HistoryYears } from '@services/ui/ChartUIService';
 import SimulationComponent from '@features/simulationSection/simulation/SimulationComponent';
 import type { ReplayParams } from '@services/types';
 

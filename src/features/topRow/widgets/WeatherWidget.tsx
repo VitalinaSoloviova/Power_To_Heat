@@ -14,7 +14,7 @@ import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
 import { useCurrentWeather } from "../hooks/useCurrentWeather";
 import { useLocation } from "../hooks/useLocation";
-import type { WeatherCondition } from "@services/currentData/CurrentWeatherService";
+import type { WeatherCondition } from "@features/topRow/currentData/CurrentWeatherService";
 
 const conditionIcon = (
     condition: WeatherCondition,

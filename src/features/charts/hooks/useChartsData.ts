@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import {
     type ChartsData,
     type HistoryYears,
-} from '@services/UIService';
+} from '@services/ui/ChartUIService';
 import type { Granularity } from '@calculations/DataResolver';
 import { uiService } from '@services/serviceRegistry';
 
