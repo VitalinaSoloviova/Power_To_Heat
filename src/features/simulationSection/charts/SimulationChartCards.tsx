@@ -1,9 +1,10 @@
 
 import type { Granularity } from '@calculations/DataResolver';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
-import { Box, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
-import { type HistoryYears, DEFAULT_HISTORY_YEARS, HISTORY_OPTIONS } from '@services/ui/ChartUIService';
+import { Box } from '@mui/material';
+import { type HistoryYears, DEFAULT_HISTORY_YEARS } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
+import HistoryPeriodSelector from './HistoryPeriodSelector';
 import { useState, useMemo, memo } from 'react';
 import { ChartCard, type CardConfig } from './ChartCard';
 import type { SimulationRange } from '@services/types';
@@ -94,39 +95,10 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', mb: 1.5, gap: 1.5 }}>
-        <Typography sx={{ fontSize: 12, fontWeight: 500, color: colors.textSecondary }}>
-          Historical period
-        </Typography>
-        <ToggleButtonGroup
-          exclusive
-          size="small"
-          value={historyYears}
-          onChange={(_, v) => v && setHistoryYears(v as HistoryYears)}
-        >
-          {HISTORY_OPTIONS.map((opt) => (
-            <ToggleButton
-              key={opt}
-              value={opt}
-              sx={{
-                color: colors.textSecondary,
-                borderColor: colors.border,
-                fontSize: 12,
-                px: 1.25,
-                py: 0.5,
-                minWidth: 36,
-                '&.Mui-selected': {
-                  color: colors.textPrimary,
-                  bgcolor: colors.primarySoft,
-                  borderColor: colors.primary,
-                },
-              }}
-            >
-              {opt}Y
-            </ToggleButton>
-          ))}
-        </ToggleButtonGroup>
-      </Box>
+      <HistoryPeriodSelector
+        historyYears={historyYears}
+        setHistoryYears={setHistoryYears}
+      />
 
       <Box sx={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', gap: 1.5, alignItems: 'stretch' }}>
         {cards.map((card) => (
@@ -143,4 +115,4 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
   );
 };
 
-export default memo(SimulationChartCards);
+export default SimulationChartCards;
