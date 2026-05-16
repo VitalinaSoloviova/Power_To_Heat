@@ -12,8 +12,8 @@ const VIEW_WIDTH = 480;
 const VIEW_HEIGHT = 160;
 
 const POINT_BASE_RADIUS = 4;
-const HORIZONTAL_POINT_PADDING = 12; // px padding from left/right edges for first/last points
-const VERTICAL_POINT_PADDING = 12; // px padding from top/bottom edges for highest/lowest points
+const HORIZONTAL_POINT_PADDING = 12; 
+const VERTICAL_POINT_PADDING = 12; 
 
 const formatHour = (ts: number) => new Date(ts).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
 
