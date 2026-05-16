@@ -5,7 +5,7 @@ import type { SimulationRange } from '@services/types';
 interface SimulationTimestampProps {
   timestamp?: string;
   range: SimulationRange;
-  formatTimestamp: (ts: string, range: SimulationRange) => string;
+  formatTimestamp: (timestamp: string, range: SimulationRange) => string;
 }
 
 const SimulationTimestamp: React.FC<SimulationTimestampProps> = ({ timestamp, range, formatTimestamp }) => {

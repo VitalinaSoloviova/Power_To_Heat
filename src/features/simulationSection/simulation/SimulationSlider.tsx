@@ -7,6 +7,7 @@ import { useColors } from '@theme/useTheme';
 import { formatTimestamp } from './simulationUtils';
 import SimulationButton from './SimulationButton';
 import type { PlaybackControl, SimulationRange, TimelineControl } from '@services/types';
+import SimulationTimestamp from './SimulationTimestamp';
 
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 const daysInMonth = (month: number) => new Date(2024, month + 1, 0).getDate();
@@ -107,17 +108,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
             '& .MuiSlider-rail': { opacity: 0.3 },
           }}
         />
-        <Typography
-          sx={{
-            fontVariantNumeric: 'tabular-nums',
-            color: colors.textPrimary,
-            fontSize: 12,
-            minWidth: 100,
-            textAlign: 'right',
-          }}
-        >
-          {point ? formatTimestamp(point.timestamp, range) : '—'}
-        </Typography>
+        <SimulationTimestamp timestamp={point?.timestamp} range={range} formatTimestamp={formatTimestamp} />
       </Box>
     </Box>
   );
