@@ -16,7 +16,15 @@ export interface CurrentEnergyPrice {
     trend?: 'rising' | 'falling' | 'stable';
 }
 
+export interface EnergyPriceWindowEntry {
+    startTimestamp: number;
+    endTimestamp: number;
+    marketPrice: number;
+    unit: string;
+}
+
 export interface CurrentEnergyPriceService {
     getCurrent(): Promise<CurrentEnergyPrice>;
+    getPriceWindow(): Promise<EnergyPriceWindowEntry[]>;
 }
 

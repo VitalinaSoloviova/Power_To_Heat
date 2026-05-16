@@ -1,4 +1,9 @@
-import type { CurrentEnergyPriceService, CurrentEnergyPrice, EnergyPriceStatus } from '@features/topRow/currentData/CurrentEnergyPriceService';
+import type {
+    CurrentEnergyPriceService,
+    CurrentEnergyPrice,
+    EnergyPriceStatus,
+    EnergyPriceWindowEntry,
+} from '@features/topRow/currentData/CurrentEnergyPriceService';
 
 interface AwattarEntry {
     start_timestamp: number;
@@ -19,14 +24,7 @@ export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
 
     async getCurrent(): Promise<CurrentEnergyPrice> {
         try {
-            const response = await fetch(
-                `${this.baseUrl}/api/energy-price/current`
-            );
-
-            if (!response.ok) throw new Error('API error');
-
-            const json = await response.json() as AwattarResponse;
-            const entries = json.data ?? [];
+            const entries = await this.fetchEntries();
 
             const now = Date.now();
             const in24h = now + 24 * 60 * 60 * 1000;
@@ -66,6 +64,28 @@ export class AwattarEnergyPriceService implements CurrentEnergyPriceService {
                 fetchedAt: new Date(),
             };
         }
+    }
+
+    async getPriceWindow(): Promise<EnergyPriceWindowEntry[]> {
+        const entries = await this.fetchEntries();
+
+        return entries.map((entry) => ({
+            startTimestamp: entry.start_timestamp,
+            endTimestamp: entry.end_timestamp,
+            marketPrice: entry.marketprice,
+            unit: entry.unit,
+        }));
+    }
+
+    private async fetchEntries(): Promise<AwattarEntry[]> {
+        const response = await fetch(
+            `${this.baseUrl}/api/energy-price/current`
+        );
+
+        if (!response.ok) throw new Error('API error');
+
+        const json = await response.json() as AwattarResponse;
+        return json.data ?? [];
     }
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { currentEnergyPriceService } from "@services/serviceRegistry";
+import { uiService } from "@services/serviceRegistry";
 import type { CurrentEnergyPrice } from "@features/topRow/currentData/CurrentEnergyPriceService";
 
 interface AsyncState<T> {
@@ -26,8 +26,8 @@ export const useCurrentEnergyPrice = (): AsyncState<CurrentEnergyPrice> => {
         let cancelled = false;
 
         const load = () => {
-            currentEnergyPriceService
-                .getCurrent()
+            uiService
+                .getCurrentEnergyPrice()
                 .then((data) => {
                     if (!cancelled)
                         setState({ data, loading: false, error: null });

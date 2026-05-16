@@ -31,7 +31,7 @@ export function useChartsData(
         setError(null);
 
         uiService
-            .getChartsData(historyYears, granularity, startDate)
+            .getChartUIData({ historyYears, granularity, startDate })
             .then((d) => {
                 if (cancelled) return;
                 setData(d);

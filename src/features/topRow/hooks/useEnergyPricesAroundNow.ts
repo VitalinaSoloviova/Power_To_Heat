@@ -1,28 +1,12 @@
 import { useEffect, useState } from 'react';
+import { uiService } from '@services/serviceRegistry';
+import type { PriceGraphPoint } from '@services/ui/UIService';
 
-interface AwattarEntry {
-  start_timestamp: number;
-  end_timestamp: number;
-  marketprice: number; // EUR/MWh
-  unit: string;
-}
-
-interface AwattarResponse {
-  data: AwattarEntry[];
-}
-
-export type PeriodTag = 'past' | 'current' | 'future';
-
-export interface PriceGraphPoint {
-  timestamp: number; // ms
-  priceCtKwh: number;
-  period: PeriodTag;
-}
-
-const BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3001';
+export type { PeriodTag, PriceGraphPoint } from '@services/ui/UIService';
 
 export const useEnergyPricesAroundNow = () => {
   const [points, setPoints] = useState<PriceGraphPoint[]>([]);
+  const [currentTimestamp, setCurrentTimestamp] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
@@ -33,37 +17,16 @@ export const useEnergyPricesAroundNow = () => {
       setLoading(true);
       setError(null);
       try {
-        const res = await fetch(`${BASE_URL}/api/energy-price/current`);
-        if (!res.ok) throw new Error('api error');
-        const json = (await res.json()) as AwattarResponse;
-        const entries = (json.data ?? []).slice();
-
-        const now = Date.now();
-        const rangeStart = now - 24 * 60 * 60 * 1000;
-        const rangeEnd = now + 24 * 60 * 60 * 1000;
-
-        // First filter out entries that start before the range start,
-        // then keep only those that start at or before the (range end + 1h) boundary.
-        const windowStartFiltered = entries.filter(e => e.start_timestamp >= rangeStart);
-        const window = windowStartFiltered.filter(e => e.start_timestamp <= rangeEnd + 60 * 60 * 1000);
-
-        // ensure ordering
-        window.sort((a, b) => a.start_timestamp - b.start_timestamp);
-
-        const pts: PriceGraphPoint[] = window.map((e) => {
-          const ts = e.start_timestamp;
-          const priceCt = Number((e.marketprice / 10).toFixed(2));
-          const period: PeriodTag = ts + 60 * 60 * 1000 <= now ? 'past' : (ts <= now && now < ts + 60 * 60 * 1000) ? 'current' : 'future';
-          return { timestamp: ts, priceCtKwh: priceCt, period };
-        });
+        const pts = await uiService.getEnergyPricesAroundNow();
 
         if (!cancelled) {
           setPoints(pts);
+          setCurrentTimestamp(Date.now());
           setLoading(false);
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (!cancelled) {
-          setError(err);
+          setError(err instanceof Error ? err : new Error(String(err)));
           setLoading(false);
         }
       }
@@ -74,7 +37,7 @@ export const useEnergyPricesAroundNow = () => {
     return () => { cancelled = true; clearInterval(id); };
   }, []);
 
-  return { points, loading, error } as const;
+  return { points, currentTimestamp, loading, error } as const;
 };
 
 export default useEnergyPricesAroundNow;

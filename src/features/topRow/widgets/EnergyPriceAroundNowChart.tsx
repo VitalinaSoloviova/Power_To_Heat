@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import useEnergyPricesAroundNow, { type PriceGraphPoint } from '../hooks/useEnergyPricesAroundNow';
@@ -19,11 +19,9 @@ const formatHour = (ts: number) => new Date(ts).toLocaleString([], { hour: '2-di
 
 const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
   const colors = useColors();
-  const { points, loading, error } = useEnergyPricesAroundNow();
+  const { points, currentTimestamp, loading, error } = useEnergyPricesAroundNow();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const svgRef = useRef<SVGSVGElement | null>(null);
-
-  const now = Date.now();
 
   const preparedPoints = useMemo<(PriceGraphPoint & { x: number })[]>(() => {
     if (!points || points.length === 0) return [] as (PriceGraphPoint & { x: number })[];
@@ -43,26 +41,27 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
   const minPrice = yValues.length ? Math.min(...yValues) : 0;
   const maxPrice = yValues.length ? Math.max(...yValues) : 1;
 
-  const yPositionOfPrice = (price: number) => {
+  const yPositionOfPrice = useCallback((price: number) => {
     const pct = (price - minPrice) / (maxPrice - minPrice || 1);
     const usableHeight = VIEW_HEIGHT - VERTICAL_POINT_PADDING * 2;
     return VIEW_HEIGHT - (pct * usableHeight + VERTICAL_POINT_PADDING);
-  };
+  }, [minPrice, maxPrice]);
 
   const pathData = useMemo(() => {
     if (preparedPoints.length === 0) return '';
     const coords = preparedPoints.map(point => `${point.x},${yPositionOfPrice(point.priceCtKwh)}`);
     return `M ${coords.join(' L ')} `;
-  }, [preparedPoints, minPrice, maxPrice]);
+  }, [preparedPoints, yPositionOfPrice]);
 
   const nowXPosition = useMemo(() => {
     if (preparedPoints.length === 0) return VIEW_WIDTH / 2;
+    const now = currentTimestamp ?? preparedPoints.find(point => point.period === 'current')?.timestamp ?? preparedPoints[0].timestamp;
     const minTimestamp = preparedPoints[0].timestamp;
     const maxTimestamp = preparedPoints[preparedPoints.length - 1].timestamp;
     const totalTimestampRange = maxTimestamp - minTimestamp || 1;
     const usableWidth = VIEW_WIDTH - HORIZONTAL_POINT_PADDING * 2;
     return HORIZONTAL_POINT_PADDING + ((now - minTimestamp) / totalTimestampRange) * usableWidth;
-  }, [preparedPoints, now]);
+  }, [preparedPoints, currentTimestamp]);
 
   return (
     <Box sx={{ width: '100%' }}>

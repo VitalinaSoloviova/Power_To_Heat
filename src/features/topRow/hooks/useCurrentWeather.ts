@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { currentWeatherService } from "@services/serviceRegistry";
+import { uiService } from "@services/serviceRegistry";
 import type { Location } from "@services/LocationService";
 import type { CurrentWeather } from "@features/topRow/currentData/CurrentWeatherService";
 
@@ -30,8 +30,8 @@ export const useCurrentWeather = (
         let cancelled = false;
 
         const load = () => {
-            currentWeatherService
-                .getCurrent(location)
+            uiService
+                .getCurrentWeather(location)
                 .then((data) => {
                     if (!cancelled)
                         setState({ data, loading: false, error: null });
