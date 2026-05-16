@@ -4,8 +4,7 @@ import { useChartsData } from '@features/charts/hooks/useChartsData';
 import { Box } from '@mui/material';
 import { type HistoryYears, DEFAULT_HISTORY_YEARS } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
-import HistoryPeriodSelector from './HistoryPeriodSelector';
-import { useState, useMemo, memo } from 'react';
+import { useState, useMemo } from 'react';
 import { ChartCard, type CardConfig } from './ChartCard';
 import type { SimulationRange } from '@services/types';
 
@@ -95,11 +94,6 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
 
   return (
     <Box>
-      <HistoryPeriodSelector
-        historyYears={historyYears}
-        setHistoryYears={setHistoryYears}
-      />
-
       <Box sx={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', gap: 1.5, alignItems: 'stretch' }}>
         {cards.map((card) => (
           <ChartCard

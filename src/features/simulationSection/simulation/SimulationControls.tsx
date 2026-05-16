@@ -4,7 +4,8 @@ import { useColors } from '@theme/useTheme';
 import SimulationSlider from './SimulationSlider';
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
 import DateSimulationControlComponent from './DateSimulationControlComponent';
-import StorageLevelControl from '@features/forecast/components/StorageLevelControl';
+import StorageLevelControl from '../StorageLevelControl';
+import type { HistoryYears } from '@services/ui/ChartUIService';
 
 interface SimulationControlsProps {
   storage: StorageControl;
@@ -13,6 +14,8 @@ interface SimulationControlsProps {
   loading: boolean;
   startDay: Date;
   onStartDayChange: (d: Date) => void;
+  historyYears: HistoryYears;
+  setHistoryYears: (v: HistoryYears) => void;
 }
 
 const SimulationControls: React.FC<SimulationControlsProps> = ({
@@ -22,6 +25,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   loading,
   startDay,
   onStartDayChange,
+  historyYears,
+  setHistoryYears,
 }) => {
   const colors = useColors();
 
@@ -50,6 +55,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         playback={playback}
         startDay={startDay}
         onStartDayChange={onStartDayChange}
+        historyYears={historyYears}
+        setHistoryYears={setHistoryYears}
       />
       <SimulationSlider
         timeline={timeline}

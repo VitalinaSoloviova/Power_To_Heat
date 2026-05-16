@@ -54,6 +54,12 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     setIndex(0);
   }, []);
 
+  const handleHistoryYearsChange = useCallback((value: HistoryYears) => {
+    setHistoryYears(value);
+    setIndex(0);
+    setIsPlaying(false);
+  }, []);
+
   const toggleSimulation = useCallback(() => {
     setIsPlaying((prev) => !prev);
   }, []);
@@ -161,6 +167,8 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
             storage={storageProp}
             timeline={timelineProp}
             playback={playbackProp}
+            historyYears={historyYears}
+            setHistoryYears={handleHistoryYearsChange}
           />
         </Box>
       )}
@@ -172,7 +180,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           range={range}
           vertical
           historyYears={historyYears}
-          onHistoryYearsChange={setHistoryYears}
+          onHistoryYearsChange={handleHistoryYearsChange}
         />
         <SimulationPriceTicker series={series} currentIndex={index} />
       </Box>
