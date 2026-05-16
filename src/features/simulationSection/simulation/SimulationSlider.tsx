@@ -111,38 +111,6 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
           },
         }}
       >
-        {/* Month grid */}
-        <Typography sx={{ fontSize: 10, fontWeight: 700, color: colors.textMuted, letterSpacing: 1, mb: 1, textTransform: 'uppercase' }}>
-          Month
-        </Typography>
-        <Box sx={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 0.5, mb: 2 }}>
-          {MONTHS.map((m, i) => (
-            <Box
-              key={m}
-              component="button"
-              onClick={() => applyDate(i, selectedDay)}
-              sx={{
-                border: 'none',
-                borderRadius: 1.5,
-                px: 0,
-                py: 0.6,
-                fontSize: 11,
-                fontWeight: selectedMonth === i ? 700 : 400,
-                cursor: 'pointer',
-                bgcolor: selectedMonth === i ? colors.primary : 'transparent',
-                color: selectedMonth === i ? '#fff' : colors.textSecondary,
-                transition: 'all 0.15s',
-                '&:hover': {
-                  bgcolor: selectedMonth === i ? colors.primary : colors.bgBase,
-                  color: selectedMonth === i ? '#fff' : colors.textPrimary,
-                },
-              }}
-            >
-              {m}
-            </Box>
-          ))}
-        </Box>
-
         {/* Day picker */}
         <Typography sx={{ fontSize: 10, fontWeight: 700, color: colors.textMuted, letterSpacing: 1, mb: 1, textTransform: 'uppercase' }}>
           Day
@@ -197,7 +165,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
       >
         <ToggleButton value="day">Day</ToggleButton>
         <ToggleButton value="week">Week</ToggleButton>
-        <ToggleButton value="month" disabled>Month</ToggleButton>
+       {/**<ToggleButton value="month" disabled>Month</ToggleButton> */} 
       </ToggleButtonGroup>
 
       <SimulationButton

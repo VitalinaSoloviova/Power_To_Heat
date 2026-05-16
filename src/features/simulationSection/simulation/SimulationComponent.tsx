@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { Box, Paper } from "@mui/material";
+import { Box } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
 import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/ui/ChartUIService";
