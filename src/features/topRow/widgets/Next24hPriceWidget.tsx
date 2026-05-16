@@ -1,4 +1,4 @@
-import { Box, Typography, LinearProgress } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { TrendingUpRounded } from "@mui/icons-material";
 import WidgetCard from "./WidgetCard";
 import { useColors } from "@theme/useTheme";
@@ -12,15 +12,6 @@ const Next24hPriceWidget: React.FC = () => {
 
     const avgPrice = currentPrice?.avg24h ?? currentPrice?.value ?? 0;
     const trend = currentPrice?.trend ?? "stable";
-
-    // Map a price in ct/kWh to a 0-100 percentage for the progress bar.
-    // Defaults: 0 ct/kWh => 0%, 40 ct/kWh => 100% (clamped).
-    const mapPriceToPercent = (price: number, min = 0, max = 40) => {
-        if (max <= min) return 0;
-        const pct = ((price - min) / (max - min)) * 100;
-        return Math.min(100, Math.max(0, pct));
-    };
-    const progress = mapPriceToPercent(avgPrice, 0, 40);
 
     return (
         <WidgetCard
