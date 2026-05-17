@@ -30,10 +30,11 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
           borderColor: isPlaying ? colors.border : colors.primary,
           borderRadius: 2,
           px: 2.5,
-          py: 0.7,
           fontSize: 15,
           fontWeight: 800,
           textTransform: 'none',
+          height: { xs: 32, sm: 40 },
+          minWidth: 90,
           '&:hover': {
             borderColor: isPlaying ? colors.textPrimary : colors.primary,
             backgroundColor: isPlaying ? `${colors.textPrimary}12` : `${colors.primary}15`,
@@ -53,8 +54,8 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
             disabled={loading || !hasStarted}
             variant="outlined"
             sx={{
-              minWidth: { xs: 32, sm: 36 },
-              height: { xs: 32, sm: 36 },
+              minWidth: { xs: 32, sm: 40 },
+              height: { xs: 32, sm: 40 },
               borderRadius: 1,
               px: 0,
               py: 0,
@@ -63,8 +64,9 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
               color: isPlaying ? colors.danger : colors.textSecondary,
               borderColor: isPlaying ? colors.danger : colors.border,
               borderWidth: 1,
+              fontSize: 20,
               '&:hover': {
-                borderColor: isPlaying ? colors.danger : colors.textSecondary,
+                borderColor: isPlaying ? colors.danger : colors.primary,
                 backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.textPrimary}08`,
               },
               '&:disabled': {
@@ -83,15 +85,19 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
         exclusive
         onChange={(_, v) => v !== null && onSpeedMultiplierChange(v)}
         sx={{
-          minHeight: 32,
+          minHeight: { xs: 32, sm: 40 },
+          height: { xs: 32, sm: 40 },
           '& .MuiToggleButton-root': {
-            px: 1,
-            py: 0,
+            px: 1.4,
+            py: 1.3,
             fontSize: 10,
-            fontWeight: 700,
+            fontWeight: 800,
             color: colors.textSecondary,
             border: `1px solid ${colors.border}`,
+            height: { xs: 32, sm: 40 },
             '&.Mui-selected': {
+              px: 1.4,
+              py: 1.3,
               background: colors.primary,
               color: '#fff',
               '&:hover': { background: colors.primary },
