@@ -42,12 +42,13 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
             key={opt}
             value={opt}
             sx={{
+              flex: '1 1 ',
               color: colors.textSecondary,
               borderColor: colors.border,
               fontSize: 12,
               px: 0.5,
               py: 0.5,
-              minWidth: { xs: 40, sm: 53 },
+              minWidth: 40,
               width: { xs: 40, sm: 53 },
               height: { xs: 40, sm: 53 },
               '&.Mui-selected': {
