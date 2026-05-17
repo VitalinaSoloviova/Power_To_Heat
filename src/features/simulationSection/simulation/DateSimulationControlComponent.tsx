@@ -42,13 +42,9 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         py: 1.5,
         borderTop: `1px solid ${colors.border}`,
         bgcolor: colors.bgCard,
-        '& > *': {
-          width: '100%',
-        },
       }}
     >
       <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
-
       <DateSelector
         startDay={startDay}
         onStartDayChange={onStartDayChange}
