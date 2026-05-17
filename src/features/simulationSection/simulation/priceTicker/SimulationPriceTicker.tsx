@@ -59,6 +59,7 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
             minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
+            maxHeight: '100%',
         }}>
             {/* Label */}
             <Box sx={{ px: 2, pt: 1.5, pb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>

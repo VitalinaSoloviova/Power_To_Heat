@@ -55,7 +55,7 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
           gap: 2,
           px: 3,
           paddingTop: 1.5,
-          paddingBottom: 3,
+          paddingBottom: 1.5,
           borderBottom: `1px solid ${colors.border}`,
           bgcolor: colors.bgCard,
         }}

@@ -48,9 +48,8 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
               fontSize: 12,
               px: 0.5,
               py: 0.5,
-              minWidth: 40,
-              width: { xs: 40, sm: 53 },
-              height: { xs: 40, sm: 53 },
+              width: { xs: 40, sm: 55 },
+              height: { xs: 40, sm: 55 },
               '&.Mui-selected': {
                 color: colors.textPrimary,
                 bgcolor: colors.primarySoft,
