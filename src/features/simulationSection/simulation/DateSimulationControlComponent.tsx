@@ -20,7 +20,7 @@ interface SimulationSliderProps {
   setHistoryYears: (v: HistoryYears) => void;
 }
 
-const SimulationSlider: React.FC<SimulationSliderProps> = ({
+const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
   timeline,
   startDay,
   onStartDayChange,
@@ -57,4 +57,4 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
   );
 };
 
-export default SimulationSlider;
+export default DateSimulationControlComponent;
