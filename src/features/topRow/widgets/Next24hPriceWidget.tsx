@@ -39,7 +39,7 @@ const Next24hPriceWidget: React.FC = () => {
             <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
                 Average next 24 hours • {trend}
             </Typography>
-            <Box sx={{ mt: 1.2 }}>
+            <Box sx={{ mt: 1.2 , maxHeight: '70%',  maxWidth: '70%' }}>
                 <EnergyPriceAroundNowChart height={84} />
             </Box>
         </WidgetCard>

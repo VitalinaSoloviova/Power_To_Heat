@@ -17,7 +17,7 @@ const VERTICAL_POINT_PADDING = 12;
 
 const formatHour = (ts: number) => new Date(ts).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
 
-const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 80 }) => {
+const EnergyPriceAroundNowChart: React.FC<Props> = () => {
   const colors = useColors();
   const { points, currentTimestamp, loading, error } = useEnergyPricesAroundNow();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -64,7 +64,7 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 80 }) => {
   }, [preparedPoints, currentTimestamp]);
 
   return (
-    <Box sx={{ width: '80%', height: '80%' }}>
+    <Box sx={{ width: '80%', height: '60%' }}>
       {loading && <Typography sx={{ color: colors.textSecondary }}>Loading…</Typography>}
       {error && <Typography sx={{ color: colors.textMuted }}>Price data unavailable</Typography>}
       {!loading && !error && (
