@@ -17,7 +17,7 @@ const VERTICAL_POINT_PADDING = 12;
 
 const formatHour = (ts: number) => new Date(ts).toLocaleString([], { hour: '2-digit', minute: '2-digit', day: '2-digit', month: 'short' });
 
-const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
+const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 80 }) => {
   const colors = useColors();
   const { points, currentTimestamp, loading, error } = useEnergyPricesAroundNow();
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
@@ -64,12 +64,12 @@ const EnergyPriceAroundNowChart: React.FC<Props> = ({ height = 120 }) => {
   }, [preparedPoints, currentTimestamp]);
 
   return (
-    <Box sx={{ width: '100%' }}>
+    <Box sx={{ width: '80%', height: '80%' }}>
       {loading && <Typography sx={{ color: colors.textSecondary }}>Loading…</Typography>}
       {error && <Typography sx={{ color: colors.textMuted }}>Price data unavailable</Typography>}
       {!loading && !error && (
-        <Box sx={{ position: 'relative', width: '100%' }}>
-          <svg ref={svgRef} viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`} preserveAspectRatio="none" style={{ width: '100%', height }}>
+        <Box sx={{ position: 'relative', width: '80%', height: '80%' }}>
+          <svg ref={svgRef} viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
             {/* grid lines */}
             <g stroke={colors.chartGrid} strokeWidth={0.5}>
               <line x1={0} x2={VIEW_WIDTH} y1={VERTICAL_POINT_PADDING} y2={VERTICAL_POINT_PADDING} />
