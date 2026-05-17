@@ -1,7 +1,6 @@
 import type { DataCoverage } from '../DataCoverageCalculator';
 import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
 import type { SimulationPoint, SimulationRange } from '../types';
-import type { UiHourData } from '@calculations/uiDataProfile';
 import type { ChartsData } from './ChartUIService';
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {
@@ -42,18 +41,29 @@ export class SimulationUIService {
 		const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
 		let level = capacity * (clampedInitialStoragePercent / 100);
 
+		// All available prices used as historical context for percentile calculation
+		const historicalPrices = chartsData.hours.map((h) => h.price);
+
 		const series = chartsData.hours.slice(0, targetCount).map((hour, pointIndex) => {
 			const current = hour.energyDemand / 100;
 			const expected = current * 0.97;
-			const generated = this.calculatePowerToHeatGeneration(hour, current);
-			const storage = pointIndex === 0
-				? { level, capacity }
-				: EnergyStorageResolver.step({
-						price: hour.price,
-						demandKw: current,
-						previous: { level, capacity },
-						stepHours,
-					}).storage;
+
+			let storage: SimulationPoint['storage'];
+			let generated = 0;
+
+			if (pointIndex === 0) {
+				storage = { level, capacity };
+			} else {
+				const step = EnergyStorageResolver.step({
+					price: hour.price,
+					tempOut: hour.weather.temp,
+					previous: { level, capacity },
+					stepHours,
+					historicalPrices,
+				});
+				storage = step.storage;
+				generated = step.generated;
+			}
 
 			level = storage.level;
 
@@ -72,14 +82,6 @@ export class SimulationUIService {
 		});
 
 		return { series, dataYears: chartsData.dataYears };
-	}
-
-	private calculatePowerToHeatGeneration(hour: UiHourData, currentDemand: number): number {
-		const p2hMax = 3_000;
-
-		if (hour.price < 60) return p2hMax;
-		if (hour.price > 100) return 0;
-		return currentDemand;
 	}
 
 	private normalizeWeatherCondition(

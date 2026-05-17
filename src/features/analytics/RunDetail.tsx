@@ -6,7 +6,7 @@
  *
  *   ┌─────────────────┬──────────────────────────────────┐
  *   │  Pie chart      │  Electricity Price │  Heat Demand │
- *   │  VS. Always On  ├────────────────────┼──────────────┤
+ *   │  VS. Direct Buy ├────────────────────┼──────────────┤
  *   │  Purchase Log   │  Temperature       │  Storage Lvl │
  *   └─────────────────┴──────────────────────────────────┘
  *
@@ -121,7 +121,7 @@ const ChartCard: React.FC<{
 
 // ── Buy history ────────────────────────────────────────────────────────────────
 
-const BuyHistory: React.FC<{ series: SimulationPoint[] }> = ({ series }) => {
+const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }> = ({ series, priceThreshold }) => {
   const colors = useColors();
   const entries = [...series].filter((p) => p.energy.generated > 0).reverse();
 
@@ -146,7 +146,7 @@ const BuyHistory: React.FC<{ series: SimulationPoint[] }> = ({ series }) => {
             day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
           });
           const cost = (p.energy.generated * p.energy.price) / 1_000;
-          const cheap = p.energy.price < 60;
+          const cheap = p.energy.price < priceThreshold;
           return (
             <Box key={i} sx={{
               display: 'flex', alignItems: 'center', gap: 1.5, px: 1, py: 0.75,
@@ -257,11 +257,11 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
             flexShrink: 0,
           }}>
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 1.5 }}>
-              VS. ALWAYS ON
+              VS. DIRECT BUY
             </Typography>
             {([
               { label: 'Our Cost',  value: `${stats.totalCost.toFixed(2)} €`,  color: colors.textPrimary },
-              { label: 'Always On', value: `${stats.alwaysCost.toFixed(2)} €`, color: colors.textMuted   },
+              { label: 'Direct Buy', value: `${stats.alwaysCost.toFixed(2)} €`, color: colors.textMuted   },
               { label: 'Savings',
                 value: `${stats.savings >= 0 ? '+' : ''}${stats.savings.toFixed(2)} €`,
                 color: stats.savings >= 0 ? colors.cool : colors.warning },
@@ -275,7 +275,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
 
           {/* Purchase Log */}
           <Box sx={{ flex: 1, minHeight: 0 }}>
-            <BuyHistory series={run.series} />
+            <BuyHistory series={run.series} priceThreshold={stats.priceThreshold} />
           </Box>
         </Box>
 

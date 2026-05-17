@@ -33,44 +33,50 @@ export interface SimulationRun {
 
 // Derived statistics shown in RunCard and RunDetail.
 export interface RunStats {
-  totalCost: number;       // € — what our price-aware strategy actually spent
-  alwaysCost: number;      // € — what always running at full power would have cost
-  savings: number;         // € — alwaysCost − totalCost (positive = we saved money)
-  cheapCount: number;      // number of hours where price < 60 €/MWh (P2H ran at max)
-  expensiveCount: number;  // number of hours where price ≥ 60 €/MWh (P2H reduced/off)
-  totalPurchases: number;  // total hours where any electricity was purchased
-  cheapCost: number;       // € — share of cost from cheap hours
-  expensiveCost: number;   // € — share of cost from expensive hours
+  totalCost: number;        // € — what our price-aware strategy actually spent
+  alwaysCost: number;       // € — what direct demand-based buying would have cost
+  savings: number;          // € — baseline cost − totalCost (positive = we saved money)
+  cheapCount: number;       // number of purchase hours with price below the series median
+  expensiveCount: number;   // number of purchase hours with price at or above the series median
+  totalPurchases: number;   // total hours where any electricity was purchased
+  cheapCost: number;        // € — share of cost from below-median hours
+  expensiveCost: number;    // € — share of cost from above-median hours
+  priceThreshold: number;   // €/MWh — dynamic median used to split cheap vs expensive
 }
 
 /**
  * Computes RunStats from a SimulationPoint series.
  *
- * Price thresholds mirror EnergyStorageResolver:
- *   < 60 €/MWh  → cheap:     P2H runs at max (3 000 kW), storage is charged
- *   60–100 €/MWh → medium:   P2H covers demand only, no net storage change
- *   > 100 €/MWh → expensive: P2H off, storage discharges to cover demand
- *
- * Always-On baseline: P2H runs at max power (3 000 kW) every single hour
- * regardless of price.  Cost = 3 kW·h × price per step.  The difference
- * between this and totalCost is how much the smart strategy saved.
+ * Baseline: buy exactly the heat demand in the hour/day where it occurs,
+ * without shifting cheap energy into storage. The demand per step is derived
+ * from the storage balance:
+ *   previous storage + purchased energy − current storage = demand served
  */
 export function computeRunStats(series: SimulationPoint[]): RunStats {
-  const P2H_MAX_KW = 3_000; // must match EnergyStorageResolver.MAX_P2H_KW
-  const CHEAP_THRESHOLD = 60; // €/MWh — same threshold used during simulation
+  // Dynamic threshold: median price of all points in the series
+  const sortedPrices = [...series.map((p) => p.energy.price)].sort((a, b) => a - b);
+  const priceThreshold = sortedPrices[Math.floor(sortedPrices.length / 2)] ?? 60;
 
   const purchases   = series.filter((p) => p.energy.generated > 0);
-  const cheap       = purchases.filter((p) => p.energy.price < CHEAP_THRESHOLD);
-  const expensive   = purchases.filter((p) => p.energy.price >= CHEAP_THRESHOLD);
+  const cheap       = purchases.filter((p) => p.energy.price < priceThreshold);
+  const expensive   = purchases.filter((p) => p.energy.price >= priceThreshold);
 
-  // Cost formula: kW × €/MWh ÷ 1 000 = € per hour
+  // Cost formula: kWh × €/MWh ÷ 1 000 = €
   const costOf      = (p: SimulationPoint) => (p.energy.generated * p.energy.price) / 1_000;
   const totalCost   = purchases.reduce((s, p) => s + costOf(p), 0);
   const cheapCost   = cheap.reduce((s, p) => s + costOf(p), 0);
   const expensiveCost = expensive.reduce((s, p) => s + costOf(p), 0);
 
-  // Always-On: buy P2H_MAX_KW every hour at whatever the market price is
-  const alwaysCost  = series.reduce((s, p) => s + (P2H_MAX_KW * p.energy.price) / 1_000, 0);
+  const alwaysCost = series.reduce((sum, point, index) => {
+    if (index === 0) return sum;
+
+    const previous = series[index - 1];
+    const demandServed =
+      previous.storage.level + point.energy.generated - point.storage.level;
+    const directPurchase = Math.max(0, demandServed);
+
+    return sum + (directPurchase * point.energy.price) / 1_000;
+  }, 0);
 
   return {
     totalCost,
@@ -81,5 +87,6 @@ export function computeRunStats(series: SimulationPoint[]): RunStats {
     totalPurchases: purchases.length,
     cheapCost,
     expensiveCost,
+    priceThreshold,
   };
 }
