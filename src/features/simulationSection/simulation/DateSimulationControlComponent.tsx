@@ -66,6 +66,7 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
           colors={colors}
           MONTHS={MONTHS}
           daysInMonth={daysInMonth}
+          simulationRange={range}
         />
       </Box>
 

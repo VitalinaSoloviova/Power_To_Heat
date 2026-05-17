@@ -10,9 +10,10 @@ interface DateSelectorProps {
   colors: any;
   MONTHS: string[];
   daysInMonth: (month: number) => number;
+  simulationRange: 'day' | 'week' | 'month';
 }
 
-const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange, colors, MONTHS, daysInMonth }) => {
+const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange, colors, MONTHS, daysInMonth, simulationRange }) => {
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = anchorEl !== null;
   const dateState = useDateState(startDay);
@@ -26,7 +27,20 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
     setAnchorEl(null);
   };
 
-  const labelMonthDay = new Date(Date.UTC(new Date().getFullYear(), dateState.selectedMonth, dateState.selectedDay)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+  const year = new Date().getUTCFullYear();
+  const startDate = new Date(Date.UTC(year, dateState.selectedMonth, dateState.selectedDay));
+  let labelMonthDay = '';
+  if (simulationRange === 'day') {
+    labelMonthDay = startDate.toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
+  } else if (simulationRange === 'week') {
+    const endDate = new Date(Date.UTC(year, dateState.selectedMonth, dateState.selectedDay + 6));
+    const formatOptions = { day: '2-digit', month: 'short' } as const;
+    const startLabel = startDate.toLocaleDateString('en-GB', formatOptions);
+    const endLabel = endDate.toLocaleDateString('en-GB', formatOptions);
+    labelMonthDay = `${startLabel} - ${endLabel}`;
+  } else if (simulationRange === 'month') {
+    labelMonthDay = startDate.toLocaleDateString('de-DE', { month: 'long' });
+  }
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 53, minWidth: 0}}>
