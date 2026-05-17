@@ -238,6 +238,8 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 flex: "0 1 23%",
                 width: { xs: "100%", lg: 320 },
                 flexDirection: "column",
+                minHeight: 0,
+                overflow: "hidden",
                 bgcolor: colors.bgCard,
                 borderLeft: { xs: "none", lg: `1px solid ${colors.border}` },
               }}
@@ -252,7 +254,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 historyYears={historyYears}
                 setHistoryYears={handleHistoryYearsChange}
               />
-              <Box sx={{ width: "100%", px: 0.5, py: 1 }}>
+              <Box sx={{ width: "100%", px: 0.5, py: 1, flex: "1 1 0", minHeight: 0, overflow: "hidden" }}>
                 <SimulationPriceTicker series={series} currentIndex={index} />
               </Box>
             </Box>
