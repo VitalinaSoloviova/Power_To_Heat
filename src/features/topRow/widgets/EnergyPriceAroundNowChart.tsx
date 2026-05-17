@@ -64,11 +64,11 @@ const EnergyPriceAroundNowChart: React.FC<Props> = () => {
   }, [preparedPoints, currentTimestamp]);
 
   return (
-    <Box sx={{ width: '80%', height: '60%' }}>
+    <Box >
       {loading && <Typography sx={{ color: colors.textSecondary }}>Loading…</Typography>}
       {error && <Typography sx={{ color: colors.textMuted }}>Price data unavailable</Typography>}
       {!loading && !error && (
-        <Box sx={{ position: 'relative', width: '80%', height: '80%' }}>
+        <Box sx={{ position: 'relative', width: '100%', height: '100%' }}>
           <svg ref={svgRef} viewBox={`0 0 ${VIEW_WIDTH} ${VIEW_HEIGHT}`} preserveAspectRatio="none" style={{ width: '100%', height: '100%' }}>
             {/* grid lines */}
             <g stroke={colors.chartGrid} strokeWidth={0.5}>

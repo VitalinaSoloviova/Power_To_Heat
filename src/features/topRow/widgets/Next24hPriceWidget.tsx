@@ -18,29 +18,32 @@ const Next24hPriceWidget: React.FC = () => {
             label="Next 24h Price"
             icon={<TrendingUpRounded sx={{ fontSize: 14 }} />}
         >
-            <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.6, mt: 0.2 }}>
-                <Typography
-                    sx={{
-                        fontSize: 22,
-                        fontWeight: 700,
-                        color: colors.textPrimary,
-                        lineHeight: 1,
-                    }}
-                >
-                    {loading ? "…" : avgPrice.toFixed(1)}
-                </Typography>
-                <Typography
-                    sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}
-                >
-                    ct/kWh
-                </Typography>
-            </Box>
-
-            <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
-                Average next 24 hours • {trend}
-            </Typography>
-            <Box sx={{ mt: 1.2 , maxHeight: '70%',  maxWidth: '70%' }}>
-                <EnergyPriceAroundNowChart height={84} />
+            <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                <Box sx={{ flex: 1, minWidth: 0 }}>
+                    <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.6 }}>
+                        <Typography
+                            sx={{
+                                fontSize: 22,
+                                fontWeight: 700,
+                                color: colors.textPrimary,
+                                lineHeight: 1,
+                            }}
+                        >
+                            {loading ? "…" : avgPrice.toFixed(1)}
+                        </Typography>
+                        <Typography
+                            sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}
+                        >
+                            ct/kWh
+                        </Typography>
+                    </Box>
+                    <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
+                        Average next 24 hours • {trend}
+                    </Typography>
+                </Box>
+                <Box sx={{ ml: 2, maxHeight: '100px', maxWidth: '80%', flexShrink: 0, width: '60%' }}>
+                    <EnergyPriceAroundNowChart />
+                </Box>
             </Box>
         </WidgetCard>
     );
