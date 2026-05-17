@@ -2,7 +2,11 @@ import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Box } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
-import { DEFAULT_STORAGE_LEVEL, DEFAULT_HISTORY_YEARS, type HistoryYears } from "@services/ui/ChartUIService";
+import {
+  DEFAULT_STORAGE_LEVEL,
+  DEFAULT_HISTORY_YEARS,
+  type HistoryYears,
+} from "@services/ui/ChartUIService";
 import type { SimulationRun } from "@features/analytics/analyticsTypes";
 import SimulationChartCards from "../charts/SimulationChartCards";
 import { useSimulationData } from "./useSimulationData";
@@ -11,6 +15,7 @@ import SimulationHeader from "./SimulationHeader";
 import SimulationPriceTicker from "./priceTicker/SimulationPriceTicker";
 import SimulationScene from "./SimulationScene";
 import type { ReplayParams, SimulationRange } from "@services/types";
+import SimulationSlider from "./SimulationSlider";
 
 interface Props {
   onRunComplete?: (run: SimulationRun) => void;
@@ -22,16 +27,27 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
   const [range, setRange] = useState<SimulationRange>(initialParams?.range ?? "day");
   const [index, setIndex] = useState(0);
   const [startDay, setStartDay] = useState<Date>(
-    () => initialParams?.startDay ?? (() => {
-      const now = new Date();
-      return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
-    })()
+    () =>
+      initialParams?.startDay ??
+      (() => {
+        const now = new Date();
+        return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
+      })(),
   );
-  const [storageLevel, setStorageLevel] = useState<number>(initialParams?.storageLevel ?? DEFAULT_STORAGE_LEVEL);
-  const [historyYears, setHistoryYears] = useState<HistoryYears>(initialParams?.historyYears ?? DEFAULT_HISTORY_YEARS);
+  const [storageLevel, setStorageLevel] = useState<number>(
+    initialParams?.storageLevel ?? DEFAULT_STORAGE_LEVEL,
+  );
+  const [historyYears, setHistoryYears] = useState<HistoryYears>(
+    initialParams?.historyYears ?? DEFAULT_HISTORY_YEARS,
+  );
   const [isPlaying, setIsPlaying] = useState(false);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
-  const { series, loading, dataYears } = useSimulationData(range, startDay, storageLevel, historyYears);
+  const { series, loading, dataYears } = useSimulationData(
+    range,
+    startDay,
+    storageLevel,
+    historyYears,
+  );
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -93,7 +109,10 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     const interval = setInterval(() => {
       setIndex((current) => {
         const next = current + 1;
-        if (next >= series.length) { setIsPlaying(false); return current; }
+        if (next >= series.length) {
+          setIsPlaying(false);
+          return current;
+        }
         return next;
       });
     }, intervalTime);
@@ -161,31 +180,37 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           <SimulationHeader loading={loading} />
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: { xs: 'column', lg: 'row' },
-              alignItems: 'stretch',
+              display: "flex",
+              flexDirection: { xs: "column", lg: "row" },
+              alignItems: "stretch",
               gap: 1.5,
               flex: 1,
               minHeight: 0,
             }}
           >
-            <Box sx={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
+            <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
               <SimulationScene point={point} />
-
+              <SimulationSlider
+                timeline={timelineProp}
+                playback={playbackProp}
+                loading={loading}
+                startDay={startDay}
+                onStartDayChange={handleStartDayChange}
+              />
               <Box
                 sx={{
-                  display: 'flex',
+                  display: "flex",
                   paddingBlock: 2,
-                  flexDirection: { xs: 'column', lg: 'row' },
+                  flexDirection: { xs: "column", lg: "row" },
                 }}
               >
-                <Box sx={{ flex: '1 1 100%', minWidth: 0, paddingLeft: 1 }}>
+                <Box sx={{ flex: "1 1 100%", minWidth: 0, paddingLeft: 1 }}>
                   <SimulationChartCards
                     startDay={startDay}
                     range={range}
                     historyYears={historyYears}
                     onHistoryYearsChange={handleHistoryYearsChange}
-                  />  
+                  />
                 </Box>
               </Box>
             </Box>
@@ -193,12 +218,12 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
             <Box
               sx={{
                 flexShrink: 0,
-                display: 'flex',
-                flex: '0 1 23%',
-                width: { xs: '100%', lg: 320 },
-                flexDirection: 'column',
+                display: "flex",
+                flex: "0 1 23%",
+                width: { xs: "100%", lg: 320 },
+                flexDirection: "column",
                 bgcolor: colors.bgCard,
-                borderLeft: { xs: 'none', lg: `1px solid ${colors.border}` },
+                borderLeft: { xs: "none", lg: `1px solid ${colors.border}` },
               }}
             >
               <SimulationControls
@@ -211,12 +236,10 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 historyYears={historyYears}
                 setHistoryYears={handleHistoryYearsChange}
               />
-              {/* Price ticker shown below the controls box */}
-              <Box sx={{ width: '100%', px: 1.5, py: 1 }}>
+              <Box sx={{ width: "100%", px: 0.5, py: 1 }}>
                 <SimulationPriceTicker series={series} currentIndex={index} />
               </Box>
             </Box>
-            
           </Box>
         </Box>
       )}

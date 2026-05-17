@@ -32,7 +32,15 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
 
   return (
     <Box>
-      <Box
+      <DateSimulationControlComponent
+        timeline={timeline}
+        playback={playback}
+        startDay={startDay}
+        onStartDayChange={onStartDayChange}
+        historyYears={historyYears}
+        setHistoryYears={setHistoryYears}
+      />
+       <Box
         sx={{
           display: 'flex',
           flexDirection: { xs: 'column', md: 'row' },
@@ -50,21 +58,6 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           onChange={storage.onStorageChange}
         />
       </Box>
-      <DateSimulationControlComponent
-        timeline={timeline}
-        playback={playback}
-        startDay={startDay}
-        onStartDayChange={onStartDayChange}
-        historyYears={historyYears}
-        setHistoryYears={setHistoryYears}
-      />
-      <SimulationSlider
-        timeline={timeline}
-        playback={playback}
-        loading={loading}
-        startDay={startDay}
-        onStartDayChange={onStartDayChange}
-      />
     </Box>
   );
 };
