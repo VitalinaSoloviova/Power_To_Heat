@@ -31,7 +31,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   const colors = useColors();
 
   return (
-    <>
+    <Box>
       <Box
         sx={{
           display: 'flex',
@@ -65,7 +65,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         startDay={startDay}
         onStartDayChange={onStartDayChange}
       />
-    </>
+    </Box>
   );
 };
 

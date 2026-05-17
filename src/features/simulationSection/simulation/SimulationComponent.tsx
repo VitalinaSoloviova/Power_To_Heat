@@ -175,34 +175,17 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
               <Box
                 sx={{
                   display: 'flex',
+                  paddingBlock: 2,
                   flexDirection: { xs: 'column', lg: 'row' },
-                  gap: 1.5,
-                  bgcolor: colors.bgCard,
                 }}
               >
-                <Box sx={{ flex: '1 1 50%', minWidth: 0 }}>
-                  <SimulationControls
-                    loading={loading}
+                <Box sx={{ flex: '1 1 100%', minWidth: 0, paddingLeft: 1 }}>
+                  <SimulationChartCards
                     startDay={startDay}
-                    onStartDayChange={handleStartDayChange}
-                    storage={storageProp}
-                    timeline={timelineProp}
-                    playback={playbackProp}
+                    range={range}
                     historyYears={historyYears}
-                    setHistoryYears={handleHistoryYearsChange}
-                  />
-                </Box>
-
-                <Box
-                  sx={{
-                    flex: '1 1 20%',
-                    minWidth: 0,
-                    p: 1.5,
-                    pl: { xs: 1.5, lg: 0 },
-                  }}
-                >
-                <SimulationPriceTicker series={series} currentIndex={index} />
-
+                    onHistoryYearsChange={handleHistoryYearsChange}
+                  />  
                 </Box>
               </Box>
             </Box>
@@ -211,23 +194,29 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
               sx={{
                 flexShrink: 0,
                 display: 'flex',
+                flex: '0 1 23%',
                 width: { xs: '100%', lg: 320 },
                 flexDirection: 'column',
-                p: 1.5,
-                pl: { xs: 1.5, lg: 0 },
                 bgcolor: colors.bgCard,
                 borderLeft: { xs: 'none', lg: `1px solid ${colors.border}` },
               }}
             >
-                <SimulationChartCards
-                    startDay={startDay}
-                    range={range}
-                    vertical
-                    historyYears={historyYears}
-                    onHistoryYearsChange={handleHistoryYearsChange}
-                  />            
-                  
+              <SimulationControls
+                loading={loading}
+                startDay={startDay}
+                onStartDayChange={handleStartDayChange}
+                storage={storageProp}
+                timeline={timelineProp}
+                playback={playbackProp}
+                historyYears={historyYears}
+                setHistoryYears={handleHistoryYearsChange}
+              />
+              {/* Price ticker shown below the controls box */}
+              <Box sx={{ width: '100%', px: 1.5, py: 1 }}>
+                <SimulationPriceTicker series={series} currentIndex={index} />
+              </Box>
             </Box>
+            
           </Box>
         </Box>
       )}
