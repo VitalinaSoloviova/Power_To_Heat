@@ -177,7 +177,6 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                   display: 'flex',
                   flexDirection: { xs: 'column', lg: 'row' },
                   gap: 1.5,
-                  borderTop: `1px solid ${colors.border}`,
                   bgcolor: colors.bgCard,
                 }}
               >
@@ -202,22 +201,17 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                     pl: { xs: 1.5, lg: 0 },
                   }}
                 >
-                  <SimulationChartCards
-                    startDay={startDay}
-                    range={range}
-                    vertical
-                    historyYears={historyYears}
-                    onHistoryYearsChange={handleHistoryYearsChange}
-                  />
+                <SimulationPriceTicker series={series} currentIndex={index} />
+
                 </Box>
               </Box>
             </Box>
 
             <Box
               sx={{
-                width: { xs: '100%', lg: 300 },
                 flexShrink: 0,
                 display: 'flex',
+                width: { xs: '100%', lg: 320 },
                 flexDirection: 'column',
                 p: 1.5,
                 pl: { xs: 1.5, lg: 0 },
@@ -225,7 +219,14 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 borderLeft: { xs: 'none', lg: `1px solid ${colors.border}` },
               }}
             >
-              <SimulationPriceTicker series={series} currentIndex={index} />
+                <SimulationChartCards
+                    startDay={startDay}
+                    range={range}
+                    vertical
+                    historyYears={historyYears}
+                    onHistoryYearsChange={handleHistoryYearsChange}
+                  />            
+                  
             </Box>
           </Box>
         </Box>
