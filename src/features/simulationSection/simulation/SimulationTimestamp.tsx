@@ -13,7 +13,7 @@ const SimulationTimestamp: React.FC<SimulationTimestampProps> = ({ timestamp, ra
     <Typography
       sx={{
         fontVariantNumeric: 'tabular-nums',
-        color: 'text.primary',
+        color: 'textSecondary',
         fontSize: 12,
         minWidth: 100,
         textAlign: 'right',
