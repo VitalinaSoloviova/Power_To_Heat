@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
@@ -30,6 +30,19 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
 
   return (
     <Box>
+       <Typography
+      sx={{
+        px: 3,
+        pt: 2,
+        pb: 2,
+        fontSize: 16,
+        fontWeight: 600,
+        color: colors.textPrimary,
+        letterSpacing: 0.3,
+      }}
+    >
+      Simulation Controls
+    </Typography>
       <DateSimulationControlComponent
         timeline={timeline}
         playback={playback}
@@ -38,6 +51,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         historyYears={historyYears}
         setHistoryYears={setHistoryYears}
       />
+      
        <Box
         sx={{
           display: 'flex',

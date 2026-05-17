@@ -18,16 +18,16 @@ const SimulationHeader: React.FC<SimulationHeaderProps> = ({
         justifyContent: 'space-between',
         alignItems: 'center',
         px: 3,
-        pt: 2,
+        pt: 1,
       }}
     >
       <Typography
         sx={{
           color: colors.textPrimary,
-          fontSize: 18,
+          fontSize: 17,
           fontWeight: 700,
           letterSpacing: 1.2,
-          py: 2,
+          py: 1,
           textTransform: 'uppercase',
         }}
       >
