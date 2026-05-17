@@ -86,7 +86,7 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
   ], [prices, demands, avgTemps, minTemps, maxTemps, xLabels, historyYears, colors]);
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+    <Box>
       <Box sx={{ display: 'flex', flexDirection: vertical ? 'column' : 'row', gap: 2, alignItems: 'stretch' }}>
         {cards.map((card) => (
           <ChartCard

@@ -13,7 +13,6 @@ interface SimulationSceneProps {
 }
 
 const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
-  // Derive flow / charge state from the current frame.
   const generatedKw = point.energy.generated;
   const demandKw = point.demand.current;
   const storageFraction = point.storage.level / point.storage.capacity;
@@ -45,13 +44,12 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
           justifyContent: 'space-between',
           px: { xs: 1, sm: 2, md: 4 },
           py: { xs: 2, md: 3 },
-          minHeight: { xs: 320, sm: 400, md: 500 },
+          minHeight: { xs: 450, sm: 550, md: 650 },
         }}
       >
         {/* Full-width sky / weather behind everything */}
         <WeatherBackdrop timestamp={point.timestamp} weather={point.weather} />
 
-        {/* subtle dot grid on top of the sky */}
         <Box
           sx={{
             position: 'absolute',
