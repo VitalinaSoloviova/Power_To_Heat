@@ -121,7 +121,7 @@ const ChartCard: React.FC<{
 
 // ── Buy history ────────────────────────────────────────────────────────────────
 
-const BuyHistory: React.FC<{ series: SimulationPoint[] }> = ({ series }) => {
+const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }> = ({ series, priceThreshold }) => {
   const colors = useColors();
   const entries = [...series].filter((p) => p.energy.generated > 0).reverse();
 
@@ -146,7 +146,7 @@ const BuyHistory: React.FC<{ series: SimulationPoint[] }> = ({ series }) => {
             day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
           });
           const cost = (p.energy.generated * p.energy.price) / 1_000;
-          const cheap = p.energy.price < 60;
+          const cheap = p.energy.price < priceThreshold;
           return (
             <Box key={i} sx={{
               display: 'flex', alignItems: 'center', gap: 1.5, px: 1, py: 0.75,
@@ -275,7 +275,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
 
           {/* Purchase Log */}
           <Box sx={{ flex: 1, minHeight: 0 }}>
-            <BuyHistory series={run.series} />
+            <BuyHistory series={run.series} priceThreshold={stats.priceThreshold} />
           </Box>
         </Box>
 

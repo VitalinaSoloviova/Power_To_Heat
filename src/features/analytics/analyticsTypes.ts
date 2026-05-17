@@ -33,14 +33,15 @@ export interface SimulationRun {
 
 // Derived statistics shown in RunCard and RunDetail.
 export interface RunStats {
-  totalCost: number;       // € — what our price-aware strategy actually spent
-  alwaysCost: number;      // € — what direct demand-based buying would have cost
-  savings: number;         // € — baseline cost − totalCost (positive = we saved money)
-  cheapCount: number;      // number of hours where price < 60 €/MWh (P2H ran at max)
-  expensiveCount: number;  // number of hours where price ≥ 60 €/MWh (P2H reduced/off)
-  totalPurchases: number;  // total hours where any electricity was purchased
-  cheapCost: number;       // € — share of cost from cheap hours
-  expensiveCost: number;   // € — share of cost from expensive hours
+  totalCost: number;        // € — what our price-aware strategy actually spent
+  alwaysCost: number;       // € — what direct demand-based buying would have cost
+  savings: number;          // € — baseline cost − totalCost (positive = we saved money)
+  cheapCount: number;       // number of purchase hours with price below the series median
+  expensiveCount: number;   // number of purchase hours with price at or above the series median
+  totalPurchases: number;   // total hours where any electricity was purchased
+  cheapCost: number;        // € — share of cost from below-median hours
+  expensiveCost: number;    // € — share of cost from above-median hours
+  priceThreshold: number;   // €/MWh — dynamic median used to split cheap vs expensive
 }
 
 /**
@@ -52,11 +53,13 @@ export interface RunStats {
  *   previous storage + purchased energy − current storage = demand served
  */
 export function computeRunStats(series: SimulationPoint[]): RunStats {
-  const CHEAP_THRESHOLD = 60; // €/MWh — same threshold used during simulation
+  // Dynamic threshold: median price of all points in the series
+  const sortedPrices = [...series.map((p) => p.energy.price)].sort((a, b) => a - b);
+  const priceThreshold = sortedPrices[Math.floor(sortedPrices.length / 2)] ?? 60;
 
   const purchases   = series.filter((p) => p.energy.generated > 0);
-  const cheap       = purchases.filter((p) => p.energy.price < CHEAP_THRESHOLD);
-  const expensive   = purchases.filter((p) => p.energy.price >= CHEAP_THRESHOLD);
+  const cheap       = purchases.filter((p) => p.energy.price < priceThreshold);
+  const expensive   = purchases.filter((p) => p.energy.price >= priceThreshold);
 
   // Cost formula: kWh × €/MWh ÷ 1 000 = €
   const costOf      = (p: SimulationPoint) => (p.energy.generated * p.energy.price) / 1_000;
@@ -84,5 +87,6 @@ export function computeRunStats(series: SimulationPoint[]): RunStats {
     totalPurchases: purchases.length,
     cheapCost,
     expensiveCost,
+    priceThreshold,
   };
 }
