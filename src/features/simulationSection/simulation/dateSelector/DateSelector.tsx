@@ -1,4 +1,5 @@
 import React from 'react';
+import { Box, Typography } from '@mui/material';
 import DateChip from './DateChip';
 import MonthDayPopover from './MonthDayPopover';
 import { useDateState } from './useDateState';
@@ -28,7 +29,10 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
   const labelMonthDay = new Date(Date.UTC(new Date().getFullYear(), dateState.selectedMonth, dateState.selectedDay)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 
   return (
-    <>
+    <Box sx={{ display: 'flex', flexDirection: 'column',  height: 'fit-content',}}>
+      <Typography variant="caption" sx={{ fontSize: 12, color: colors.textSecondary || colors.textPrimary }}>
+        Simulation period
+      </Typography>
       <DateChip label={labelMonthDay} onClick={e => setAnchorEl(e.currentTarget)} open={open} colors={colors} />
       <MonthDayPopover
         open={open}
@@ -45,7 +49,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
         MONTHS={MONTHS}
         daysInMonth={daysInMonth}
       />
-    </>
+    </Box>
   );
 };
 
