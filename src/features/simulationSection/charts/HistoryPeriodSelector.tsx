@@ -11,9 +11,10 @@ interface HistoryPeriodSelectorProps {
 const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYears, setHistoryYears }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75,
+}}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
-        <Typography sx={{ fontSize: 12, fontWeight: 500, color: colors.textSecondary }}>
+        <Typography sx={{ fontSize: 13, fontWeight: 500, color: colors.textSecondary, paddingTop: 0.5 }}>
           Historical period
         </Typography>
         <Tooltip

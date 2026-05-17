@@ -48,6 +48,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           px: 3,
           py: 1.5,
           borderTop: `1px solid ${colors.border}`,
+          borderBottom: `1px solid ${colors.border}`,
           bgcolor: colors.bgCard,
         }}
       >

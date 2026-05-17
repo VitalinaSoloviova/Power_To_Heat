@@ -31,28 +31,62 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
   const { range, onRangeChange } = timeline;
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'stretch',
-        justifyContent: 'flex-start',
-        gap: 2,
-        px: 3,
-        py: 1.5,
-        borderTop: `1px solid ${colors.border}`,
-        bgcolor: colors.bgCard,
-      }}
-    >
-      <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
-      <DateSelector
-        startDay={startDay}
-        onStartDayChange={onStartDayChange}
-        colors={colors}
-        MONTHS={MONTHS}
-        daysInMonth={daysInMonth}
-      />
-      <SimulationRangeToggleGroup range={range} onRangeChange={onRangeChange} />
+    <Box>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'stretch', md: 'center' },
+          justifyContent: 'flex-start',
+          gap: 2,
+          px: 3,
+          py: 1.5,
+          borderTop: `1px solid ${colors.border}`,
+          borderBottom: `1px solid ${colors.border}`,
+          bgcolor: colors.bgCard,
+        }}
+      >
+        <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'stretch', md: 'center' },
+          justifyContent: 'flex-start',
+          gap: 2,
+          px: 3,
+          paddingTop: 1.5,
+          paddingBottom: 3,
+          borderBottom: `1px solid ${colors.border}`,
+          bgcolor: colors.bgCard,
+        }}
+      >
+        <DateSelector
+          startDay={startDay}
+          onStartDayChange={onStartDayChange}
+          colors={colors}
+          MONTHS={MONTHS}
+          daysInMonth={daysInMonth}
+        />
+      </Box>
+
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          alignItems: { xs: 'stretch', md: 'center' },
+          justifyContent: 'flex-start',
+          gap: 2,
+          px: 3,
+          py: 1.5,
+          paddingBottom: 2,
+          bgcolor: colors.bgCard,
+        }}
+      >
+        <SimulationRangeToggleGroup range={range} onRangeChange={onRangeChange} />
+      </Box>
     </Box>
   );
 };

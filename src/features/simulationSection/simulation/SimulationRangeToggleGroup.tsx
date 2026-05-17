@@ -12,7 +12,7 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
   const colors = useColors();
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, height: 60,  }}>
-      <Typography variant="caption" sx={{ fontSize: 12, color: colors.textSecondary || colors.textPrimary }}>
+      <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
         Simulation range
       </Typography>
       <ToggleButtonGroup
@@ -27,11 +27,11 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
             textTransform: 'none',
             px: 2,
             py: 0.25,
-            fontSize: 12,
-            height: 35,
+            fontSize: 13,
+            height: 40,
             '&.Mui-selected': {
               color: '#fff',
-              height: 35,
+              height: 40,
               background: colors.primary,
               borderColor: colors.primary,
               '&:hover': { background: colors.primary },
