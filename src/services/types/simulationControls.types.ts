@@ -7,6 +7,8 @@ export interface PlaybackControl {
   onTogglePlay: () => void;
   speedMultiplier: number;
   onSpeedMultiplierChange: (multiplier: number) => void;
+  onCancel?: () => void;
+  hasStarted?: boolean;
 }
 
 /** Time-range selection and current frame index of the simulation slider. */

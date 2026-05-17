@@ -1,4 +1,4 @@
-import { Box, Button, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, Button, ToggleButtonGroup, ToggleButton, Tooltip } from '@mui/material';
 import type { PlaybackControl } from '@services/types';
 import { useColors } from '@theme/useTheme';
 
@@ -17,10 +17,10 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
   hasData,
 }) => {
   const colors = useColors();
-  const { isPlaying, onTogglePlay, speedMultiplier, onSpeedMultiplierChange } = playback;
+  const { isPlaying, onTogglePlay, speedMultiplier, onSpeedMultiplierChange, onCancel, hasStarted } = playback;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}> 
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
       <Button
         onClick={onTogglePlay}
         disabled={loading || !hasData}
@@ -32,20 +32,42 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
           px: 2,
           py: 0.5,
           fontSize: 12,
-          fontWeight: 600,
+          fontWeight: 700,
           textTransform: 'none',
           '&:hover': {
             borderColor: isPlaying ? colors.danger : colors.primary,
             backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.primary}15`,
           },
           '&:disabled': {
-             borderColor: colors.border,
-             color: colors.textMuted
-          }
+            borderColor: colors.border,
+            color: colors.textMuted,
+          },
         }}
       >
-        {isPlaying ? '⏸ Stop' : '▶ Simulate'}
+        {isPlaying ? '⏸ Pause' : '▶ Simulate'}
       </Button>
+
+      <Tooltip title="Cancel simulation">
+          <Button
+            onClick={() => onCancel?.()}
+            disabled={loading || !hasStarted}
+            variant="outlined"
+            sx={{
+              minWidth  : 36,
+              height: 36,
+              borderRadius: 1,
+              px: 0,
+              py: 0,
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: colors.textSecondary,
+              borderColor: colors.border,
+              borderWidth: 1,
+            }}
+          >
+            ⏹
+          </Button>
+      </Tooltip>
 
       <ToggleButtonGroup
         size="small"
@@ -65,8 +87,8 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
               background: colors.primary,
               color: '#fff',
               '&:hover': { background: colors.primary },
-            }
-          }
+            },
+          },
         }}
       >
         <ToggleButton value={1}>1x</ToggleButton>

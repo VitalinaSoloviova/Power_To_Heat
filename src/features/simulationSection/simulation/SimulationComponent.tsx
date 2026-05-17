@@ -41,6 +41,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     initialParams?.historyYears ?? DEFAULT_HISTORY_YEARS,
   );
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [speedMultiplier, setSpeedMultiplier] = useState(1);
   const { series, loading, dataYears } = useSimulationData(
     range,
@@ -77,7 +78,11 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
   }, []);
 
   const toggleSimulation = useCallback(() => {
-    setIsPlaying((prev) => !prev);
+    setIsPlaying((prev) => {
+      const next = !prev;
+      if (next) setHasStarted(true);
+      return next;
+    });
   }, []);
 
   // Auto-save when simulation plays to the last frame
@@ -143,8 +148,19 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
       onTogglePlay: toggleSimulation,
       speedMultiplier,
       onSpeedMultiplierChange: setSpeedMultiplier,
+      hasStarted,
+      onCancel: () => {
+        setIsPlaying(false);
+        setIndex(0);
+        const now = new Date();
+        setStartDay(new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate())));
+        setStorageLevel(DEFAULT_STORAGE_LEVEL);
+        setHistoryYears(DEFAULT_HISTORY_YEARS);
+        setSpeedMultiplier(1);
+        setHasStarted(false);
+      },
     }),
-    [isPlaying, toggleSimulation, speedMultiplier],
+    [isPlaying, toggleSimulation, speedMultiplier, hasStarted],
   );
 
   return (

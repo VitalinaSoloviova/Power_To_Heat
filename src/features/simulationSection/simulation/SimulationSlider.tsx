@@ -45,6 +45,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         py: 1.5,
         borderTop: `1px solid ${colors.border}`,
         bgcolor: colors.bgCard,
+        height: 90,
       }}
     >
       <SimulationButton
@@ -52,7 +53,6 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         loading={loading}
         hasData={series.length > 0}
       />
-      {/* Slider + current timestamp */}
       <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
         <Slider
           value={index}
