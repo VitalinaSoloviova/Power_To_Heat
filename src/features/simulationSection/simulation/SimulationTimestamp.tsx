@@ -15,8 +15,11 @@ const SimulationTimestamp: React.FC<SimulationTimestampProps> = ({ timestamp, ra
         fontVariantNumeric: 'tabular-nums',
         color: 'textSecondary',
         fontSize: 12,
-        minWidth: 100,
+        minWidth: { xs: 60, sm: 100 },
         textAlign: 'right',
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
         
       }}
     >

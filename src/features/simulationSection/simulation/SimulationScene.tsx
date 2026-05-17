@@ -33,17 +33,19 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
   const consumptionIntensity = Math.min(1, demandKw / maxIntensityKw);
 
   return (
-    <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch' }}>
+    <Box sx={{ display: 'flex', gap: 4, flex: 1, alignItems: 'stretch', minWidth: 0 }}>
       <Box
         sx={{
           flex: 1,
+          minWidth: 0,
           position: 'relative',
           display: 'flex',
+          flexWrap: 'wrap',
           alignItems: 'center',
           justifyContent: 'space-between',
-          px: 4,
-          py: 3,
-          minHeight: 500,
+          px: { xs: 1, sm: 2, md: 4 },
+          py: { xs: 2, md: 3 },
+          minHeight: { xs: 320, sm: 400, md: 500 },
         }}
       >
         {/* Full-width sky / weather behind everything */}
@@ -64,18 +66,18 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
           }}
         />
 
-        <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
+        <Box sx={{ position: 'relative', zIndex: 2, minWidth: { xs: 40, sm: 80 } }}>
           <EnergyIsland point={point} />
         </Box>
 
-        <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
+        <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: { xs: 0, sm: 80 } }}>
           <EnergyFlow
             intensity={productionIntensity}
             color="#16a34a"
           />
         </Box>
 
-        <Box sx={{ position: 'relative', zIndex: 2, minWidth: 80 }}>
+        <Box sx={{ position: 'relative', zIndex: 2, minWidth: { xs: 40, sm: 80 } }}>
           <StorageIsland
             point={point}
             isCharging={isCharging}
@@ -83,7 +85,7 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
           />
         </Box>
 
-        <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: 80 }}>
+        <Box sx={{ flex: 1, position: 'relative', zIndex: 1, minWidth: { xs: 0, sm: 80 } }}>
           <EnergyFlow
             intensity={consumptionIntensity}
             color="#0ea5e9"
@@ -102,11 +104,12 @@ const SimulationScene: React.FC<SimulationSceneProps> = ({ point }) => {
             left: '50%',
             transform: 'translateX(-50%)',
             zIndex: 10,
-            width: 'auto',
+            width: 'calc(100% - 16px)',
+            maxWidth: 750,
             pointerEvents: 'none',
           }}
         >
-          <Box sx={{ pointerEvents: 'auto', minWidth: 320 }}>
+          <Box sx={{ pointerEvents: 'auto', minWidth: 0 }}>
             <InfoToolbar point={point} />
           </Box>
         </Box>

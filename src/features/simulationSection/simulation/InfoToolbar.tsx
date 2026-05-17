@@ -13,9 +13,12 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
     <Box
       sx={{
         display: 'flex',
+        flexWrap: 'wrap',
+        rowGap: 1.5,
+        columnGap: 2,
         justifyContent: 'space-between',
         alignItems: 'center',
-        px: 3,
+        px: { xs: 1.5, sm: 3 },
         py: 1.5,
         borderRadius: 2,
         background: `rgba(48, 61, 91, 0.85)`,
@@ -25,12 +28,14 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
           0 4px 12px rgba(0,0,0,0.25),
           inset 0 1px 0 rgba(255,255,255,0.1)
         `,
-        width: '750px',
+        width: '100%',
+        maxWidth: 750,
+        minWidth: 0,
       }}
     >
 
       {/* Storage */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 100 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
           fontWeight: 600, 
@@ -58,7 +63,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       </Box>
 
       {/* City Demand */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 90 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
           fontWeight: 600, 
@@ -80,7 +85,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       </Box>
 
       {/* Weather Info */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 80 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
           fontWeight: 600, 
@@ -101,7 +106,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       </Box>
 
       {/* Wind Speed */}
-      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 80 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
           fontWeight: 600, 

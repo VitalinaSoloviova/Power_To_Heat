@@ -224,10 +224,10 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
       </Box>
 
       {/* Body */}
-      <Box sx={{ display: 'flex', gap: 2, flex: 1, minHeight: 0 }}>
+      <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2, flex: 1, minHeight: 0, minWidth: 0 }}>
 
         {/* Left: Pie + Savings + Purchase Log */}
-        <Box sx={{ width: 300, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0 }}>
+        <Box sx={{ width: { xs: '100%', md: 300 }, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0, minWidth: 0 }}>
           {/* Pie */}
           <Box sx={{ border: `1px solid ${colors.border}`, borderRadius: 2.5, p: 2, bgcolor: colors.bgCardSolid, flexShrink: 0 }}>
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 0.5 }}>

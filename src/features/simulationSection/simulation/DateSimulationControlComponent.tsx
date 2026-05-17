@@ -35,9 +35,6 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
       <Box
         sx={{
           display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          alignItems: { xs: 'stretch', md: 'center' },
-          justifyContent: 'flex-start',
           gap: 2,
           px: 3,
           py: 1.5,

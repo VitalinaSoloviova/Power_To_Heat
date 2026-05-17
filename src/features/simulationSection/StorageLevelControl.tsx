@@ -15,17 +15,17 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: 260, flex: 1 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: { xs: 140, sm: 260 }, flex: 1 }}>
       <Typography sx={{ fontSize: 12, color: colors.textSecondary }}>
         Current storage level (input)
       </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', minWidth: 0 }}>
         <Slider
           value={value}
           min={0}
           max={100}
           onChange={(_, v) => onChange(v as number)}
-          sx={{ color: colors.heat, flex: 1 }}
+          sx={{ color: colors.heat, flex: '1 1 120px', minWidth: 100 }}
         />
         <TextField
           size="small"
@@ -38,7 +38,7 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
             },
           }}
           sx={{
-            width: 100,
+            width: { xs: 72, sm: 100 },
             input: { color: colors.textPrimary },
             '& .MuiOutlinedInput-notchedOutline': { borderColor: colors.border },
           }}

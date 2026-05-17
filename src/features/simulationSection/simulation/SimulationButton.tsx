@@ -20,7 +20,7 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
   const { isPlaying, onTogglePlay, speedMultiplier, onSpeedMultiplierChange, onCancel, hasStarted } = playback;
 
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+    <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexWrap: 'wrap', minWidth: 0 }}>
       <Button
         onClick={onTogglePlay}
         disabled={loading || !hasData}
@@ -53,8 +53,8 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
             disabled={loading || !hasStarted}
             variant="outlined"
             sx={{
-              minWidth  : 36,
-              height: 36,
+              minWidth: { xs: 32, sm: 36 },
+              height: { xs: 32, sm: 36 },
               borderRadius: 1,
               px: 0,
               py: 0,
@@ -75,7 +75,7 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
         exclusive
         onChange={(_, v) => v !== null && onSpeedMultiplierChange(v)}
         sx={{
-          height: 32,
+          minHeight: 32,
           '& .MuiToggleButton-root': {
             px: 1,
             py: 0,

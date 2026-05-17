@@ -40,12 +40,14 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         display: 'flex',
         flexDirection: { xs: 'column', md: 'row' },
         alignItems: { xs: 'stretch', md: 'center' },
+        flexWrap: 'wrap',
         gap: 2,
-        px: 3,
+        px: { xs: 1.5, md: 3 },
         py: 1.5,
         borderTop: `1px solid ${colors.border}`,
         bgcolor: colors.bgCard,
-        height: 90,
+        minHeight: { xs: 'auto', md: 90 },
+        minWidth: 0,
       }}
     >
       <SimulationButton
@@ -53,7 +55,7 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         loading={loading}
         hasData={series.length > 0}
       />
-      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2 }}>
+      <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', gap: 2, minWidth: 0 }}>
         <Slider
           value={index}
           min={0}

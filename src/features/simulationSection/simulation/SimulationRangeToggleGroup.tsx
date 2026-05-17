@@ -11,7 +11,7 @@ interface SimulationRangeToggleGroupProps {
 const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({ range, onRangeChange }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, height: 60,  }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, minHeight: 60 }}>
       <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
         Simulation range
       </Typography>
@@ -21,17 +21,18 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
         value={range}
         onChange={(_, v) => v && onRangeChange(v as SimulationRange)}
         sx={{
+          flexWrap: 'wrap',
           '& .MuiToggleButton-root': {
             color: colors.textSecondary,
             border: `1px solid ${colors.border}`,
             textTransform: 'none',
-            px: 2,
+            px: { xs: 1, sm: 2 },
             py: 0.25,
             fontSize: 13,
-            height: 40,
+            minHeight: 40,
             '&.Mui-selected': {
               color: '#fff',
-              height: 40,
+              minHeight: 40,
               background: colors.primary,
               borderColor: colors.primary,
               '&:hover': { background: colors.primary },

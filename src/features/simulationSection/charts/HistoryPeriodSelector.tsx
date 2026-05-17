@@ -11,9 +11,8 @@ interface HistoryPeriodSelectorProps {
 const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYears, setHistoryYears }) => {
   const colors = useColors();
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75,
-}}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75}}>
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
         <Typography sx={{ fontSize: 13, fontWeight: 500, color: colors.textSecondary, paddingTop: 0.5 }}>
           Historical period
         </Typography>
@@ -25,7 +24,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
           <IconButton
             size="small"
             aria-label="Historical period information"
-            sx={{ color: colors.textMuted, p: 0.25 }}
+            sx={{ color: colors.textMuted, p: 0 }}
           >
             <InfoOutlineRounded sx={{ fontSize: 15 }} />
           </IconButton>
@@ -36,6 +35,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
         size="small"
         value={historyYears}
         onChange={(_, v) => v && setHistoryYears(v as HistoryYears)}
+        sx={{ flexWrap: 'wrap' }}
       >
         {HISTORY_OPTIONS.map((opt) => (
           <ToggleButton
@@ -45,10 +45,11 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
               color: colors.textSecondary,
               borderColor: colors.border,
               fontSize: 12,
-              px: 1.25,
+              px: 0.5,
               py: 0.5,
-              width:53, 
-              height:53,
+              minWidth: { xs: 40, sm: 53 },
+              width: { xs: 40, sm: 53 },
+              height: { xs: 40, sm: 53 },
               '&.Mui-selected': {
                 color: colors.textPrimary,
                 bgcolor: colors.primarySoft,

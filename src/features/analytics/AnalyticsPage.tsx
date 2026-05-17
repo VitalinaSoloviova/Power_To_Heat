@@ -39,13 +39,15 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
   };
 
   return (
-    <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
+    <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, flex: 1, overflow: 'hidden', minWidth: 0 }}>
       {/* Left: run list */}
       <Box sx={{
-        width: 260,
+        width: { xs: '100%', md: 260 },
         flexShrink: 0,
-        borderRight: `1px solid ${colors.border}`,
+        borderRight: { xs: 'none', md: `1px solid ${colors.border}` },
+        borderBottom: { xs: `1px solid ${colors.border}`, md: 'none' },
         overflowY: 'auto',
+        maxHeight: { xs: 220, md: 'none' },
         px: 1.5,
         py: 2,
       }}>

@@ -55,7 +55,8 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
             bgcolor: colors.bgCardSolid,
             overflow: 'hidden',
             flex: 1,
-            minHeight: 180,
+            minHeight: { xs: 120, sm: 180 },
+            minWidth: 0,
             display: 'flex',
             flexDirection: 'column',
         }}>
