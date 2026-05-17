@@ -26,8 +26,8 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
         disabled={loading || !hasData}
         variant="outlined"
         sx={{
-          color: isPlaying ? colors.danger : colors.primary,
-          borderColor: isPlaying ? colors.danger : colors.primary,
+          color: isPlaying ? colors.textPrimary : colors.primary,
+          borderColor: isPlaying ? colors.border : colors.primary,
           borderRadius: 2,
           px: 2.5,
           py: 0.7,
@@ -35,8 +35,8 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
           fontWeight: 800,
           textTransform: 'none',
           '&:hover': {
-            borderColor: isPlaying ? colors.danger : colors.primary,
-            backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.primary}15`,
+            borderColor: isPlaying ? colors.textPrimary : colors.primary,
+            backgroundColor: isPlaying ? `${colors.textPrimary}12` : `${colors.primary}15`,
           },
           '&:disabled': {
             borderColor: colors.border,
@@ -60,9 +60,17 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
               py: 0,
               alignItems: 'center',
               justifyContent: 'center',
-              color: colors.textSecondary,
-              borderColor: colors.border,
+              color: isPlaying ? colors.danger : colors.textSecondary,
+              borderColor: isPlaying ? colors.danger : colors.border,
               borderWidth: 1,
+              '&:hover': {
+                borderColor: isPlaying ? colors.danger : colors.textSecondary,
+                backgroundColor: isPlaying ? `${colors.danger}15` : `${colors.textPrimary}08`,
+              },
+              '&:disabled': {
+                borderColor: colors.border,
+                color: colors.textMuted,
+              },
             }}
           >
             ⏹
