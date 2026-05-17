@@ -1,7 +1,6 @@
 import { Box } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 
-import SimulationSlider from './SimulationSlider';
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
 import DateSimulationControlComponent from './DateSimulationControlComponent';
 import StorageLevelControl from '../StorageLevelControl';
@@ -22,7 +21,6 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
   storage,
   timeline,
   playback,
-  loading,
   startDay,
   onStartDayChange,
   historyYears,

@@ -4,9 +4,9 @@ import { useDateState } from './dateSelector/useDateState';
 import { useColors } from '@theme/useTheme';
 
 import { formatTimestamp } from './simulationUtils';
-import SimulationButton from './SimulationButton';
 import type { PlaybackControl, TimelineControl } from '@services/types';
 import SimulationTimestamp from './SimulationTimestamp';
+import SimulationButton from './SimulationButton';
 
 interface SimulationSliderProps {
   /** Range / index / series state. */

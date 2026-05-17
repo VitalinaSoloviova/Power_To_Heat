@@ -29,7 +29,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
   const labelMonthDay = new Date(Date.UTC(new Date().getFullYear(), dateState.selectedMonth, dateState.selectedDay)).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' });
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column',  height: 'fit-content',}}>
+    <Box sx={{ display: 'flex', flexDirection: 'column',}}>
       <Typography variant="caption" sx={{ fontSize: 12, color: colors.textSecondary || colors.textPrimary }}>
         Simulation period
       </Typography>
