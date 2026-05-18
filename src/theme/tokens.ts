@@ -1,17 +1,16 @@
 /**
  * Design tokens — typography, radii, weights.
- * Values are identical to what was used before — only the names are new.
  */
 
 // Font sizes (px)
 export const tx = {
-  xs:      10,   // tags, alert badges
-  sm:      11,   // timestamps, metadata, secondary body
-  base:    12,   // normal body text
-  md:      13,   // primary body text
-  lg:      15,   // card titles, emphasized text
-  xl:      18,   // section headings
-  display: 28,   // large metric values
+  xs:      11,   // tags, alert badges
+  sm:      12,   // timestamps, metadata, secondary body
+  base:    13,   // normal body text
+  md:      14,   // primary body text
+  lg:      16,   // card titles, emphasized text
+  xl:      20,   // section headings
+  display: 30,   // large metric values
 } as const;
 
 // Font weights

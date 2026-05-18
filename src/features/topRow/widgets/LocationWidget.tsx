@@ -10,7 +10,7 @@ const LocationWidget: React.FC = () => {
     const { data, loading } = useLocation();
 
     return (
-        <WidgetCard label="Location" icon={<PlaceRounded sx={{ fontSize: 14 }} />}>
+        <WidgetCard label="Location" icon={<PlaceRounded sx={{ fontSize: 20 }} />}>
             <Typography
                 sx={{
                     fontSize: 22,

@@ -29,7 +29,7 @@ const EnergyPriceWidget: React.FC = () => {
     return (
         <WidgetCard
             label="Current Energy Price"
-            icon={<BoltRounded sx={{ fontSize: 14 }} />}
+            icon={<BoltRounded sx={{ fontSize: 20 }} />}
         >
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 0.6, mt: 0.2 }}>
                 <Typography

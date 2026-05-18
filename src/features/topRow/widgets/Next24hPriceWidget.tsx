@@ -17,7 +17,7 @@ const Next24hPriceWidget: React.FC = () => {
     return (
         <WidgetCard
             label="Next 24h Price"
-            icon={<TrendingUpRounded sx={{ fontSize: 14 }} />}
+            icon={<TrendingUpRounded sx={{ fontSize: 20 }} />}
         >
             <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
                 <Box sx={{ flex: 1, minWidth: 0 }}>

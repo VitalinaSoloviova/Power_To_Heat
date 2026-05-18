@@ -21,7 +21,7 @@ const conditionIcon = (
     condition: WeatherCondition,
     color: string
 ): ReactNode => {
-    const sx = { fontSize: tx.display, color };
+    const sx = { fontSize: 20, color };
     switch (condition) {
         case "sunny":
             return <WbSunnyRounded sx={sx} />;
