@@ -121,8 +121,8 @@ export const lightColors: AppColors = {
   bgSurfaceHover: '#ede8fb',
 
   // Near-white frosted cards — clean surface, iridescent only on border
-  bgCard:         'rgba(255, 255, 255, 0.78)',
-  bgCardSolid:    'rgba(255, 255, 255, 0.95)',
+  bgCard:         'rgba(255, 255, 255, 0.92)',
+  bgCardSolid:    'rgba(255, 255, 255, 0.97)',
 
   // Solid lavender border — used for dividers / sidebars; cards use borderGradient
   border:         'rgba(150, 130, 240, 0.45)',
@@ -157,7 +157,7 @@ export const lightColors: AppColors = {
   chartTitle:     '#111830',
   chartGrid:      'rgba(80, 70, 180, 0.10)',
 
-  backdropBlur:   'blur(20px)',
+  backdropBlur:   'blur(28px)',
 
   // Used for selected/comparing RunCard surface shimmer
   iridescent: [
@@ -178,12 +178,13 @@ export const lightColors: AppColors = {
     '  rgba(253,186,208,0.95) 100%)',
   ].join(''),
 
-  // Light-mode glass shadow: pastel drop shadow + bright top rim
+  // Light-mode glass shadow: deep outer shadow + strong specular inner rims
   glassShadow: [
-    '0 6px 32px rgba(120,100,220,0.18)',
-    '0 2px 10px rgba(120,100,220,0.11)',
-    'inset 0 1px 0 rgba(255,255,255,0.92)',
-    'inset 0 -1px 0 rgba(160,140,255,0.14)',
+    '0 12px 48px rgba(100,80,200,0.22)',
+    '0 3px 14px rgba(100,80,200,0.14)',
+    'inset 0 2px 1px rgba(255,255,255,1.0)',
+    'inset 2px 0 1px rgba(255,255,255,0.80)',
+    'inset 0 -2px 1px rgba(160,140,255,0.22)',
   ].join(', '),
 
   // Soft pastel orbs on near-white lavender base
@@ -223,14 +224,17 @@ export const getColors = (theme: ThemeMode): AppColors => palettes[theme];
  */
 export const getGlassSx = (c: AppColors) => {
   if (c.borderGradient) {
-    // bgCard must be wrapped as a gradient image so padding-box clip applies correctly.
-    // A plain rgba/hex value is treated as background-color and ignores per-layer clipping.
+    // Three background layers (top → bottom):
+    //  1. specular — diagonal white highlight for 3-D glass depth (padding-box)
+    //  2. cardLayer — solid near-white base (padding-box)
+    //  3. borderGradient — soap-bubble rainbow fills only the 2 px border ring (border-box)
+    const specular = 'linear-gradient(145deg, rgba(255,255,255,0.90) 0%, rgba(255,255,255,0.50) 30%, rgba(255,255,255,0.04) 100%)';
     const cardLayer = `linear-gradient(${c.bgCard}, ${c.bgCard})`;
     return {
-      background: `${cardLayer} padding-box, ${c.borderGradient} border-box`,
+      background: `${specular} padding-box, ${cardLayer} padding-box, ${c.borderGradient} border-box`,
       backdropFilter: c.backdropBlur,
       WebkitBackdropFilter: c.backdropBlur,
-      border: '1.5px solid transparent',
+      border: '2px solid transparent',
       borderRadius: 2.5,
       boxShadow: c.glassShadow,
     };
