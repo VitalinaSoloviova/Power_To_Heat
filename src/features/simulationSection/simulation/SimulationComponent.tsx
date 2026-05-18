@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { Box } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
+import { getGlassSx } from "@theme/colors";
 import {
   DEFAULT_STORAGE_LEVEL,
   DEFAULT_HISTORY_YEARS,
@@ -182,12 +183,11 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
       ) : (
         <Box
           sx={{
+            ...getGlassSx(colors),
             flex: 1,
             minWidth: 0,
             p: 0,
             borderRadius: 3,
-            background: colors.bgBase,
-            border: `1px solid ${colors.border}`,
             display: "flex",
             flexDirection: "column",
             minHeight: "clamp(500px, 72vh, 920px)",

@@ -36,8 +36,9 @@ export interface RunStats {
   totalCost: number;        // € — what our price-aware strategy actually spent
   alwaysCost: number;       // € — what direct demand-based buying would have cost
   savings: number;          // € — baseline cost − totalCost (positive = we saved money)
-  cheapCount: number;       // number of purchase hours with price below the series median
-  expensiveCount: number;   // number of purchase hours with price at or above the series median
+  cheapCount: number;       // number of purchase hours with price below the series median (non-emergency)
+  expensiveCount: number;   // number of purchase hours with price at or above the series median (non-emergency)
+  emergencyCount: number;   // number of emergency purchases (storage empty, forced buy)
   totalPurchases: number;   // total hours where any electricity was purchased
   cheapCost: number;        // € — share of cost from below-median hours
   expensiveCost: number;    // € — share of cost from above-median hours
@@ -58,8 +59,10 @@ export function computeRunStats(series: SimulationPoint[]): RunStats {
   const priceThreshold = sortedPrices[Math.floor(sortedPrices.length / 2)] ?? 60;
 
   const purchases   = series.filter((p) => p.energy.generated > 0);
-  const cheap       = purchases.filter((p) => p.energy.price < priceThreshold);
-  const expensive   = purchases.filter((p) => p.energy.price >= priceThreshold);
+  const emergency   = purchases.filter((p) => p.energy.mode === 'emergency');
+  const nonEmerg    = purchases.filter((p) => p.energy.mode !== 'emergency');
+  const cheap       = nonEmerg.filter((p) => p.energy.price < priceThreshold);
+  const expensive   = nonEmerg.filter((p) => p.energy.price >= priceThreshold);
 
   // Cost formula: kWh × €/MWh ÷ 1 000 = €
   const costOf      = (p: SimulationPoint) => (p.energy.generated * p.energy.price) / 1_000;
@@ -84,6 +87,7 @@ export function computeRunStats(series: SimulationPoint[]): RunStats {
     savings: alwaysCost - totalCost,
     cheapCount: cheap.length,
     expensiveCount: expensive.length,
+    emergencyCount: emergency.length,
     totalPurchases: purchases.length,
     cheapCost,
     expensiveCost,

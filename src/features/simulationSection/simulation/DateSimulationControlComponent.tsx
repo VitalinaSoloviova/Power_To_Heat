@@ -41,6 +41,8 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
           borderTop: `1px solid ${colors.border}`,
           borderBottom: `1px solid ${colors.border}`,
           bgcolor: colors.bgCard,
+          backdropFilter: colors.backdropBlur,
+          WebkitBackdropFilter: colors.backdropBlur,
         }}
       >
         <HistoryPeriodSelector historyYears={historyYears} setHistoryYears={setHistoryYears} />
@@ -58,6 +60,8 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
           paddingBottom: 1.5,
           borderBottom: `1px solid ${colors.border}`,
           bgcolor: colors.bgCard,
+          backdropFilter: colors.backdropBlur,
+          WebkitBackdropFilter: colors.backdropBlur,
         }}
       >
         <DateSelector
@@ -81,6 +85,8 @@ const DateSimulationControlComponent: React.FC<SimulationSliderProps> = ({
           py: 1.5,
           paddingBottom: 2,
           bgcolor: colors.bgCard,
+          backdropFilter: colors.backdropBlur,
+          WebkitBackdropFilter: colors.backdropBlur,
         }}
       >
         <SimulationRangeToggleGroup range={range} onRangeChange={onRangeChange} />

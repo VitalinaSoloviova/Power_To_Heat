@@ -34,8 +34,11 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
       sx={{
         width: 78,
         flexShrink: 0,
-        bgcolor: colors.bgDeep,
+        bgcolor: colors.bgCard,
+        backdropFilter: colors.backdropBlur,
+        WebkitBackdropFilter: colors.backdropBlur,
         borderRight: `1px solid ${colors.border}`,
+        boxShadow: `4px 0 24px rgba(0,0,0,0.12)`,
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',

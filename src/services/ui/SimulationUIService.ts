@@ -51,6 +51,8 @@ export class SimulationUIService {
 			let storage: SimulationPoint['storage'];
 			let generated = 0;
 
+			let mode: 'charging' | 'emergency' | 'idle' = 'idle';
+
 			if (pointIndex === 0) {
 				storage = { level, capacity };
 			} else {
@@ -63,6 +65,7 @@ export class SimulationUIService {
 				});
 				storage = step.storage;
 				generated = step.generated;
+				mode = step.mode;
 			}
 
 			level = storage.level;
@@ -75,7 +78,7 @@ export class SimulationUIService {
 					cloudCoverage: hour.weather.description?.toLowerCase().includes('cloud') ? 0.75 : 0.2,
 					windSpeed: hour.weather.wind,
 				},
-				energy: { generated, price: hour.price },
+				energy: { generated, price: hour.price, mode },
 				demand: { current, expected },
 				storage,
 			};

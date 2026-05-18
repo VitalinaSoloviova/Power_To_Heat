@@ -64,6 +64,8 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
           borderTop: `1px solid ${colors.border}`,
           borderBottom: `1px solid ${colors.border}`,
           bgcolor: colors.bgCard,
+          backdropFilter: colors.backdropBlur,
+          WebkitBackdropFilter: colors.backdropBlur,
         }}
       >
         <StorageLevelControl

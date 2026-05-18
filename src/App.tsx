@@ -10,7 +10,7 @@ const AppShell = () => {
   const colors = useColors();
   const [page, setPage] = useState('overview');
   return (
-    <Box className={styles.appShell} style={{ backgroundColor: colors.bgBase }}>
+    <Box className={styles.appShell} style={{ background: colors.bgGradient }}>
       <Sidebar activePage={page} onPageChange={setPage} />
       <MainContent activePage={page} onPageChange={setPage} />
     </Box>
