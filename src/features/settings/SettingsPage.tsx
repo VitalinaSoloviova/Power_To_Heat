@@ -247,7 +247,7 @@ const CityAutocomplete: React.FC<{
   const colors = useColors();
   const [options, setOptions] = useState<CityOption[]>([]);
   const [loading, setLoading] = useState(false);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   const search = useCallback((query: string) => {
     clearTimeout(debounceRef.current);
@@ -461,7 +461,7 @@ const SettingsPage: React.FC = () => {
           </Typography>
         )}
         {saved && (
-          <Typography sx={{ fontSize: tx.sm, color: colors.success ?? colors.primary, fontWeight: fw.medium }}>
+          <Typography sx={{ fontSize: tx.sm, color: colors.energy, fontWeight: fw.medium }}>
             Gespeichert ✓
           </Typography>
         )}
