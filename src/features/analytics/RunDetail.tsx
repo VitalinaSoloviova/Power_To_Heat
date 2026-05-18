@@ -22,8 +22,9 @@
  */
 
 import { useMemo, useRef, useState, useEffect } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Chip } from '@mui/material';
 import ReplayRoundedIcon from '@mui/icons-material/ReplayRounded';
+import LocationOnRoundedIcon from '@mui/icons-material/LocationOnRounded';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { PieChart } from '@mui/x-charts/PieChart';
@@ -142,8 +143,8 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
       </Box>
       <Box sx={{ flex: 1, overflowY: 'auto', px: 1.5, py: 1, display: 'flex', flexDirection: 'column', gap: 0.6 }}>
         {entries.map((p, i) => {
-          const ts = new Date(p.timestamp).toLocaleString('de-DE', {
-            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+          const ts = new Date(p.timestamp).toLocaleString('en-US', {
+            day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false,
           });
           const cost = (p.energy.generated * p.energy.price) / 1_000;
           const emergency = p.energy.mode === 'emergency';
@@ -163,7 +164,7 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
               </Typography>
               {emergency && (
                 <Typography sx={{ fontSize: 9, fontWeight: 700, color: colors.danger, letterSpacing: 0.5, mr: 0.5 }}>
-                  NOTFALL
+                  EMERGENCY
                 </Typography>
               )}
               <Typography sx={{ fontSize: tx.base, fontWeight: fw.semibold, color: colors.textPrimary, fontVariantNumeric: 'tabular-nums' }}>
@@ -185,7 +186,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
 
   const xLabels = useMemo(() =>
     run.series.map((p) =>
-      new Date(p.timestamp).toLocaleString('de-DE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })
+      new Date(p.timestamp).toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false })
     ),
   [run.series]);
 
@@ -194,10 +195,14 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
   const temps          = useMemo(() => run.series.map((p) => p.weather.temperature),      [run.series]);
   const storagePercent = useMemo(() => run.series.map((p) => Math.round((p.storage.level / p.storage.capacity) * 100)), [run.series]);
 
-  const startDate = new Date(run.params.startDay).toLocaleDateString('de-DE', {
-    day: '2-digit', month: 'long', year: 'numeric',
+  const startDate = new Date(run.params.startDay).toLocaleDateString('en-US', {
+    day: '2-digit', month: 'long',
   });
   const rangeLabel = run.params.range === 'day' ? 'Day' : run.params.range === 'week' ? 'Week' : 'Month';
+
+  const { cityName, residents, storageCapacityMwh, maxChargePercent,
+          criticalThresholdPct, nearCriticalThresholdPct, halfCapacityThresholdPct,
+          emergencyBuyEnabled } = run.params;
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 2 }}>
@@ -230,6 +235,58 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
         )}
       </Box>
 
+      {/* Simulation parameters summary */}
+      {(cityName || residents != null || storageCapacityMwh != null) && (
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, flexShrink: 0 }}>
+          {cityName && (
+            <Chip
+              icon={<LocationOnRoundedIcon sx={{ fontSize: 13 }} />}
+              label={cityName}
+              size="small"
+              sx={{ fontSize: tx.xs, bgcolor: `${colors.primary}18`, color: colors.primary, border: `1px solid ${colors.primary}33` }}
+            />
+          )}
+          {residents != null && (
+            <Chip
+              label={`${residents.toLocaleString('en-US')} residents`}
+              size="small"
+              sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
+            />
+          )}
+          {storageCapacityMwh != null && (
+            <Chip
+              label={`${storageCapacityMwh.toLocaleString('en-US')} MWh storage`}
+              size="small"
+              sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
+            />
+          )}
+          {maxChargePercent != null && (
+            <Chip
+              label={`Max charge: ${maxChargePercent} %`}
+              size="small"
+              sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
+            />
+          )}
+          {criticalThresholdPct != null && nearCriticalThresholdPct != null && halfCapacityThresholdPct != null && (
+            <Chip
+              label={`Thresholds: ${criticalThresholdPct} / ${nearCriticalThresholdPct} / ${halfCapacityThresholdPct} %`}
+              size="small"
+              sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
+            />
+          )}
+          {emergencyBuyEnabled != null && (
+            <Chip
+              label={emergencyBuyEnabled ? 'Emergency buy: on' : 'Emergency buy: off'}
+              size="small"
+              sx={{ fontSize: tx.xs,
+                bgcolor: emergencyBuyEnabled ? `${colors.warning}18` : colors.bgSurface,
+                color: emergencyBuyEnabled ? colors.warning : colors.textMuted,
+                border: `1px solid ${emergencyBuyEnabled ? `${colors.warning}44` : colors.border}` }}
+            />
+          )}
+        </Box>
+      )}
+
       {/* Body */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 2, flex: 1, minHeight: 0, minWidth: 0 }}>
 
@@ -260,10 +317,10 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
             {/* Custom legend — never overflows the card */}
             <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mt: 0.5 }}>
               {[
-                { label: 'Günstig',  color: colors.cool,    count: stats.cheapCount     },
-                { label: 'Teuer',    color: colors.warning, count: stats.expensiveCount },
+                { label: 'Cheap',     color: colors.cool,    count: stats.cheapCount     },
+                { label: 'Expensive', color: colors.warning, count: stats.expensiveCount },
                 ...(stats.emergencyCount > 0
-                  ? [{ label: 'Notfall', color: colors.danger, count: stats.emergencyCount }]
+                  ? [{ label: 'Emergency', color: colors.danger, count: stats.emergencyCount }]
                   : []),
               ].map((item) => (
                 <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>

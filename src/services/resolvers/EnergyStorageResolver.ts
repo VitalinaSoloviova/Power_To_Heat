@@ -48,13 +48,14 @@ export class EnergyStorageResolver {
         return {
             storage: { level: newLevel, capacity },
             flow: newLevel - level,
-            mode: chargeAmount_kWh > 0
-                ? 'charging'
-                : emergencyPurchase_kWh > 0
-                    ? 'emergency'
-                    : 'idle',
             generated: purchasedEnergy_kWh,
             emergencyPurchase: emergencyPurchase_kWh,
+            // emergency takes precedence — if storage went empty, flag it even if regular charging also ran
+            mode: emergencyPurchase_kWh > 0
+                ? 'emergency'
+                : chargeAmount_kWh > 0
+                    ? 'charging'
+                    : 'idle',
         };
     }
 }

@@ -192,7 +192,7 @@ const KwhRow: React.FC<{ label: string; kwh: number; color?: string }> = ({ labe
       <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary }}>{label}</Typography>
       <Box sx={{ textAlign: 'right' }}>
         <Typography component="span" sx={{ fontSize: tx.sm, fontWeight: fw.bold, color: color ?? colors.textPrimary }}>
-          {Number(kwh).toLocaleString('de-DE')} kWh
+          {Number(kwh).toLocaleString('en-US')} kWh
         </Typography>
         <Typography component="span" sx={{ fontSize: tx.xs, color: colors.textMuted, ml: 0.5 }}>
           ({mwh} MWh)

@@ -92,8 +92,8 @@ const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
   const statsA = useMemo(() => computeRunStats(runA.series), [runA.series]);
   const statsB = useMemo(() => computeRunStats(runB.series), [runB.series]);
 
-  const labelA = new Date(runA.params.startDay).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' });
-  const labelB = new Date(runB.params.startDay).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' });
+  const labelA = new Date(runA.params.startDay).toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+  const labelB = new Date(runB.params.startDay).toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
 
   const pricesA      = useMemo(() => runA.series.map(p => p.energy.price), [runA.series]);
   const pricesB      = useMemo(() => runB.series.map(p => p.energy.price), [runB.series]);

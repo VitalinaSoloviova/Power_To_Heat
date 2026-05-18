@@ -15,7 +15,7 @@ interface TickerEntry {
 
 const TickerCard: React.FC<{ entry: TickerEntry; colors: AppColors }> = ({ entry, colors }) => {
     const ts = new Date(entry.timestamp);
-    const label = ts.toLocaleString('de-DE', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' });
+    const label = ts.toLocaleString('en-US', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false });
     const accentColor = entry.isCheap ? colors.cool : entry.isEmergency ? colors.danger : colors.warning;
 
     return (
@@ -45,7 +45,7 @@ const TickerCard: React.FC<{ entry: TickerEntry; colors: AppColors }> = ({ entry
                 </Typography>
                 {entry.isEmergency && (
                     <Typography sx={{ fontSize: 9, fontWeight: 700, color: colors.danger, letterSpacing: 0.5 }}>
-                        NOTFALL
+                        EMERGENCY
                     </Typography>
                 )}
                 <Typography sx={{ fontSize: tx.base, color: colors.textSecondary, fontVariantNumeric: 'tabular-nums' }}>
