@@ -220,7 +220,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
         >
           Replay
         </Button>
-        {run.params.historyYears !== null && run.params.historyYears !== undefined && run.params.dataYears && (
+        {run.params.historyYears !== undefined && run.params.historyYears !== undefined && run.params.dataYears && (
           <Typography sx={{ fontSize: tx.sm, color: colors.textMuted }}>
             {run.params.historyYears}Y requested ·{' '}
             <Typography component="span" sx={{ color: run.params.dataYears.weather >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: fw.semibold, fontSize: tx.sm }}>
@@ -236,7 +236,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
       </Box>
 
       {/* Simulation parameters summary */}
-      {(cityName || residents != null || storageCapacityMwh != null) && (
+      {(cityName || residents !== undefined || storageCapacityMwh !== undefined) && (
         <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.75, flexShrink: 0 }}>
           {cityName && (
             <Chip
@@ -246,35 +246,35 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
               sx={{ fontSize: tx.xs, bgcolor: `${colors.primary}18`, color: colors.primary, border: `1px solid ${colors.primary}33` }}
             />
           )}
-          {residents != null && (
+          {residents !== undefined && (
             <Chip
               label={`${residents.toLocaleString('en-US')} residents`}
               size="small"
               sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
             />
           )}
-          {storageCapacityMwh != null && (
+          {storageCapacityMwh !== undefined && (
             <Chip
               label={`${storageCapacityMwh.toLocaleString('en-US')} MWh storage`}
               size="small"
               sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
             />
           )}
-          {maxChargePercent != null && (
+          {maxChargePercent !== undefined && (
             <Chip
               label={`Max charge: ${maxChargePercent} %`}
               size="small"
               sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
             />
           )}
-          {criticalThresholdPct != null && nearCriticalThresholdPct != null && halfCapacityThresholdPct != null && (
+          {criticalThresholdPct !== undefined && nearCriticalThresholdPct !== undefined && halfCapacityThresholdPct !== undefined && (
             <Chip
               label={`Thresholds: ${criticalThresholdPct} / ${nearCriticalThresholdPct} / ${halfCapacityThresholdPct} %`}
               size="small"
               sx={{ fontSize: tx.xs, bgcolor: colors.bgSurface, color: colors.textSecondary, border: `1px solid ${colors.border}` }}
             />
           )}
-          {emergencyBuyEnabled != null && (
+          {emergencyBuyEnabled !== undefined && (
             <Chip
               label={emergencyBuyEnabled ? 'Emergency buy: on' : 'Emergency buy: off'}
               size="small"

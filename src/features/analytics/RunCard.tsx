@@ -35,9 +35,9 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
 
   const infos = [
     ...(run.params.cityName ? [`City: ${run.params.cityName}`] : []),
-    ...(run.params.residents != null ? [`Residents: ${run.params.residents.toLocaleString('en-US')}`] : []),
+    ...(run.params.residents !== undefined ? [`Residents: ${run.params.residents.toLocaleString('en-US')}`] : []),
     `Storage: ${run.params.storageLevel} %`,
-    ...(historyYears !== null && historyYears !== undefined ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
+    ...(historyYears !== undefined && historyYears !== undefined ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
     `Cost: ${stats.totalCost.toFixed(2)} €`,
     `Cheap / Expensive: ${stats.cheapCount} / ${stats.expensiveCount}`,
     `Savings: ${stats.savings >= 0 ? '+' : ''}${stats.savings.toFixed(0)} €`,

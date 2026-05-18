@@ -118,9 +118,9 @@ const SummaryCard: React.FC<{
       </Box>
 
       {/* City + residents */}
-      {(run.params.cityName || run.params.residents != null) && (
+      {(run.params.cityName || run.params.residents !== undefined) && (
         <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
-          {[run.params.cityName, run.params.residents != null ? `${run.params.residents.toLocaleString('en-US')} residents` : null]
+          {[run.params.cityName, run.params.residents !== undefined ? `${run.params.residents.toLocaleString('en-US')} residents` : null]
             .filter(Boolean).join(' · ')}
         </Typography>
       )}
@@ -156,7 +156,7 @@ const SummaryCard: React.FC<{
       </Box>
 
       {/* Storage + initial level */}
-      {run.params.storageCapacityMwh != null && (
+      {run.params.storageCapacityMwh !== undefined && (
         <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
           {run.params.storageCapacityMwh.toLocaleString('en-US')} MWh · Initial {run.params.storageLevel} %
         </Typography>
