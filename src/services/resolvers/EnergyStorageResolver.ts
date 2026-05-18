@@ -3,30 +3,36 @@ import {
     STORAGE_CAPACITY_KWH,
     updateStorage,
 } from '@features/simulationSection/simulation/P2HChargingLogic';
+import type { ChargingConfig } from '@features/simulationSection/simulation/P2HChargingLogic';
 
 export interface StorageStepInput {
-    price: number;                           // EUR/MWh — day-ahead market price
-    tempOut: number;                         // °C — outdoor temperature for heat-loss calculation
+    price: number;
+    tempOut: number;
     previous: { level: number; capacity: number };
-    stepHours: number;                       // 1 for hourly, 24 for daily
-    historicalPrices: number[];              // past prices used to compute P10/P25/median
+    stepHours: number;
+    historicalPrices: number[];
+    chargingConfig?: ChargingConfig;
+    emergencyBuyEnabled?: boolean;
 }
 
 export interface StorageStepOutput {
     storage: { level: number; capacity: number };
-    flow: number;       // kWh change in storage level (positive = charged, negative = lost)
+    flow: number;
     mode: 'charging' | 'emergency' | 'idle';
-    generated: number;  // kWh of electricity purchased this step
-    emergencyPurchase: number; // kWh bought directly when storage cannot cover demand
+    generated: number;
+    emergencyPurchase: number;
 }
 
 export class EnergyStorageResolver {
-    static readonly CAPACITY_KWH = STORAGE_CAPACITY_KWH; // 1800 MWh usable sand battery capacity
+    static readonly CAPACITY_KWH = STORAGE_CAPACITY_KWH;
 
-    static step({ price, tempOut, previous, stepHours, historicalPrices }: StorageStepInput): StorageStepOutput {
+    static step({
+        price, tempOut, previous, stepHours, historicalPrices,
+        chargingConfig, emergencyBuyEnabled = true,
+    }: StorageStepInput): StorageStepOutput {
         const { level, capacity } = previous;
 
-        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices);
+        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices, chargingConfig);
 
         let newLevel = level;
         if (chargeAmount_kWh > 0) {
@@ -34,8 +40,9 @@ export class EnergyStorageResolver {
         }
 
         const levelAfterDemand = updateStorage(newLevel, tempOut, stepHours);
-        const emergencyPurchase_kWh = Math.max(0, -levelAfterDemand);
-        newLevel = Math.max(0, levelAfterDemand);
+        const rawEmergency = Math.max(0, -levelAfterDemand);
+        const emergencyPurchase_kWh = emergencyBuyEnabled ? rawEmergency : 0;
+        newLevel = emergencyBuyEnabled ? Math.max(0, levelAfterDemand) : Math.max(0, levelAfterDemand);
         const purchasedEnergy_kWh = chargeAmount_kWh + emergencyPurchase_kWh;
 
         return {

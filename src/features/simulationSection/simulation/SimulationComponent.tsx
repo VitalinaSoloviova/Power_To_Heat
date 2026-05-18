@@ -8,6 +8,7 @@ import {
   DEFAULT_HISTORY_YEARS,
   type HistoryYears,
 } from "@services/ui/ChartUIService";
+import { useSettings } from "@features/settings/useSettings";
 import type { SimulationRun } from "@features/analytics/analyticsTypes";
 import SimulationChartCards from "../charts/SimulationChartCards";
 import { useSimulationData } from "./useSimulationData";
@@ -25,6 +26,14 @@ interface Props {
 
 const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) => {
   const colors = useColors();
+  const { settings } = useSettings();
+  const chargingConfig = {
+    storageCapacityMwh:       settings.storageCapacityMwh,
+    maxChargePercent:          settings.maxChargePercent,
+    criticalThresholdPct:      settings.criticalThresholdPct,
+    nearCriticalThresholdPct:  settings.nearCriticalThresholdPct,
+    halfCapacityThresholdPct:  settings.halfCapacityThresholdPct,
+  };
   const [range, setRange] = useState<SimulationRange>(initialParams?.range ?? "day");
   const [index, setIndex] = useState(0);
   const [startDay, setStartDay] = useState<Date>(
@@ -49,6 +58,11 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     startDay,
     storageLevel,
     historyYears,
+    {
+      chargingConfig,
+      emergencyBuyEnabled: settings.emergencyBuyEnabled,
+      priceHistoryDays: settings.priceHistoryDays,
+    },
   );
 
   useEffect(() => {

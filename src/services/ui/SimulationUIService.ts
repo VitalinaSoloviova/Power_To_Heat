@@ -2,6 +2,7 @@ import type { DataCoverage } from '../DataCoverageCalculator';
 import { EnergyStorageResolver } from '../resolvers/EnergyStorageResolver';
 import type { SimulationPoint, SimulationRange } from '../types';
 import type { ChartsData } from './ChartUIService';
+import type { ChargingConfig } from '@features/simulationSection/simulation/P2HChargingLogic';
 
 const POINTS_PER_RANGE: Record<SimulationRange, number> = {
 	day: 24,
@@ -19,6 +20,9 @@ export interface SimulationSeriesInput {
 	chartsData: ChartsData;
 	range: SimulationRange;
 	initialStoragePercent: number;
+	chargingConfig?: ChargingConfig;
+	emergencyBuyEnabled?: boolean;
+	priceHistoryDays?: number;
 }
 
 export interface SimulationSeriesData {
@@ -26,23 +30,29 @@ export interface SimulationSeriesData {
 	dataYears: DataCoverage;
 }
 
-/**
- * Pure simulation series computation. Takes already-loaded chart data and
- * produces a time-series of `SimulationPoint` for the simulation UI.
- *
- * No I/O, no side effects — safe to call on every storage-slider change.
- */
 export class SimulationUIService {
 	public getSimulationSeries(input: SimulationSeriesInput): SimulationSeriesData {
-		const { chartsData, range, initialStoragePercent } = input;
+		const {
+			chartsData, range, initialStoragePercent,
+			chargingConfig, emergencyBuyEnabled = true, priceHistoryDays,
+		} = input;
+
 		const targetCount = POINTS_PER_RANGE[range];
 		const stepHours = STEP_HOURS[range];
-		const capacity = EnergyStorageResolver.CAPACITY_KWH;
-		const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
-		let level = capacity * (clampedInitialStoragePercent / 100);
 
-		// All available prices used as historical context for percentile calculation
-		const historicalPrices = chartsData.hours.map((h) => h.price);
+		// Capacity from config (if provided) or default
+		const capacityKwh = chargingConfig
+			? chargingConfig.storageCapacityMwh * 1_000 * 0.9
+			: EnergyStorageResolver.CAPACITY_KWH;
+
+		const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
+		let level = capacityKwh * (clampedInitialStoragePercent / 100);
+
+		// Limit historical prices to requested number of days (each day = 24 price points)
+		const maxHistoricalPoints = priceHistoryDays ? priceHistoryDays * 24 : chartsData.hours.length;
+		const historicalPrices = chartsData.hours
+			.slice(0, maxHistoricalPoints)
+			.map((h) => h.price);
 
 		const series = chartsData.hours.slice(0, targetCount).map((hour, pointIndex) => {
 			const current = hour.energyDemand / 100;
@@ -50,18 +60,19 @@ export class SimulationUIService {
 
 			let storage: SimulationPoint['storage'];
 			let generated = 0;
-
 			let mode: 'charging' | 'emergency' | 'idle' = 'idle';
 
 			if (pointIndex === 0) {
-				storage = { level, capacity };
+				storage = { level, capacity: capacityKwh };
 			} else {
 				const step = EnergyStorageResolver.step({
 					price: hour.price,
 					tempOut: hour.weather.temp,
-					previous: { level, capacity },
+					previous: { level, capacity: capacityKwh },
 					stepHours,
 					historicalPrices,
+					chargingConfig,
+					emergencyBuyEnabled,
 				});
 				storage = step.storage;
 				generated = step.generated;
@@ -91,15 +102,14 @@ export class SimulationUIService {
 		description: string | undefined,
 		windSpeed = 0,
 	): SimulationPoint['weather']['condition'] {
-		const normalizedDescription = (description ?? '').toLowerCase();
-
-		if (normalizedDescription.includes('rain') || normalizedDescription.includes('drizzle')) return 'rainy';
-		if (normalizedDescription.includes('snow')) return 'snowy';
-		if (normalizedDescription.includes('storm') || normalizedDescription.includes('thunder')) return 'stormy';
-		if (normalizedDescription.includes('fog') || normalizedDescription.includes('mist')) return 'foggy';
-		if (normalizedDescription.includes('cloud') || normalizedDescription.includes('overcast')) return 'cloudy';
+		const d = (description ?? '').toLowerCase();
+		if (d.includes('rain') || d.includes('drizzle')) return 'rainy';
+		if (d.includes('snow')) return 'snowy';
+		if (d.includes('storm') || d.includes('thunder')) return 'stormy';
+		if (d.includes('fog') || d.includes('mist')) return 'foggy';
+		if (d.includes('cloud') || d.includes('overcast')) return 'cloudy';
 		if (windSpeed >= 8) return 'windy';
-		if (normalizedDescription.includes('clear') || normalizedDescription.includes('sun')) return 'sunny';
+		if (d.includes('clear') || d.includes('sun')) return 'sunny';
 		return 'unknown';
 	}
 }

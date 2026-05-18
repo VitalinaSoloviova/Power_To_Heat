@@ -16,6 +16,7 @@ import {
 	type SimulationSeriesInput,
 	type SimulationSeriesData,
 } from './SimulationUIService';
+import type { ChargingConfig } from '@features/simulationSection/simulation/P2HChargingLogic';
 
 export type PeriodTag = 'past' | 'current' | 'future';
 
@@ -47,6 +48,9 @@ export interface SimulationUIDataInput {
 	startDate: Date;
 	initialStoragePercent: number;
 	historyYears: HistoryYears;
+	chargingConfig?: ChargingConfig;
+	emergencyBuyEnabled?: boolean;
+	priceHistoryDays?: number;
 }
 
 const ENERGY_PRICE_REFRESH_MS = 5 * 60 * 1000;
@@ -120,6 +124,9 @@ export class UIService {
 				chartsData,
 				range: input.range,
 				initialStoragePercent: input.initialStoragePercent,
+				chargingConfig: input.chargingConfig,
+				emergencyBuyEnabled: input.emergencyBuyEnabled,
+				priceHistoryDays: input.priceHistoryDays,
 			});
 		});
 	}
@@ -190,6 +197,9 @@ export class UIService {
 			input.historyYears,
 			this.toUtcDayTimestamp(input.startDate),
 			input.initialStoragePercent,
+			input.chargingConfig ? JSON.stringify(input.chargingConfig) : '',
+			input.emergencyBuyEnabled ?? true,
+			input.priceHistoryDays ?? '',
 		].join('|');
 	}
 
