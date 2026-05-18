@@ -98,7 +98,7 @@ export function calculateChargeAmount(
     return Math.min(CHARGE_AMOUNT_KWH * 1.5, freeCapacity_kWh);
   }
 
-  if (currentCapacity_kWh <= lowCapacity_kWh && currentPrice <= P25) {£
+  if (currentCapacity_kWh <= lowCapacity_kWh && currentPrice <= P25) {
     return Math.min(CHARGE_AMOUNT_KWH, freeCapacity_kWh);
   }
 
