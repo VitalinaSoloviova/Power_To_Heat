@@ -2,6 +2,7 @@ import { Box, Typography, Chip, IconButton, Tooltip } from '@mui/material';
 import { DeleteRounded, CompareArrowsRounded } from '@mui/icons-material';
 import { useColors } from '@theme/useTheme';
 import { getGlassSx } from '@theme/colors';
+import { tx, radii } from '@theme/tokens';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
 
@@ -47,7 +48,7 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
         ...getGlassSx(colors),
         mb: 1,
         p: 1.5,
-        borderRadius: 2,
+        borderRadius: radii.md,
         // Only override border for selected/comparing — let getGlassSx handle default
         ...(selected
           ? { border: `1.5px solid ${colors.primary}`, background: `${colors.iridescent}, ${colors.primarySoft}` }
@@ -63,9 +64,9 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
         <Chip
           label={RANGE_LABEL[run.params.range]}
           size="small"
-          sx={{ fontSize: 10, height: 18, bgcolor: `${colors.primary}20`, color: colors.primary, border: 'none' }}
+          sx={{ fontSize: tx.xs, height: 18, bgcolor: `${colors.primary}20`, color: colors.primary, border: 'none' }}
         />
-        <Typography sx={{ fontSize: 11, color: colors.textSecondary, flex: 1 }}>
+        <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary, flex: 1 }}>
           {startDate}
         </Typography>
         <IconButton
@@ -73,13 +74,13 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
           sx={{ p: 0.5, color: colors.textMuted, '&:hover': { color: colors.danger } }}
         >
-          <DeleteRounded sx={{ fontSize: 18 }} />
+          <DeleteRounded sx={{ fontSize: tx.xl }} />
         </IconButton>
       </Box>
 
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.3 }}>
         {infos.map((info) => (
-          <Typography key={info} sx={{ fontSize: 11, color: colors.textSecondary }}>
+          <Typography key={info} sx={{ fontSize: tx.sm, color: colors.textSecondary }}>
             · {info}
           </Typography>
         ))}
@@ -98,7 +99,7 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
               onClick={(e) => { e.stopPropagation(); onCompare(); }}
               sx={{
                 p: 0.5,
-                borderRadius: 1,
+                borderRadius: radii.sm,
                 color: isComparing ? colors.heat : colors.textMuted,
                 bgcolor: isComparing ? `${colors.heat}18` : 'transparent',
                 border: `1px solid ${isComparing ? `${colors.heat}55` : 'transparent'}`,
@@ -109,7 +110,7 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
                 },
               }}
             >
-              <CompareArrowsRounded sx={{ fontSize: 18 }} />
+              <CompareArrowsRounded sx={{ fontSize: tx.xl }} />
             </IconButton>
           </Tooltip>
         )}

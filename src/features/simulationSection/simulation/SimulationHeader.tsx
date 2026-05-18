@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
+import { tx, fw } from '@theme/tokens';
 
 interface SimulationHeaderProps {
   loading: boolean;
@@ -25,7 +26,7 @@ const SimulationHeader: React.FC<SimulationHeaderProps> = ({
         sx={{
           color: colors.textPrimary,
           fontSize: 17,
-          fontWeight: 700,
+          fontWeight: fw.bold,
           letterSpacing: 1.2,
           py: 1,
           textTransform: 'uppercase',
@@ -35,7 +36,7 @@ const SimulationHeader: React.FC<SimulationHeaderProps> = ({
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
         {loading && (
-          <Typography sx={{ color: colors.textMuted, fontSize: 11 }}>
+          <Typography sx={{ color: colors.textMuted, fontSize: tx.sm }}>
             Loading data…
           </Typography>
         )}

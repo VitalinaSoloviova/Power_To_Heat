@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import type { SimulationPoint } from '@services/types';
+import { fw, radii } from '@theme/tokens';
 interface InfoToolbarProps {
   point: SimulationPoint;
 }
@@ -16,7 +17,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
         alignItems: 'center',
         px: { xs: 1.5, sm: 3 },
         py: 1.5,
-        borderRadius: 2,
+        borderRadius: radii.md,
         background: `rgba(48, 61, 91, 0.85)`,
         border: `1px solid rgba(255,255,255,0.1)`,
         backdropFilter: 'blur(12px)',
@@ -34,7 +35,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
-          fontWeight: 600, 
+          fontWeight: fw.semibold,
           color: 'rgba(180, 210, 240, 0.75)',
           textTransform: 'uppercase',
           letterSpacing: 1,
@@ -62,7 +63,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
-          fontWeight: 600, 
+          fontWeight: fw.semibold,
           color: 'rgba(180, 210, 240, 0.75)',
           textTransform: 'uppercase',
           letterSpacing: 1,
@@ -84,7 +85,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
-          fontWeight: 600, 
+          fontWeight: fw.semibold,
           color: 'rgba(180, 210, 240, 0.75)',
           textTransform: 'uppercase',
           letterSpacing: 1,
@@ -105,7 +106,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
       <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', flex: '1 1 auto', minWidth: 0 }}>
         <Typography sx={{ 
           fontSize: 9, 
-          fontWeight: 600, 
+          fontWeight: fw.semibold,
           color: 'rgba(180, 210, 240, 0.75)',
           textTransform: 'uppercase',
           letterSpacing: 1,

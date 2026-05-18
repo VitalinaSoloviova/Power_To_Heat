@@ -29,6 +29,8 @@ import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useColors } from '@theme/useTheme';
 import { getChartSx, getGlassSx } from '@theme/colors';
+import { tx, fw, radii } from '@theme/tokens';
+import { getSectionLabelSx } from '@theme/colors';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
 import type { SimulationPoint } from '@services/types';
@@ -76,14 +78,14 @@ const ChartCard: React.FC<{
       flexDirection: 'column',
       minHeight: 0,
     }}>
-      <Typography sx={{ fontSize: 11, color: colors.textSecondary, fontWeight: 500 }}>
+      <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary, fontWeight: fw.medium }}>
         {title}
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 0.5, mt: 0.25 }}>
-        <Typography sx={{ fontSize: 28, fontWeight: 700, color: colors.textPrimary, lineHeight: 1 }}>
+        <Typography sx={{ fontSize: tx.display, fontWeight: fw.bold, color: colors.textPrimary, lineHeight: 1 }}>
           {data.length > 0 ? (formatValue ? formatValue(avg) : avg.toFixed(1)) : '—'}
         </Typography>
-        <Typography sx={{ fontSize: 12, color: colors.textSecondary, mb: 0.25 }}>{unit}</Typography>
+        <Typography sx={{ fontSize: tx.base, color: colors.textSecondary, mb: 0.25 }}>{unit}</Typography>
       </Box>
 
       <AutoHeight>
@@ -134,7 +136,7 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
       overflow: 'hidden',
     }}>
       <Box sx={{ px: 2, py: 1.5, borderBottom: `1px solid ${colors.border}` }}>
-        <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8 }}>
+        <Typography sx={{ ...getSectionLabelSx(colors) }}>
           PURCHASE LOG
         </Typography>
       </Box>
@@ -154,17 +156,17 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
               border: `1px solid ${accentColor}66`,
               bgcolor: `${accentColor}1a`,
             }}>
-              <Typography sx={{ fontSize: 11, color: colors.textSecondary, minWidth: 76 }}>{ts}</Typography>
-              <Typography sx={{ fontSize: 13, fontWeight: 700, color: accentColor, flex: 1 }}>
+              <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary, minWidth: 76 }}>{ts}</Typography>
+              <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: accentColor, flex: 1 }}>
                 {p.energy.price.toFixed(1)}
-                <Typography component="span" sx={{ fontSize: 10, fontWeight: 500, ml: 0.4 }}>€/MWh</Typography>
+                <Typography component="span" sx={{ fontSize: tx.xs, fontWeight: fw.medium, ml: 0.4 }}>€/MWh</Typography>
               </Typography>
               {emergency && (
                 <Typography sx={{ fontSize: 9, fontWeight: 700, color: colors.danger, letterSpacing: 0.5, mr: 0.5 }}>
                   NOTFALL
                 </Typography>
               )}
-              <Typography sx={{ fontSize: 12, fontWeight: 600, color: colors.textPrimary, fontVariantNumeric: 'tabular-nums' }}>
+              <Typography sx={{ fontSize: tx.base, fontWeight: fw.semibold, color: colors.textPrimary, fontVariantNumeric: 'tabular-nums' }}>
                 {cost.toFixed(2)} €
               </Typography>
             </Box>
@@ -201,7 +203,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 2 }}>
       {/* Header */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0, flexWrap: 'wrap' }}>
-        <Typography sx={{ fontSize: 15, fontWeight: 700, color: colors.textPrimary, flex: 1 }}>
+        <Typography sx={{ fontSize: tx.lg, fontWeight: fw.bold, color: colors.textPrimary, flex: 1 }}>
           {startDate} · {rangeLabel} · Storage {run.params.storageLevel} %
         </Typography>
         <Button
@@ -209,18 +211,18 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
           variant="outlined"
           startIcon={<ReplayRoundedIcon />}
           onClick={onReplay}
-          sx={{ fontSize: 11, borderRadius: 2, borderColor: colors.primary, color: colors.primary, '&:hover': { bgcolor: `${colors.primary}18` } }}
+          sx={{ fontSize: tx.sm, borderRadius: radii.md, borderColor: colors.primary, color: colors.primary, '&:hover': { bgcolor: `${colors.primary}18` } }}
         >
           Replay
         </Button>
         {run.params.historyYears !== null && run.params.historyYears !== undefined && run.params.dataYears && (
-          <Typography sx={{ fontSize: 11, color: colors.textMuted }}>
+          <Typography sx={{ fontSize: tx.sm, color: colors.textMuted }}>
             {run.params.historyYears}Y requested ·{' '}
-            <Typography component="span" sx={{ color: run.params.dataYears.weather >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: 600, fontSize: 11 }}>
+            <Typography component="span" sx={{ color: run.params.dataYears.weather >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: fw.semibold, fontSize: tx.sm }}>
               {run.params.dataYears.weather}Y weather
             </Typography>
             {' / '}
-            <Typography component="span" sx={{ color: run.params.dataYears.price >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: 600, fontSize: 11 }}>
+            <Typography component="span" sx={{ color: run.params.dataYears.price >= run.params.historyYears ? colors.cool : colors.warning, fontWeight: fw.semibold, fontSize: tx.sm }}>
               {run.params.dataYears.price}Y price
             </Typography>
             {' '}actual coverage
@@ -235,7 +237,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
         <Box sx={{ width: { xs: '100%', md: 300 }, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0, minWidth: 0 }}>
           {/* Pie */}
           <Box sx={{ ...getGlassSx(colors), p: 2, flexShrink: 0 }}>
-            <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 0.5 }}>
+            <Typography sx={{ ...getSectionLabelSx(colors), mb: 0.5 }}>
               PURCHASES
             </Typography>
             <PieChart
@@ -266,7 +268,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
               ].map((item) => (
                 <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                   <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color, flexShrink: 0 }} />
-                  <Typography sx={{ fontSize: 10, color: colors.textSecondary }}>
+                  <Typography sx={{ fontSize: tx.xs, color: colors.textSecondary }}>
                     {item.label} ({item.count})
                   </Typography>
                 </Box>
@@ -285,7 +287,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
             ].join(', '),
             flexShrink: 0,
           }}>
-            <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 1.5 }}>
+            <Typography sx={{ ...getSectionLabelSx(colors), mb: 1.5 }}>
               VS. DIRECT BUY
             </Typography>
             {([
@@ -296,8 +298,8 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
                 color: stats.savings >= 0 ? colors.cool : colors.warning },
             ] as { label: string; value: string; color: string }[]).map((row) => (
               <Box key={row.label} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', mb: 0.75 }}>
-                <Typography sx={{ fontSize: 11, color: colors.textSecondary }}>{row.label}</Typography>
-                <Typography sx={{ fontSize: 13, fontWeight: 700, color: row.color }}>{row.value}</Typography>
+                <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary }}>{row.label}</Typography>
+                <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: row.color }}>{row.value}</Typography>
               </Box>
             ))}
           </Box>

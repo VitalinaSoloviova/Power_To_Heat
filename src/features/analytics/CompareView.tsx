@@ -4,6 +4,7 @@ import CloseRounded from '@mui/icons-material/CloseRounded';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useColors } from '@theme/useTheme';
 import { getChartSx, getGlassSx } from '@theme/colors';
+import { tx, fw, radii } from '@theme/tokens';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
 
@@ -47,12 +48,12 @@ const DualChart: React.FC<DualChartProps> = ({ title, unit, dataA, dataB, colorA
   return (
     <Box sx={{ ...getGlassSx(colors), backdropFilter: 'none', WebkitBackdropFilter: 'none', p: 2, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
       <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 0.5, flexWrap: 'wrap' }}>
-        <Typography sx={{ fontSize: 11, color: colors.textSecondary, fontWeight: 500 }}>{title}</Typography>
+        <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary, fontWeight: fw.medium }}>{title}</Typography>
         <Box sx={{ display: 'flex', gap: 1.5, ml: 'auto' }}>
-          <Typography sx={{ fontSize: 10, color: colorA, fontWeight: 700 }}>
+          <Typography sx={{ fontSize: tx.xs, color: colorA, fontWeight: fw.bold }}>
             A: {avgA.toFixed(1)} {unit}
           </Typography>
-          <Typography sx={{ fontSize: 10, color: colorB, fontWeight: 700 }}>
+          <Typography sx={{ fontSize: tx.xs, color: colorB, fontWeight: fw.bold }}>
             B: {avgB.toFixed(1)} {unit}
           </Typography>
         </Box>
@@ -119,18 +120,18 @@ const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0, flexWrap: 'wrap' }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: colorA }} />
-          <Typography sx={{ fontSize: 13, fontWeight: 700, color: colors.textPrimary }}>{labelA}</Typography>
+          <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: colors.textPrimary }}>{labelA}</Typography>
         </Box>
-        <Typography sx={{ fontSize: 13, color: colors.textMuted }}>vs.</Typography>
+        <Typography sx={{ fontSize: tx.md, color: colors.textMuted }}>vs.</Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: colorB }} />
-          <Typography sx={{ fontSize: 13, fontWeight: 700, color: colors.textPrimary }}>{labelB}</Typography>
+          <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: colors.textPrimary }}>{labelB}</Typography>
         </Box>
         <Button
           size="small"
           startIcon={<CloseRounded />}
           onClick={onClose}
-          sx={{ ml: 'auto', fontSize: 11, borderRadius: 2, borderColor: colors.border, color: colors.textSecondary,
+          sx={{ ml: 'auto', fontSize: tx.sm, borderRadius: radii.md, borderColor: colors.border, color: colors.textSecondary,
             border: `1px solid ${colors.border}`, '&:hover': { bgcolor: colors.bgSurface } }}
         >
           Close
@@ -144,8 +145,8 @@ const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
             <Typography sx={{ fontSize: 9, color: colors.textMuted, letterSpacing: 0.6, textTransform: 'uppercase', mb: 0.3 }}>
               {row.label}
             </Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 700, color: colorA }}>{row.a}</Typography>
-            <Typography sx={{ fontSize: 12, fontWeight: 700, color: colorB }}>{row.b}</Typography>
+            <Typography sx={{ fontSize: tx.base, fontWeight: fw.bold, color: colorA }}>{row.a}</Typography>
+            <Typography sx={{ fontSize: tx.base, fontWeight: fw.bold, color: colorB }}>{row.b}</Typography>
           </Box>
         ))}
       </Box>

@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { ChevronLeftRounded, ChevronRightRounded } from '@mui/icons-material';
 import { useColors } from '@theme/useTheme';
+import { getSectionLabelSx } from '@theme/colors';
+import { tx, duration, easing } from '@theme/tokens';
 import RunCard from './RunCard';
 import RunDetail from './RunDetail';
 import CompareView from './CompareView';
@@ -54,7 +56,7 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
         sx={{
           width: { xs: '100%', md: open ? SIDEBAR_W : COLLAPSED_W },
           flexShrink: 0,
-          transition: 'width 0.28s cubic-bezier(0.4,0,0.2,1)',
+          transition: `width ${duration.base} ${easing.standard}`,
           overflow: 'hidden',
           borderRight: { xs: 'none', md: `1px solid ${colors.border}` },
           borderBottom: { xs: `1px solid ${colors.border}`, md: 'none' },
@@ -66,10 +68,9 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
         <Box sx={{ display: 'flex', alignItems: 'center', px: 1.5, pt: 2, pb: 1, gap: 0.5, flexShrink: 0 }}>
           <Typography
             sx={{
-              fontSize: 11, fontWeight: 700, color: colors.textSecondary,
-              letterSpacing: 0.8, textTransform: 'uppercase', flex: 1,
+              ...getSectionLabelSx(colors), flex: 1,
               whiteSpace: 'nowrap', overflow: 'hidden',
-              opacity: open ? 1 : 0, transition: 'opacity 0.18s',
+              opacity: open ? 1 : 0, transition: `opacity ${duration.fast}`,
             }}
           >
             Simulation History
@@ -82,8 +83,8 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
                 '&:hover': { bgcolor: colors.bgSurface, color: colors.textPrimary } }}
             >
               {open
-                ? <ChevronLeftRounded sx={{ fontSize: 18 }} />
-                : <ChevronRightRounded sx={{ fontSize: 18 }} />}
+                ? <ChevronLeftRounded sx={{ fontSize: tx.xl }} />
+                : <ChevronRightRounded sx={{ fontSize: tx.xl }} />}
             </IconButton>
           </Tooltip>
         </Box>
@@ -92,12 +93,12 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
         <Box
           sx={{
             flex: 1, overflowY: 'auto', px: 1.5, pb: 2,
-            opacity: open ? 1 : 0, transition: 'opacity 0.18s',
+            opacity: open ? 1 : 0, transition: `opacity ${duration.fast}`,
             pointerEvents: open ? 'auto' : 'none',
           }}
         >
           {runs.length === 0 ? (
-            <Typography sx={{ fontSize: 12, color: colors.textMuted, mt: 4, textAlign: 'center' }}>
+            <Typography sx={{ fontSize: tx.base, color: colors.textMuted, mt: 4, textAlign: 'center' }}>
               No simulations saved yet.
             </Typography>
           ) : (
@@ -128,7 +129,7 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
           <RunDetail run={selected} onReplay={() => onReplay(selected)} />
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
-            <Typography sx={{ color: colors.textMuted, fontSize: 13 }}>
+            <Typography sx={{ color: colors.textMuted, fontSize: tx.md }}>
               Select a simulation
             </Typography>
           </Box>

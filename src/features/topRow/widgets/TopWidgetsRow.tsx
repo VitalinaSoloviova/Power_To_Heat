@@ -6,6 +6,7 @@ import LocationWidget from "./LocationWidget";
 import Next24hPriceWidget from "./Next24hPriceWidget";
 import WeatherWidget from "./WeatherWidget";
 import { useColors } from "@theme/useTheme";
+import { radii, duration, easing } from "@theme/tokens";
 
 const TopWidgetsRow: React.FC = () => {
     const colors = useColors();
@@ -18,7 +19,7 @@ const TopWidgetsRow: React.FC = () => {
                 sx={{
                     display: "grid",
                     gridTemplateRows: open ? "1fr" : "0fr",
-                    transition: "grid-template-rows 0.28s cubic-bezier(0.4,0,0.2,1)",
+                    transition: `grid-template-rows ${duration.base} ${easing.standard}`,
                     overflow: "hidden",
                 }}
             >
@@ -31,7 +32,7 @@ const TopWidgetsRow: React.FC = () => {
                         minWidth: 0,
                         pb: open ? 0 : 0,
                         opacity: open ? 1 : 0,
-                        transition: "opacity 0.20s",
+                        transition: `opacity ${duration.fast}`,
                     }}
                 >
                     <LocationWidget />
@@ -49,7 +50,7 @@ const TopWidgetsRow: React.FC = () => {
                         onClick={() => setOpen((o) => !o)}
                         sx={{
                             p: 0.3,
-                            borderRadius: 1,
+                            borderRadius: radii.sm,
                             color: colors.textMuted,
                             bgcolor: "transparent",
                             border: `1px solid ${colors.border}`,

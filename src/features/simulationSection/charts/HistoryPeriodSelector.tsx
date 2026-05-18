@@ -2,6 +2,7 @@ import { InfoOutlineRounded } from '@mui/icons-material';
 import { Box, IconButton, ToggleButton, ToggleButtonGroup, Tooltip, Typography } from '@mui/material';
 import { HISTORY_OPTIONS, type HistoryYears } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
+import { tx, fw } from '@theme/tokens';
 
 interface HistoryPeriodSelectorProps {
   historyYears: HistoryYears;
@@ -13,7 +14,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75}}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
-        <Typography sx={{ fontSize: 13, fontWeight: 500, color: colors.textSecondary, paddingTop: 0.5 }}>
+        <Typography sx={{ fontSize: tx.md, fontWeight: fw.medium, color: colors.textSecondary, paddingTop: 0.5 }}>
           Historical period
         </Typography>
         <Tooltip
@@ -26,7 +27,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
             aria-label="Historical period information"
             sx={{ color: colors.textMuted, p: 0 }}
           >
-            <InfoOutlineRounded sx={{ fontSize: 15 }} />
+            <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
           </IconButton>
         </Tooltip>
       </Box>
@@ -45,7 +46,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
               flex: '1 1 ',
               color: colors.textSecondary,
               borderColor: colors.border,
-              fontSize: 12,
+              fontSize: tx.base,
               px: 0.5,
               py: 0.5,
               width: { xs: 40, sm: 55 },

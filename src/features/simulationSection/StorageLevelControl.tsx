@@ -1,5 +1,6 @@
 import { Box, Typography, Slider, TextField, InputAdornment } from '@mui/material';
 import { useColors } from '@theme/useTheme';
+import { tx } from '@theme/tokens';
 
 interface StorageLevelControlProps {
   value: number;
@@ -16,7 +17,7 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: { xs: 140, sm: 260 }, flex: 1 }}>
-      <Typography sx={{ fontSize: 12, color: colors.textSecondary }}>
+      <Typography sx={{ fontSize: tx.base, color: colors.textSecondary }}>
         Current storage level (input)
       </Typography>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', minWidth: 0 }}>
