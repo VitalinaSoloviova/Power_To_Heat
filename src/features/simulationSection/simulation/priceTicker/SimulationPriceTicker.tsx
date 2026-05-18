@@ -2,6 +2,7 @@ import { useRef, useEffect, memo } from 'react';
 import { Box, Typography } from '@mui/material';
 import { AnimatePresence } from 'framer-motion';
 import { useColors } from '@theme/useTheme';
+import { getGlassSx } from '@theme/colors';
 import type { SimulationPoint } from '@services/types';
 import TickerCard from './TickerCard';
 
@@ -16,19 +17,28 @@ interface TickerEntry {
     priceEurMwh: number;
     costEur: number;
     isCheap: boolean;
+    isEmergency: boolean;
 }
 
 function buildEntries(series: SimulationPoint[], upTo: number): TickerEntry[] {
-    return series
-        .slice(0, upTo + 1)
+    const window = series.slice(0, upTo + 1);
+    const purchasePrices = window.filter((p) => p.energy.generated > 0).map((p) => p.energy.price);
+    const sorted = [...purchasePrices].sort((a, b) => a - b);
+    const median = sorted[Math.floor(sorted.length / 2)] ?? 60;
+
+    return window
         .filter((p) => p.energy.generated > 0)
-        .map((p, i) => ({
-            key: `${p.timestamp}-${i}`,
-            timestamp: p.timestamp,
-            priceEurMwh: p.energy.price,
-            costEur: (p.energy.generated * p.energy.price) / 1_000,
-            isCheap: p.energy.price < 60,
-        }))
+        .map((p, i) => {
+            const isEmergency = p.energy.mode === 'emergency';
+            return {
+                key: `${p.timestamp}-${i}`,
+                timestamp: p.timestamp,
+                priceEurMwh: p.energy.price,
+                costEur: (p.energy.generated * p.energy.price) / 1_000,
+                isCheap: !isEmergency && p.energy.price < median,
+                isEmergency,
+            };
+        })
         .reverse(); // newest first
 }
 
@@ -50,9 +60,7 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
 
     return (
         <Box sx={{
-            border: `1px solid ${colors.border}`,
-            borderRadius: 2.5,
-            bgcolor: colors.bgCardSolid,
+            ...getGlassSx(colors),
             overflow: 'hidden',
             flex: '1 1 0',
             height: '100%',

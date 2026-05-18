@@ -1,15 +1,7 @@
-/**
- * RunCard
- *
- * Compact summary card shown in the Analytics sidebar list.
- * Displays the simulation date, range badge, and four key stats
- * (storage start level, total cost, cheap/expensive split, savings).
- * Clicking the card selects it; the trash icon deletes it from history.
- */
-
-import { Box, Typography, Chip, IconButton } from '@mui/material';
-import { DeleteRounded } from '@mui/icons-material';
+import { Box, Typography, Chip, IconButton, Tooltip } from '@mui/material';
+import { DeleteRounded, CompareArrowsRounded } from '@mui/icons-material';
 import { useColors } from '@theme/useTheme';
+import { getGlassSx } from '@theme/colors';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
 
@@ -18,11 +10,13 @@ const RANGE_LABEL: Record<string, string> = { day: 'Day', week: 'Week', month: '
 interface Props {
   run: SimulationRun;
   selected: boolean;
+  isComparing?: boolean;
   onSelect: () => void;
   onDelete: () => void;
+  onCompare?: () => void;
 }
 
-const RunCard: React.FC<Props> = ({ run, selected, onSelect, onDelete }) => {
+const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDelete, onCompare }) => {
   const colors = useColors();
   const stats = computeRunStats(run.series);
 
@@ -50,14 +44,19 @@ const RunCard: React.FC<Props> = ({ run, selected, onSelect, onDelete }) => {
     <Box
       onClick={onSelect}
       sx={{
+        ...getGlassSx(colors),
         mb: 1,
         p: 1.5,
         borderRadius: 2,
-        border: `1px solid ${selected ? colors.primary : colors.border}`,
-        bgcolor: selected ? `${colors.primary}10` : colors.bgCardSolid,
+        // Only override border for selected/comparing — let getGlassSx handle default
+        ...(selected
+          ? { border: `1.5px solid ${colors.primary}`, background: `${colors.iridescent}, ${colors.primarySoft}` }
+          : isComparing
+            ? { border: `1.5px solid ${colors.heat}`, background: `${colors.iridescent}, ${colors.heatSoft}` }
+            : {}),
         cursor: 'pointer',
-        transition: 'border-color .2s, background .2s',
-        '&:hover': { borderColor: colors.primary },
+        transition: 'border-color .2s, box-shadow .2s, transform .2s',
+        '&:hover': { borderColor: colors.primary, transform: 'translateY(-1px)' },
       }}
     >
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.75, mb: 0.75 }}>
@@ -72,9 +71,9 @@ const RunCard: React.FC<Props> = ({ run, selected, onSelect, onDelete }) => {
         <IconButton
           size="small"
           onClick={(e) => { e.stopPropagation(); onDelete(); }}
-          sx={{ p: 0.25, color: colors.textMuted, '&:hover': { color: colors.warning } }}
+          sx={{ p: 0.5, color: colors.textMuted, '&:hover': { color: colors.danger } }}
         >
-          <DeleteRounded sx={{ fontSize: 14 }} />
+          <DeleteRounded sx={{ fontSize: 18 }} />
         </IconButton>
       </Box>
 
@@ -86,9 +85,35 @@ const RunCard: React.FC<Props> = ({ run, selected, onSelect, onDelete }) => {
         ))}
       </Box>
 
-      <Typography sx={{ fontSize: 9.5, color: colors.textMuted, mt: 0.75 }}>
-        {savedAt}
-      </Typography>
+      <Box sx={{ display: 'flex', alignItems: 'center', mt: 0.75 }}>
+        <Typography sx={{ fontSize: 9.5, color: colors.textMuted, flex: 1 }}>
+          {savedAt}
+        </Typography>
+
+        {/* Compare button — only for non-selected cards */}
+        {!selected && onCompare && (
+          <Tooltip title={isComparing ? 'Remove from comparison' : 'Compare with selected'} placement="top">
+            <IconButton
+              size="small"
+              onClick={(e) => { e.stopPropagation(); onCompare(); }}
+              sx={{
+                p: 0.5,
+                borderRadius: 1,
+                color: isComparing ? colors.heat : colors.textMuted,
+                bgcolor: isComparing ? `${colors.heat}18` : 'transparent',
+                border: `1px solid ${isComparing ? `${colors.heat}55` : 'transparent'}`,
+                '&:hover': {
+                  color: colors.heat,
+                  bgcolor: `${colors.heat}18`,
+                  border: `1px solid ${colors.heat}55`,
+                },
+              }}
+            >
+              <CompareArrowsRounded sx={{ fontSize: 18 }} />
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
     </Box>
   );
 };

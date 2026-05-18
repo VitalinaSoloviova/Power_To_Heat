@@ -46,6 +46,8 @@ const SimulationSlider: React.FC<SimulationSliderProps> = ({
         py: 1.5,
         borderTop: `1px solid ${colors.border}`,
         bgcolor: colors.bgCard,
+        backdropFilter: colors.backdropBlur,
+        WebkitBackdropFilter: colors.backdropBlur,
         minHeight: { xs: 'auto', md: 90 },
         minWidth: 0,
       }}

@@ -28,7 +28,7 @@ import { LineChart } from '@mui/x-charts/LineChart';
 import { ChartsReferenceLine } from '@mui/x-charts/ChartsReferenceLine';
 import { PieChart } from '@mui/x-charts/PieChart';
 import { useColors } from '@theme/useTheme';
-import { getChartSx } from '@theme/colors';
+import { getChartSx, getGlassSx } from '@theme/colors';
 import { computeRunStats } from './analyticsTypes';
 import type { SimulationRun } from './analyticsTypes';
 import type { SimulationPoint } from '@services/types';
@@ -68,10 +68,10 @@ const ChartCard: React.FC<{
 
   return (
     <Box sx={{
-      border: `1px solid ${colors.border}`,
-      borderRadius: 2.5,
+      ...getGlassSx(colors),
+      backdropFilter: 'none',
+      WebkitBackdropFilter: 'none',
       p: 2,
-      bgcolor: colors.bgCardSolid,
       display: 'flex',
       flexDirection: 'column',
       minHeight: 0,
@@ -127,13 +127,11 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
 
   return (
     <Box sx={{
-      border: `1px solid ${colors.border}`,
-      borderRadius: 2.5,
+      ...getGlassSx(colors),
       display: 'flex',
       flexDirection: 'column',
       height: '100%',
       overflow: 'hidden',
-      bgcolor: colors.bgCardSolid,
     }}>
       <Box sx={{ px: 2, py: 1.5, borderBottom: `1px solid ${colors.border}` }}>
         <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8 }}>
@@ -146,20 +144,27 @@ const BuyHistory: React.FC<{ series: SimulationPoint[]; priceThreshold: number }
             day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
           });
           const cost = (p.energy.generated * p.energy.price) / 1_000;
-          const cheap = p.energy.price < priceThreshold;
+          const emergency = p.energy.mode === 'emergency';
+          const cheap     = !emergency && p.energy.price < priceThreshold;
+          const accentColor = emergency ? colors.danger : cheap ? colors.cool : colors.warning;
           return (
             <Box key={i} sx={{
-              display: 'flex', alignItems: 'center', gap: 1.5, px: 1, py: 0.75,
+              display: 'flex', alignItems: 'center', gap: 1.5, px: 1.5, py: 1,
               borderRadius: 1.5,
-              border: `1px solid ${cheap ? colors.cool : colors.warning}44`,
-              bgcolor: cheap ? `${colors.cool}0a` : `${colors.warning}0a`,
+              border: `1px solid ${accentColor}66`,
+              bgcolor: `${accentColor}1a`,
             }}>
-              <Typography sx={{ fontSize: 10, color: colors.textMuted, minWidth: 72 }}>{ts}</Typography>
-              <Typography sx={{ fontSize: 13, fontWeight: 700, color: cheap ? colors.cool : colors.warning, flex: 1 }}>
+              <Typography sx={{ fontSize: 11, color: colors.textSecondary, minWidth: 76 }}>{ts}</Typography>
+              <Typography sx={{ fontSize: 13, fontWeight: 700, color: accentColor, flex: 1 }}>
                 {p.energy.price.toFixed(1)}
-                <Typography component="span" sx={{ fontSize: 9, fontWeight: 400, ml: 0.4 }}>€/MWh</Typography>
+                <Typography component="span" sx={{ fontSize: 10, fontWeight: 500, ml: 0.4 }}>€/MWh</Typography>
               </Typography>
-              <Typography sx={{ fontSize: 11, color: colors.textSecondary, fontVariantNumeric: 'tabular-nums' }}>
+              {emergency && (
+                <Typography sx={{ fontSize: 9, fontWeight: 700, color: colors.danger, letterSpacing: 0.5, mr: 0.5 }}>
+                  NOTFALL
+                </Typography>
+              )}
+              <Typography sx={{ fontSize: 12, fontWeight: 600, color: colors.textPrimary, fontVariantNumeric: 'tabular-nums' }}>
                 {cost.toFixed(2)} €
               </Typography>
             </Box>
@@ -229,31 +234,55 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
         {/* Left: Pie + Savings + Purchase Log */}
         <Box sx={{ width: { xs: '100%', md: 300 }, flexShrink: 0, display: 'flex', flexDirection: 'column', gap: 1.5, minHeight: 0, minWidth: 0 }}>
           {/* Pie */}
-          <Box sx={{ border: `1px solid ${colors.border}`, borderRadius: 2.5, p: 2, bgcolor: colors.bgCardSolid, flexShrink: 0 }}>
+          <Box sx={{ ...getGlassSx(colors), p: 2, flexShrink: 0 }}>
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 0.5 }}>
               PURCHASES
             </Typography>
             <PieChart
               series={[{
                 data: [
-                  { id: 'cheap',     value: stats.cheapCount,     label: 'Cheap',     color: colors.cool    },
-                  { id: 'expensive', value: stats.expensiveCount, label: 'Expensive', color: colors.warning },
+                  { id: 'cheap',     value: stats.cheapCount,     color: colors.cool    },
+                  { id: 'expensive', value: stats.expensiveCount, color: colors.warning },
+                  ...(stats.emergencyCount > 0
+                    ? [{ id: 'emergency', value: stats.emergencyCount, color: colors.danger }]
+                    : []),
                 ],
-                innerRadius: 32,
+                innerRadius: 36,
                 paddingAngle: 2,
                 cornerRadius: 3,
               }]}
-              width={210}
-              height={140}
+              width={200}
+              height={130}
+              sx={{ '& .MuiChartsLegend-root': { display: 'none' } }}
             />
+            {/* Custom legend — never overflows the card */}
+            <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mt: 0.5 }}>
+              {[
+                { label: 'Günstig',  color: colors.cool,    count: stats.cheapCount     },
+                { label: 'Teuer',    color: colors.warning, count: stats.expensiveCount },
+                ...(stats.emergencyCount > 0
+                  ? [{ label: 'Notfall', color: colors.danger, count: stats.emergencyCount }]
+                  : []),
+              ].map((item) => (
+                <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                  <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color, flexShrink: 0 }} />
+                  <Typography sx={{ fontSize: 10, color: colors.textSecondary }}>
+                    {item.label} ({item.count})
+                  </Typography>
+                </Box>
+              ))}
+            </Box>
           </Box>
 
           {/* Savings */}
           <Box sx={{
-            border: `1px solid ${stats.savings >= 0 ? colors.cool : colors.warning}44`,
-            borderRadius: 2.5,
+            ...getGlassSx(colors),
+            border: `1px solid ${stats.savings >= 0 ? colors.cool : colors.warning}55`,
             p: 2,
-            bgcolor: stats.savings >= 0 ? `${colors.cool}0a` : `${colors.warning}0a`,
+            background: [
+              colors.iridescent,
+              stats.savings >= 0 ? `${colors.cool}0d` : `${colors.warning}0d`,
+            ].join(', '),
             flexShrink: 0,
           }}>
             <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, mb: 1.5 }}>

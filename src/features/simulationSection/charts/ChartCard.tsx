@@ -2,7 +2,7 @@ import { memo, useCallback } from 'react';
 import { Box, Typography } from '@mui/material';
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useColors } from '@theme/useTheme';
-import { getChartSx } from '@theme/colors';
+import { getChartSx, getGlassSx } from '@theme/colors';
 
 const COMPACT_H = 140;
 const EXPANDED_H = 320;
@@ -57,20 +57,20 @@ export const ChartCard = memo<{
     <Box
       onClick={handleClick}
       sx={{
+        ...getGlassSx(colors),
+        backdropFilter: 'none',
+        WebkitBackdropFilter: 'none',
         ...(vertical ? { width: '100%' } : { flex: 1, minWidth: 0 }),
         height: expanded ? EXPANDED_H : COMPACT_H,
         transition: 'height 0.32s cubic-bezier(0.4,0,0.2,1), box-shadow 0.25s, border-color 0.25s',
-        overflow: 'hidden',
-        bgcolor: colors.bgCardSolid,
         border: `1px solid ${expanded ? colors.primary : colors.border}`,
-        borderRadius: 2.5,
         p: 2,
         display: 'flex',
         flexDirection: 'column',
         cursor: 'pointer',
         boxShadow: expanded
-          ? `0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px ${colors.primary}30`
-          : 'none',
+          ? `0 8px 32px rgba(0,0,0,0.25), 0 0 0 1px ${colors.primary}30, inset 0 1px 0 ${colors.borderStrong}, inset 0 -1px 0 rgba(0,0,0,0.12)`
+          : `0 8px 32px rgba(0,0,0,0.22), 0 2px 8px rgba(0,0,0,0.15), inset 0 1px 0 ${colors.borderStrong}, inset 0 -1px 0 rgba(0,0,0,0.12), inset 1px 0 0 rgba(255,255,255,0.04)`,
         position: 'relative',
       }}
     >

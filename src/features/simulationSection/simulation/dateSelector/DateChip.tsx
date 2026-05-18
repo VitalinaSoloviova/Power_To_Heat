@@ -27,10 +27,13 @@ const DateChip: React.FC<DateChipProps> = ({ label, onClick, open, colors }) => 
       borderRadius: 1,
       width: 'fit-content',
       border: `1px solid ${colors.border}`,
-      bgcolor: open ? colors.bgCardSolid : 'transparent',
+      bgcolor: open ? colors.bgCard : 'transparent',
+      backdropFilter: open ? colors.backdropBlur : 'none',
+      WebkitBackdropFilter: open ? colors.backdropBlur : 'none',
       color: colors.textPrimary,
       fontSize: 12,
-      '&:hover': { bgcolor: colors.bgCardSolid },
+      transition: 'background 0.2s',
+      '&:hover': { bgcolor: colors.bgCard, backdropFilter: colors.backdropBlur },
     }}
   >
       <CalendarIcon size={25} />

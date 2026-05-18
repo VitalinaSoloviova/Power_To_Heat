@@ -33,12 +33,17 @@ const MonthDayPopover: React.FC<MonthDayPopoverProps> = ({
     slotProps={{
       paper: {
         sx: {
-          bgcolor: colors.bgCardSolid,
-          border: `1px solid ${colors.border}`,
+          background: [colors.iridescent, colors.bgCard].join(', '),
+          border: `1px solid ${colors.borderStrong}`,
           borderRadius: 2.5,
           p: 2,
-          boxShadow: '0 8px 32px rgba(0,0,0,0.45)',
-          backdropFilter: 'blur(12px)',
+          boxShadow: [
+            '0 8px 32px rgba(0,0,0,0.45)',
+            `inset 0 1px 0 ${colors.borderStrong}`,
+            'inset 0 -1px 0 rgba(0,0,0,0.12)',
+          ].join(', '),
+          backdropFilter: colors.backdropBlur,
+          WebkitBackdropFilter: colors.backdropBlur,
           minWidth: 220,
         },
       },

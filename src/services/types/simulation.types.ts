@@ -12,6 +12,7 @@ export interface SimulationWeather {
 export interface SimulationEnergy {
   generated: number;          // kW (renewable output at this timestamp)
   price: number;              // €/MWh
+  mode: 'charging' | 'emergency' | 'idle'; // purchase mode from EnergyStorageResolver
 }
 
 export interface SimulationDemand {
