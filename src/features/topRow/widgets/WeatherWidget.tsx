@@ -15,12 +15,13 @@ import { useColors } from "@theme/useTheme";
 import { useCurrentWeather } from "../hooks/useCurrentWeather";
 import { useLocation } from "../hooks/useLocation";
 import type { WeatherCondition } from "@features/topRow/currentData/CurrentWeatherService";
+import { tx, fw } from "@theme/tokens";
 
 const conditionIcon = (
     condition: WeatherCondition,
     color: string
 ): ReactNode => {
-    const sx = { fontSize: 28, color };
+    const sx = { fontSize: tx.display, color };
     switch (condition) {
         case "sunny":
             return <WbSunnyRounded sx={sx} />;
@@ -60,7 +61,7 @@ const WeatherWidget: React.FC = () => {
                 <Typography
                     sx={{
                         fontSize: 22,
-                        fontWeight: 700,
+                        fontWeight: fw.bold,
                         color: colors.textPrimary,
                         lineHeight: 1,
                     }}
@@ -68,7 +69,7 @@ const WeatherWidget: React.FC = () => {
                     {loading ? "…" : temperature}
                 </Typography>
                 <Typography
-                    sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}
+                    sx={{ fontSize: tx.base, color: colors.textSecondary, fontWeight: fw.medium }}
                 >
                     °C
                 </Typography>
@@ -76,8 +77,8 @@ const WeatherWidget: React.FC = () => {
                     <Typography
                         sx={{
                             ml: "auto",
-                            fontSize: 11,
-                            fontWeight: 600,
+                            fontSize: tx.sm,
+                            fontWeight: fw.semibold,
                             color: colors.textSecondary,
                             textTransform: "capitalize",
                         }}
@@ -89,7 +90,7 @@ const WeatherWidget: React.FC = () => {
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5, mt: 0.4 }}>
                 <WindIcon sx={{ fontSize: 14, color: colors.textMuted }} />
-                <Typography sx={{ fontSize: 11, color: colors.textMuted }}>
+                <Typography sx={{ fontSize: tx.sm, color: colors.textMuted }}>
                     Wind {wind} km/h
                 </Typography>
             </Box>

@@ -5,6 +5,7 @@ import { useColors } from "@theme/useTheme";
 import { useCurrentEnergyPrice } from "../hooks/useCurrentEnergyPrice";
 import type React from "react";
 import EnergyPriceAroundNowChart from "./EnergyPriceAroundNowChart";
+import { tx, fw } from "@theme/tokens";
 
 const Next24hPriceWidget: React.FC = () => {
     const colors = useColors();
@@ -24,7 +25,7 @@ const Next24hPriceWidget: React.FC = () => {
                         <Typography
                             sx={{
                                 fontSize: 22,
-                                fontWeight: 700,
+                                fontWeight: fw.bold,
                                 color: colors.textPrimary,
                                 lineHeight: 1,
                             }}
@@ -32,12 +33,12 @@ const Next24hPriceWidget: React.FC = () => {
                             {loading ? "…" : avgPrice.toFixed(1)}
                         </Typography>
                         <Typography
-                            sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}
+                            sx={{ fontSize: tx.base, color: colors.textSecondary, fontWeight: fw.medium }}
                         >
                             ct/kWh
                         </Typography>
                     </Box>
-                    <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
+                    <Typography sx={{ fontSize: tx.sm, color: colors.textMuted, mt: 0.4 }}>
                         Average next 24 hours • {trend}
                     </Typography>
                 </Box>

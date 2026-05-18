@@ -1,5 +1,6 @@
 import { Box, Typography } from '@mui/material';
 import { useColors } from '@theme/useTheme';
+import { fw } from '@theme/tokens';
 
 import type { PlaybackControl, StorageControl, TimelineControl } from '@services/types';
 import DateSimulationControlComponent from './DateSimulationControlComponent';
@@ -36,7 +37,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         pt: 2,
         pb: 2,
         fontSize: 16,
-        fontWeight: 600,
+        fontWeight: fw.semibold,
         color: colors.textPrimary,
         letterSpacing: 0.3,
       }}

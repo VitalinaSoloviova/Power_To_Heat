@@ -5,6 +5,8 @@ import { useColors } from '@theme/useTheme';
 import { getGlassSx } from '@theme/colors';
 import type { SimulationPoint } from '@services/types';
 import TickerCard from './TickerCard';
+import { tx, fw } from '@theme/tokens';
+import { getSectionLabelSx } from '@theme/colors';
 
 interface Props {
     series: SimulationPoint[];
@@ -72,10 +74,10 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
         }}>
             {/* Label */}
             <Box sx={{ px: 2, pt: 1.5, pb: 0.5, display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Typography sx={{ fontSize: 11, fontWeight: 700, color: colors.textSecondary, letterSpacing: 0.8, textTransform: 'uppercase', flex: 1 }}>
+                <Typography sx={{ ...getSectionLabelSx(colors), flex: 1 }}>
                     Purchase Log
                 </Typography>
-                <Typography sx={{ fontSize: 10, color: colors.textMuted }}>
+                <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
                     ↑ new
                 </Typography>
             </Box>
@@ -99,7 +101,7 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
                 }}
             >
                 {entries.length === 0 ? (
-                    <Typography sx={{ fontSize: 11, color: colors.textMuted, px: 1 }}>
+                    <Typography sx={{ fontSize: tx.sm, color: colors.textMuted, px: 1 }}>
                         No purchases yet…
                     </Typography>
                 ) : (
@@ -122,10 +124,10 @@ const SimulationPriceTicker: React.FC<Props> = ({ series, currentIndex }) => {
                 borderTop: `1px solid ${colors.border}`,
                 bgcolor: `${colors.primary}0d`,
             }}>
-                <Typography sx={{ fontSize: 11, color: colors.textSecondary }}>
+                <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary }}>
                     Total Cost
                 </Typography>
-                <Typography sx={{ fontSize: 15, fontWeight: 700, color: colors.primary }}>
+                <Typography sx={{ fontSize: tx.lg, fontWeight: fw.bold, color: colors.primary }}>
                     {totalCost.toFixed(2)} €
                 </Typography>
             </Box>

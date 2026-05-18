@@ -5,6 +5,7 @@ import { useColors } from "@theme/useTheme";
 import { useCurrentEnergyPrice } from "../hooks/useCurrentEnergyPrice";
 import type { EnergyPriceStatus } from "@features/topRow/currentData/CurrentEnergyPriceService";
 import type { AppColors } from "@theme/colors";
+import { tx, fw } from "@theme/tokens";
 
 const statusColor = (status: EnergyPriceStatus, colors: AppColors): string => {
     switch (status) {
@@ -34,7 +35,7 @@ const EnergyPriceWidget: React.FC = () => {
                 <Typography
                     sx={{
                         fontSize: 22,
-                        fontWeight: 700,
+                        fontWeight: fw.bold,
                         color: colors.textPrimary,
                         lineHeight: 1,
                     }}
@@ -42,7 +43,7 @@ const EnergyPriceWidget: React.FC = () => {
                     {loading ? "…" : value}
                 </Typography>
                 <Typography
-                    sx={{ fontSize: 12, color: colors.textSecondary, fontWeight: 500 }}
+                    sx={{ fontSize: tx.base, color: colors.textSecondary, fontWeight: fw.medium }}
                 >
                     {unit}
                 </Typography>
@@ -50,8 +51,8 @@ const EnergyPriceWidget: React.FC = () => {
                     <Typography
                         sx={{
                             ml: "auto",
-                            fontSize: 11,
-                            fontWeight: 700,
+                            fontSize: tx.sm,
+                            fontWeight: fw.bold,
                             color: statusColor(status, colors),
                             textTransform: "lowercase",
                         }}
@@ -60,7 +61,7 @@ const EnergyPriceWidget: React.FC = () => {
                     </Typography>
                 )}
             </Box>
-            <Typography sx={{ fontSize: 11, color: colors.textMuted, mt: 0.4 }}>
+            <Typography sx={{ fontSize: tx.sm, color: colors.textMuted, mt: 0.4 }}>
                 Day-ahead spot price
             </Typography>
         </WidgetCard>

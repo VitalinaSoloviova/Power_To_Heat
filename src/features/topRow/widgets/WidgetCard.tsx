@@ -2,6 +2,7 @@ import { Box, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import { useColors } from "@theme/useTheme";
 import { getGlassSx } from "@theme/colors";
+import { tx, fw, duration } from "@theme/tokens";
 
 interface WidgetCardProps {
     label: string;
@@ -28,7 +29,7 @@ const WidgetCard: React.FC<WidgetCardProps> = ({ label, icon, children }) => {
                 gap: 0.6,
                 position: "relative",
                 overflow: "hidden",
-                transition: 'box-shadow 0.25s, transform 0.25s',
+                transition: `box-shadow ${duration.base}, transform ${duration.base}`,
                 '&:hover': {
                   boxShadow: `0 12px 40px rgba(0,0,0,0.28), inset 0 1px 0 ${colors.borderStrong}, inset 0 -1px 0 ${colors.border}`,
                   transform: 'translateY(-2px)',
@@ -43,9 +44,9 @@ const WidgetCard: React.FC<WidgetCardProps> = ({ label, icon, children }) => {
                 )}
                 <Typography
                     sx={{
-                        fontSize: 11,
+                        fontSize: tx.sm,
                         color: colors.textSecondary,
-                        fontWeight: 500,
+                        fontWeight: fw.medium,
                     }}
                 >
                     {label}

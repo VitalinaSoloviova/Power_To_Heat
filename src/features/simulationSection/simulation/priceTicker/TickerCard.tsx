@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Typography } from '@mui/material';
 import { motion } from 'framer-motion';
 import type { AppColors } from '@theme/colors';
+import { tx, fw } from '@theme/tokens';
 
 interface TickerEntry {
     key: string;
@@ -35,19 +36,19 @@ const TickerCard: React.FC<{ entry: TickerEntry; colors: AppColors }> = ({ entry
                 alignItems: 'center',
                 gap: 1.5,
             }}>
-                <Typography sx={{ fontSize: 10, color: colors.textMuted, lineHeight: 1, minWidth: 72 }}>
+                <Typography sx={{ fontSize: tx.xs, color: colors.textMuted, lineHeight: 1, minWidth: 72 }}>
                     {label}
                 </Typography>
-                <Typography sx={{ fontSize: 14, fontWeight: 700, color: accentColor, lineHeight: 1, flex: 1 }}>
+                <Typography sx={{ fontSize: 14, fontWeight: fw.bold, color: accentColor, lineHeight: 1, flex: 1 }}>
                     {entry.priceEurMwh.toFixed(1)}
-                    <Typography component="span" sx={{ fontSize: 10, fontWeight: 400, ml: 0.4 }}>€/MWh</Typography>
+                    <Typography component="span" sx={{ fontSize: tx.xs, fontWeight: fw.regular, ml: 0.4 }}>€/MWh</Typography>
                 </Typography>
                 {entry.isEmergency && (
                     <Typography sx={{ fontSize: 9, fontWeight: 700, color: colors.danger, letterSpacing: 0.5 }}>
                         NOTFALL
                     </Typography>
                 )}
-                <Typography sx={{ fontSize: 12, color: colors.textSecondary, fontVariantNumeric: 'tabular-nums' }}>
+                <Typography sx={{ fontSize: tx.base, color: colors.textSecondary, fontVariantNumeric: 'tabular-nums' }}>
                     {entry.costEur.toFixed(2)} €
                 </Typography>
             </Box>

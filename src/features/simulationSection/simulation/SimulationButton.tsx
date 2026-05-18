@@ -1,6 +1,7 @@
 import { Box, Button, ToggleButtonGroup, ToggleButton, Tooltip } from '@mui/material';
 import type { PlaybackControl } from '@services/types';
 import { useColors } from '@theme/useTheme';
+import { tx, radii } from '@theme/tokens';
 
 interface SimulationButtonProps {
   /** Play / pause + speed selection. */
@@ -28,9 +29,9 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
         sx={{
           color: isPlaying ? colors.textPrimary : colors.primary,
           borderColor: isPlaying ? colors.border : colors.primary,
-          borderRadius: 2,
+          borderRadius: radii.md,
           px: 2.5,
-          fontSize: 15,
+          fontSize: tx.lg,
           fontWeight: 800,
           textTransform: 'none',
           height: { xs: 32, sm: 40 },
@@ -56,7 +57,7 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
             sx={{
               minWidth: { xs: 32, sm: 40 },
               height: { xs: 32, sm: 40 },
-              borderRadius: 1,
+              borderRadius: radii.sm,
               px: 0,
               py: 0,
               alignItems: 'center',
@@ -90,7 +91,7 @@ const SimulationButton: React.FC<SimulationButtonProps> = ({
           '& .MuiToggleButton-root': {
             px: 1.4,
             py: 1.3,
-            fontSize: 10,
+            fontSize: tx.xs,
             fontWeight: 800,
             color: colors.textSecondary,
             border: `1px solid ${colors.border}`,

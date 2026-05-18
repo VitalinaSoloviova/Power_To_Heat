@@ -1,6 +1,7 @@
 import { Typography } from '@mui/material';
 
 import type { SimulationRange } from '@services/types';
+import { tx } from '@theme/tokens';
 
 interface SimulationTimestampProps {
   timestamp?: string;
@@ -14,7 +15,7 @@ const SimulationTimestamp: React.FC<SimulationTimestampProps> = ({ timestamp, ra
       sx={{
         fontVariantNumeric: 'tabular-nums',
         color: 'textSecondary',
-        fontSize: 12,
+        fontSize: tx.base,
         minWidth: { xs: 60, sm: 100 },
         textAlign: 'right',
         whiteSpace: 'nowrap',

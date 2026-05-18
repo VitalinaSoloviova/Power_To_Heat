@@ -246,6 +246,18 @@ export const getGlassSx = (c: AppColors) => {
 };
 
 /**
+ * Reusable sx props for uppercase section labels (PURCHASE LOG, SIMULATION HISTORY, …).
+ * Spread into a Typography sx prop.
+ */
+export const getSectionLabelSx = (c: AppColors) => ({
+  fontSize: 11,
+  fontWeight: 700,
+  color: c.textSecondary,
+  letterSpacing: 0.8,
+  textTransform: 'uppercase' as const,
+});
+
+/**
  * Reusable chart styling — reads axis/grid colors directly from the palette.
  * Pass it to a chart's `sx` prop: `<LineChart sx={getChartSx(colors)} />`.
  */
