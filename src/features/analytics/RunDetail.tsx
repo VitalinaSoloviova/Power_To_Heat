@@ -253,7 +253,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
               }]}
               width={200}
               height={130}
-              slotProps={{ legend: { hidden: true } }}
+              sx={{ '& .MuiChartsLegend-root': { display: 'none' } }}
             />
             {/* Custom legend — never overflows the card */}
             <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap', mt: 0.5 }}>
