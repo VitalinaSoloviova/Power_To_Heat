@@ -2,12 +2,14 @@ import { Box, Typography } from "@mui/material";
 import { PlaceRounded } from "@mui/icons-material";
 import { useColors } from "@theme/useTheme";
 import { useLocation } from "../hooks/useLocation";
+import { useSettings } from "@features/settings/useSettings";
 import WidgetCard from "./WidgetCard";
 import { tx, fw } from "@theme/tokens";
 
 const LocationWidget: React.FC = () => {
     const colors = useColors();
     const { data, loading } = useLocation();
+    const { settings } = useSettings();
 
     return (
         <WidgetCard label="Location" icon={<PlaceRounded sx={{ fontSize: 20 }} />}>
@@ -29,7 +31,7 @@ const LocationWidget: React.FC = () => {
                         : ""}
                 </Typography>
                 <Typography sx={{ fontSize: tx.sm, color: colors.textMuted }}>
-                    {data ? "55,000 residents" : ""}
+                    {data ? `${settings.residents.toLocaleString('en-DE')} residents` : ""}
                 </Typography>
             </Box>
         </WidgetCard>

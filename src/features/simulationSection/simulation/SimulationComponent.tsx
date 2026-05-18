@@ -33,6 +33,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
     criticalThresholdPct:      settings.criticalThresholdPct,
     nearCriticalThresholdPct:  settings.nearCriticalThresholdPct,
     halfCapacityThresholdPct:  settings.halfCapacityThresholdPct,
+    residents:                 settings.residents,
   };
   const [range, setRange] = useState<SimulationRange>(initialParams?.range ?? "day");
   const [index, setIndex] = useState(0);

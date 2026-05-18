@@ -32,17 +32,17 @@ export class EnergyStorageResolver {
     }: StorageStepInput): StorageStepOutput {
         const { level, capacity } = previous;
 
-        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices, chargingConfig);
+        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices, chargingConfig) * stepHours;
 
         let newLevel = level;
         if (chargeAmount_kWh > 0) {
             newLevel = Math.min(newLevel + chargeAmount_kWh, capacity);
         }
 
-        const levelAfterDemand = updateStorage(newLevel, tempOut, stepHours);
+        const levelAfterDemand = updateStorage(newLevel, tempOut, stepHours, chargingConfig?.residents);
         const rawEmergency = Math.max(0, -levelAfterDemand);
         const emergencyPurchase_kWh = emergencyBuyEnabled ? rawEmergency : 0;
-        newLevel = emergencyBuyEnabled ? Math.max(0, levelAfterDemand) : Math.max(0, levelAfterDemand);
+        newLevel = Math.max(0, levelAfterDemand + emergencyPurchase_kWh);
         const purchasedEnergy_kWh = chargeAmount_kWh + emergencyPurchase_kWh;
 
         return {

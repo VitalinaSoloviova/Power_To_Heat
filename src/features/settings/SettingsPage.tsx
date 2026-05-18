@@ -118,11 +118,11 @@ const ZoneBar: React.FC<{
 
   // Zones from left (0 %) to right (100 %)
   const zones = [
-    { from: 0,            to: critical,     color: colors.danger,  label: `0 – ${critical} %`,                   description: 'Sofortladen — unabhängig vom Preis' },
-    { from: critical,     to: nearCritical, color: colors.warning, label: `${critical} – ${nearCritical} %`,     description: 'Laden wenn Preis unter dem Durchschnitt' },
-    { from: nearCritical, to: halfCapacity, color: colors.energy,  label: `${nearCritical} – ${halfCapacity} %`, description: 'Laden wenn Preis sehr günstig (günstigste 10 %)' },
-    { from: halfCapacity, to: maxCharge,    color: colors.primary, label: `${halfCapacity} – ${maxCharge} %`,    description: 'Nur laden bei negativen Preisen (Überschussstrom)' },
-    { from: maxCharge,    to: 100,          color: colors.border,  label: `> ${maxCharge} %`,                    description: 'Voll — kein Laden' },
+    { from: 0,            to: critical,     color: colors.danger,  label: `0 – ${critical} %`,                   description: 'Charge immediately — regardless of price' },
+    { from: critical,     to: nearCritical, color: colors.warning, label: `${critical} – ${nearCritical} %`,     description: 'Charge if price is below average' },
+    { from: nearCritical, to: halfCapacity, color: colors.energy,  label: `${nearCritical} – ${halfCapacity} %`, description: 'Charge if price is very cheap (bottom 10 %)' },
+    { from: halfCapacity, to: maxCharge,    color: colors.primary, label: `${halfCapacity} – ${maxCharge} %`,    description: 'Charge only at negative prices (surplus energy)' },
+    { from: maxCharge,    to: 100,          color: colors.border,  label: `> ${maxCharge} %`,                    description: 'Full — no charging' },
   ];
 
   // Boundary positions for dashed divider lines (skip 0 and 100)
@@ -402,10 +402,10 @@ const ResidentsRow: React.FC<{
       </Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 0.5 }}>
         <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
-          Stadtbevölkerung: {base.toLocaleString('de-DE')}
+          City population: {base.toLocaleString('en-US')}
         </Typography>
         <Typography sx={{ fontSize: tx.xs, color: fillColor, fontWeight: fw.medium, transition: `color ${duration.slow}` }}>
-          {residents.toLocaleString('de-DE')} Einwohner
+          {residents.toLocaleString('en-US')} residents
         </Typography>
       </Box>
     </FieldRow>
@@ -457,12 +457,12 @@ const SettingsPage: React.FC = () => {
         </Typography>
         {isDirty && (
           <Typography sx={{ fontSize: tx.sm, color: colors.textMuted, fontStyle: 'italic' }}>
-            Ungespeicherte Änderungen
+            Unsaved changes
           </Typography>
         )}
         {saved && (
           <Typography sx={{ fontSize: tx.sm, color: colors.energy, fontWeight: fw.medium }}>
-            Gespeichert ✓
+            Saved ✓
           </Typography>
         )}
         <Button
@@ -556,21 +556,21 @@ const SettingsPage: React.FC = () => {
                 label="Critical"
                 value={draft.criticalThresholdPct}
                 min={5} max={draft.nearCriticalThresholdPct - 1} unit="%"
-                hint={`Sofortladen unabhängig vom Preis (= ${Math.round(criticalKwh).toLocaleString('de-DE')} kWh)`}
+                hint={`Charge immediately regardless of price (= ${Math.round(criticalKwh).toLocaleString('en-US')} kWh)`}
                 onChange={(v) => set({ criticalThresholdPct: v })}
               />
               <SliderRow
-                label="Durchschnittspreis-Grenze"
+                label="Average price threshold"
                 value={draft.nearCriticalThresholdPct}
                 min={draft.criticalThresholdPct + 1} max={draft.halfCapacityThresholdPct - 1} unit="%"
-                hint={`Laden wenn Preis unter dem historischen Durchschnitt liegt (= ${Math.round(nearCritKwh).toLocaleString('de-DE')} kWh)`}
+                hint={`Charge if price is below historical average (= ${Math.round(nearCritKwh).toLocaleString('en-US')} kWh)`}
                 onChange={(v) => set({ nearCriticalThresholdPct: v })}
               />
               <SliderRow
-                label="Günstig-Preis-Grenze"
+                label="Cheap price threshold"
                 value={draft.halfCapacityThresholdPct}
                 min={draft.nearCriticalThresholdPct + 1} max={draft.maxChargePercent - 5} unit="%"
-                hint={`Laden nur bei sehr günstigen Preisen (günstigste 10 % historisch, = ${Math.round(halfCapKwh).toLocaleString('de-DE')} kWh)`}
+                hint={`Charge only at very cheap prices (cheapest 10 % historically, = ${Math.round(halfCapKwh).toLocaleString('en-US')} kWh)`}
                 onChange={(v) => set({ halfCapacityThresholdPct: v })}
               />
             </Box>
@@ -580,7 +580,7 @@ const SettingsPage: React.FC = () => {
             {/* Zone bar */}
             <Box>
               <Typography sx={{ fontSize: tx.sm, fontWeight: fw.medium, color: colors.textSecondary, mb: 1.5 }}>
-                Speicherzonen Übersicht
+                Storage zones overview
               </Typography>
               <ZoneBar
                 critical={draft.criticalThresholdPct}

@@ -4,6 +4,7 @@ export interface ChargingConfig {
   criticalThresholdPct: number;     // charge immediately regardless of price
   nearCriticalThresholdPct: number; // charge if price < median
   halfCapacityThresholdPct: number; // charge if price < P10
+  residents: number;                // city residents → derives connected households
 }
 
 const DEFAULT_CONFIG: ChargingConfig = {
@@ -12,7 +13,10 @@ const DEFAULT_CONFIG: ChargingConfig = {
   criticalThresholdPct: 25,
   nearCriticalThresholdPct: 30,
   halfCapacityThresholdPct: 50,
+  residents: 55_000,
 };
+
+const CHARGE_HOURS = 48; // target: full storage chargeable in 48 hours
 
 function deriveThresholds(cfg: ChargingConfig) {
   const roundTripEfficiency = 0.9;
@@ -20,10 +24,10 @@ function deriveThresholds(cfg: ChargingConfig) {
 
   return {
     outputCapacity_kWh,
+    chargeAmount_kWh:    outputCapacity_kWh / CHARGE_HOURS,
     maxStorageLevel_kWh: outputCapacity_kWh * (cfg.maxChargePercent / 100),
     halfCapacity_kWh:    outputCapacity_kWh * (cfg.halfCapacityThresholdPct / 100),
     nearCritical_kWh:    outputCapacity_kWh * (cfg.nearCriticalThresholdPct / 100),
-    // low = midpoint between critical (25 %) and nearCritical
     lowCapacity_kWh:     outputCapacity_kWh * ((cfg.nearCriticalThresholdPct - 5) / 100),
     critical_kWh:        outputCapacity_kWh * (cfg.criticalThresholdPct / 100),
   };
@@ -33,7 +37,8 @@ function deriveThresholds(cfg: ChargingConfig) {
 export const STORAGE_CAPACITY_KWH =
   DEFAULT_CONFIG.storageCapacityMwh * 1_000 * 0.9;
 
-export const CHARGE_AMOUNT_KWH = 20_000; // 20 MWh added per hourly charge event
+// For display — actual charge amount is derived per-config in deriveThresholds
+export const CHARGE_AMOUNT_KWH = STORAGE_CAPACITY_KWH / CHARGE_HOURS;
 
 export function calculateChargeAmount(
   currentCapacity_kWh: number,
@@ -41,7 +46,7 @@ export function calculateChargeAmount(
   historicalPrices: number[],
   cfg: ChargingConfig = DEFAULT_CONFIG,
 ): number {
-  const { maxStorageLevel_kWh, halfCapacity_kWh, nearCritical_kWh, lowCapacity_kWh, critical_kWh } =
+  const { chargeAmount_kWh, maxStorageLevel_kWh, halfCapacity_kWh, nearCritical_kWh, lowCapacity_kWh, critical_kWh } =
     deriveThresholds(cfg);
 
   const freeCapacity_kWh = Math.max(0, maxStorageLevel_kWh - currentCapacity_kWh);
@@ -53,7 +58,7 @@ export function calculateChargeAmount(
 
   if (prices.length === 0) {
     return currentCapacity_kWh <= critical_kWh
-      ? Math.min(lowCapacity_kWh - currentCapacity_kWh, freeCapacity_kWh)
+      ? Math.min(chargeAmount_kWh, freeCapacity_kWh)
       : 0;
   }
 
@@ -63,16 +68,16 @@ export function calculateChargeAmount(
   const median = prices[Math.floor(l * 0.50)];
 
   if (currentCapacity_kWh <= critical_kWh) {
-    return Math.min(lowCapacity_kWh - currentCapacity_kWh, freeCapacity_kWh);
+    return Math.min(chargeAmount_kWh, freeCapacity_kWh);
   }
   if (currentCapacity_kWh <= nearCritical_kWh && currentPrice < median) {
-    return Math.min(CHARGE_AMOUNT_KWH * 1.5, freeCapacity_kWh);
+    return Math.min(chargeAmount_kWh, freeCapacity_kWh);
   }
   if (currentCapacity_kWh <= lowCapacity_kWh && currentPrice <= P25) {
-    return Math.min(CHARGE_AMOUNT_KWH, freeCapacity_kWh);
+    return Math.min(chargeAmount_kWh, freeCapacity_kWh);
   }
   if (currentCapacity_kWh <= halfCapacity_kWh && currentPrice <= P10) {
-    return Math.min(CHARGE_AMOUNT_KWH * 0.5, freeCapacity_kWh);
+    return Math.min(chargeAmount_kWh, freeCapacity_kWh);
   }
 
   return 0;
@@ -88,14 +93,17 @@ export function charge(
   return calculateChargeAmount(currentCapacity_kWh, currentPrice, historicalPrices, cfg) > 0;
 }
 
-const households = 4_900;
-const heat_loss_coefficient = 0.11225; // kW/K per household
-const tempIn = 20;
+const PERSONS_PER_HOUSEHOLD = 2.2;       // avg German household size (report)
+const DISTRICT_HEATING_SHARE = 0.15;     // 15% of households connected (Ramboll, 2025)
+const H_TAVG_KW_PER_K = 0.1265;         // avg transmission heat loss coefficient kW/K (Höttges, 2020)
+const TEMP_IN = 20;                      // target inside temperature °C
 
 export function updateStorage(
   currentCapacity_kWh: number,
   tempOut: number,
   dt: number,
+  residents: number = DEFAULT_CONFIG.residents,
 ): number {
-  return currentCapacity_kWh - households * heat_loss_coefficient * (tempIn - tempOut) * dt;
+  const households = (residents / PERSONS_PER_HOUSEHOLD) * DISTRICT_HEATING_SHARE;
+  return currentCapacity_kWh - households * H_TAVG_KW_PER_K * (TEMP_IN - tempOut) * dt;
 }
