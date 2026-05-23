@@ -40,9 +40,9 @@ export class SimulationUIService {
 		const targetCount = POINTS_PER_RANGE[range];
 		const stepHours = STEP_HOURS[range];
 
-		// Capacity from config (if provided) or default
+		// Physical capacity — no efficiency factor; losses are modelled per step in updateStorage
 		const capacityKwh = chargingConfig
-			? chargingConfig.storageCapacityMwh * 1_000 * 0.9
+			? chargingConfig.storageCapacityMwh * 1_000
 			: EnergyStorageResolver.CAPACITY_KWH;
 
 		const clampedInitialStoragePercent = Math.min(100, Math.max(0, initialStoragePercent));
@@ -54,16 +54,29 @@ export class SimulationUIService {
 			.slice(0, maxHistoricalPoints)
 			.map((h) => h.price);
 
-		const series = chartsData.hours.slice(0, targetCount).map((hour, pointIndex) => {
-			const current = hour.energyDemand / 100;
-			const expected = current * 0.97;
+		// Number of data points that cover 7 days of forecast
+		const forecastSteps = Math.round(7 * 24 / stepHours);
 
+		const series = chartsData.hours.slice(0, targetCount).map((hour, pointIndex) => {
 			let storage: SimulationPoint['storage'];
 			let generated = 0;
 			let mode: 'charging' | 'emergency' | 'idle' = 'idle';
+			let demandKwh: number;
+
+			// Sum of expected heat demand (kWh) over the next ~7 days.
+			// h.energyDemand is already calculateHeatDemandKw(temp, residents) from ChartUIService.
+			const futureSlice = chartsData.hours.slice(pointIndex + 1, pointIndex + 1 + forecastSteps);
+			const forecastDemandKwh = futureSlice.reduce((sum, h) => sum + h.energyDemand * stepHours, 0);
 
 			if (pointIndex === 0) {
 				storage = { level, capacity: capacityKwh };
+				// Compute demand for display without advancing storage
+				demandKwh = EnergyStorageResolver.computeDemandKwh({
+					tempOut: hour.weather.temp,
+					levelKwh: level,
+					stepHours,
+					chargingConfig,
+				});
 			} else {
 				const step = EnergyStorageResolver.step({
 					price: hour.price,
@@ -73,13 +86,18 @@ export class SimulationUIService {
 					historicalPrices,
 					chargingConfig,
 					emergencyBuyEnabled,
+					forecastDemandKwh,
 				});
 				storage = step.storage;
 				generated = step.generated;
 				mode = step.mode;
+				demandKwh = step.demandKwh;
 			}
 
 			level = storage.level;
+
+			// Convert kWh per step → average MW (power), consistent regardless of step size
+			const demandMw = demandKwh / (stepHours * 1_000);
 
 			return {
 				timestamp: hour.datetime.toISOString(),
@@ -90,7 +108,7 @@ export class SimulationUIService {
 					windSpeed: hour.weather.wind,
 				},
 				energy: { generated, price: hour.price, mode },
-				demand: { current, expected },
+				demand: { current: demandMw, expected: demandMw * 0.97 },
 				storage,
 			};
 		});

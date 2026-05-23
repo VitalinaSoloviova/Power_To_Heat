@@ -1,6 +1,7 @@
 
 import type { Granularity } from '@calculations/DataResolver';
 import { useChartsData } from '@features/charts/hooks/useChartsData';
+import { useSettings } from '@features/settings/useSettings';
 import { Box } from '@mui/material';
 import { type HistoryYears, DEFAULT_HISTORY_YEARS } from '@services/ui/ChartUIService';
 import { useColors } from '@theme/useTheme';
@@ -34,8 +35,9 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const historyYears = historyYearsProp ?? DEFAULT_HISTORY_YEARS;
   const colors = useColors();
+  const { settings } = useSettings();
 
-  const { data: charts } = useChartsData(historyYears, startDay, GRANULARITY[range]);
+  const { data: charts } = useChartsData(historyYears, startDay, GRANULARITY[range], settings.residents);
 
   const n = POINTS[range];
   const xLabels = useMemo(() => (charts?.xLabels ?? []).slice(0, n), [charts?.xLabels, n]);

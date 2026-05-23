@@ -11,6 +11,7 @@ export interface AppSettings {
 
   // Storage
   storageCapacityMwh: number;
+  maxChargePowerMw: number;    // max thermal charge power of the heat pump (MW)
   maxChargePercent: number;
 
   // Charging behaviour
@@ -26,16 +27,17 @@ export const DEFAULT_SETTINGS: AppSettings = {
   postalCode: '61348',
   cityLat: 50.23,
   cityLon: 8.62,
-  cityPopulation: 55_000,
-  residents: 55_000,
+  cityPopulation: 60_000,
+  residents: 60_000,
 
-  storageCapacityMwh: 2_000,
-  maxChargePercent: 89,
+  storageCapacityMwh: 300,
+  maxChargePowerMw: 10,
+  maxChargePercent: 90,
 
   priceHistoryDays: 90,
   emergencyBuyEnabled: true,
-  criticalThresholdPct: 25,
-  nearCriticalThresholdPct: 30,
+  criticalThresholdPct: 20,
+  nearCriticalThresholdPct: 35,
   halfCapacityThresholdPct: 50,
 };
 

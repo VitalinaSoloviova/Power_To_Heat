@@ -13,6 +13,7 @@ export interface StorageStepInput {
     historicalPrices: number[];
     chargingConfig?: ChargingConfig;
     emergencyBuyEnabled?: boolean;
+    forecastDemandKwh?: number; // expected heat demand for the next ~7 days (kWh)
 }
 
 export interface StorageStepOutput {
@@ -21,6 +22,7 @@ export interface StorageStepOutput {
     mode: 'charging' | 'emergency' | 'idle';
     generated: number;
     emergencyPurchase: number;
+    demandKwh: number;   // heat demand served this step (kWh)
 }
 
 export class EnergyStorageResolver {
@@ -28,18 +30,22 @@ export class EnergyStorageResolver {
 
     static step({
         price, tempOut, previous, stepHours, historicalPrices,
-        chargingConfig, emergencyBuyEnabled = true,
+        chargingConfig, emergencyBuyEnabled = true, forecastDemandKwh,
     }: StorageStepInput): StorageStepOutput {
         const { level, capacity } = previous;
 
-        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices, chargingConfig) * stepHours;
+        // Charge amount per step = hourly charge power × step duration
+        const chargeAmount_kWh = calculateChargeAmount(level, price, historicalPrices, chargingConfig, forecastDemandKwh) * stepHours;
 
         let newLevel = level;
         if (chargeAmount_kWh > 0) {
             newLevel = Math.min(newLevel + chargeAmount_kWh, capacity);
         }
 
-        const levelAfterDemand = updateStorage(newLevel, tempOut, stepHours, chargingConfig?.residents);
+        const { newLevel: levelAfterDemand, demandKwh } = updateStorage(
+            newLevel, tempOut, stepHours, chargingConfig?.residents,
+        );
+
         const rawEmergency = Math.max(0, -levelAfterDemand);
         const emergencyPurchase_kWh = emergencyBuyEnabled ? rawEmergency : 0;
         newLevel = Math.max(0, levelAfterDemand + emergencyPurchase_kWh);
@@ -50,6 +56,7 @@ export class EnergyStorageResolver {
             flow: newLevel - level,
             generated: purchasedEnergy_kWh,
             emergencyPurchase: emergencyPurchase_kWh,
+            demandKwh,
             // emergency takes precedence — if storage went empty, flag it even if regular charging also ran
             mode: emergencyPurchase_kWh > 0
                 ? 'emergency'
@@ -57,5 +64,18 @@ export class EnergyStorageResolver {
                     ? 'charging'
                     : 'idle',
         };
+    }
+
+    /** Compute heat demand for a step without advancing the simulation (used for the first frame). */
+    static computeDemandKwh({
+        tempOut, levelKwh, stepHours, chargingConfig,
+    }: {
+        tempOut: number;
+        levelKwh: number;
+        stepHours: number;
+        chargingConfig?: ChargingConfig;
+    }): number {
+        const { demandKwh } = updateStorage(levelKwh, tempOut, stepHours, chargingConfig?.residents);
+        return demandKwh;
     }
 }

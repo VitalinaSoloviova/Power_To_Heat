@@ -175,8 +175,8 @@ const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
 
   const pricesA      = useMemo(() => runA.series.map(p => p.energy.price), [runA.series]);
   const pricesB      = useMemo(() => runB.series.map(p => p.energy.price), [runB.series]);
-  const demandsA     = useMemo(() => runA.series.map(p => p.demand.current / 10), [runA.series]);
-  const demandsB     = useMemo(() => runB.series.map(p => p.demand.current / 10), [runB.series]);
+  const demandsA     = useMemo(() => runA.series.map(p => p.demand.current), [runA.series]);
+  const demandsB     = useMemo(() => runB.series.map(p => p.demand.current), [runB.series]);
   const tempsA       = useMemo(() => runA.series.map(p => p.weather.temperature), [runA.series]);
   const tempsB       = useMemo(() => runB.series.map(p => p.weather.temperature), [runB.series]);
   const storageA     = useMemo(() => runA.series.map(p => Math.round((p.storage.level / p.storage.capacity) * 100)), [runA.series]);

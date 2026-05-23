@@ -1,8 +1,8 @@
 import type { DataResolver, Granularity } from '@calculations/DataResolver';
 import type { UiHourData } from '@calculations/uiDataProfile';
-import { city } from '@calculations/CityData';
-import { DataCoverageCalculator, type DataCoverage } from '../DataCoverageCalculator';
+import { DEFAULT_SETTINGS } from '@features/settings/settingsTypes';
 import { CityDemandResolver } from '../resolvers/CityDemandResolver';
+import { DataCoverageCalculator, type DataCoverage } from '../DataCoverageCalculator';
 
 /** Number of past years to average for the historical comparison. */
 export const HISTORY_OPTIONS = [1, 5, 10, 15, 20, 30, 40, 50] as const;
@@ -48,9 +48,10 @@ export class ChartUIService {
     historyYears: HistoryYears,
     granularity: Granularity = 'daily',
     startDate?: Date,
+    residents: number = DEFAULT_SETTINGS.residents,
   ): Promise<ChartsData> {
     const period = this.buildPeriod(historyYears, startDate);
-    const cacheKey = `${historyYears}|${granularity}|${period.start.getTime()}`;
+    const cacheKey = `${historyYears}|${granularity}|${period.start.getTime()}|${residents}`;
 
     const cached = this.resultCache.get(cacheKey);
     if (cached) return Promise.resolve(cached);
@@ -58,7 +59,7 @@ export class ChartUIService {
     const pending = this.inFlight.get(cacheKey);
     if (pending) return pending;
 
-    const request = this.fetchChartsData(period, granularity)
+    const request = this.fetchChartsData(period, granularity, residents)
       .then((data) => {
         this.resultCache.set(cacheKey, data);
         this.inFlight.delete(cacheKey);
@@ -76,6 +77,7 @@ export class ChartUIService {
   private async fetchChartsData(
     period: ChartsPeriod,
     granularity: Granularity,
+    residents: number = DEFAULT_SETTINGS.residents,
   ): Promise<ChartsData> {
     const { hours, weatherDates, priceDates } = await this.dataResolver.getUiDataProfile(
       period.start,
@@ -85,7 +87,7 @@ export class ChartUIService {
     );
 
     const dataYears = DataCoverageCalculator.fromDateLists(weatherDates, priceDates);
-    const enrichedHours = this.enrichHoursWithEnergyDemand(hours);
+    const enrichedHours = this.enrichHoursWithEnergyDemand(hours, residents);
     const xLabels = this.buildXLabels(enrichedHours, granularity);
 
     return { period, hours: enrichedHours, xLabels, dataYears, granularity };
@@ -100,10 +102,11 @@ export class ChartUIService {
     return { start, end, historyYears };
   }
 
-  private enrichHoursWithEnergyDemand(hours: UiHourData[]): UiHourData[] {
+  private enrichHoursWithEnergyDemand(hours: UiHourData[], residents: number = DEFAULT_SETTINGS.residents): UiHourData[] {
     return hours.map((hour) => ({
       ...hour,
-      energyDemand: CityDemandResolver.calculate(hour.weather.temp, city),
+      // kW = kWh/h — same formula as updateStorage, single source of truth
+      energyDemand: CityDemandResolver.getDemandKw(hour.weather.temp, residents),
     }));
   }
 

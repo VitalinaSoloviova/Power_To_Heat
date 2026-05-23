@@ -29,6 +29,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
   const { settings } = useSettings();
   const chargingConfig = {
     storageCapacityMwh:       settings.storageCapacityMwh,
+    maxChargePowerMw:          settings.maxChargePowerMw,
     maxChargePercent:          settings.maxChargePercent,
     criticalThresholdPct:      settings.criticalThresholdPct,
     nearCriticalThresholdPct:  settings.nearCriticalThresholdPct,
@@ -120,6 +121,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
           cityName: settings.cityName,
           residents: settings.residents,
           storageCapacityMwh: settings.storageCapacityMwh,
+          maxChargePowerMw: settings.maxChargePowerMw,
           maxChargePercent: settings.maxChargePercent,
           criticalThresholdPct: settings.criticalThresholdPct,
           nearCriticalThresholdPct: settings.nearCriticalThresholdPct,

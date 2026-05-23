@@ -441,11 +441,13 @@ const SettingsPage: React.FC = () => {
   const isDirty = JSON.stringify(draft) !== JSON.stringify(settings);
 
   // Derived storage values from draft (so sliders reflect live changes)
-  const outputCapacity = draft.storageCapacityMwh * 1_000 * 0.9;
-  const maxStored      = outputCapacity * (draft.maxChargePercent / 100);
-  const criticalKwh    = outputCapacity * (draft.criticalThresholdPct / 100);
-  const nearCritKwh    = outputCapacity * (draft.nearCriticalThresholdPct / 100);
-  const halfCapKwh     = outputCapacity * (draft.halfCapacityThresholdPct / 100);
+  // Physical capacity — no efficiency factor; losses are modelled per step
+  const capacity_kWh = draft.storageCapacityMwh * 1_000;
+  const maxStored    = capacity_kWh * (draft.maxChargePercent / 100);
+  const criticalKwh  = capacity_kWh * (draft.criticalThresholdPct / 100);
+  const nearCritKwh  = capacity_kWh * (draft.nearCriticalThresholdPct / 100);
+  const halfCapKwh   = capacity_kWh * (draft.halfCapacityThresholdPct / 100);
+  const fillHours    = draft.storageCapacityMwh / draft.maxChargePowerMw;
 
   return (
     <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3, flex: 1, overflowY: 'auto' }}>
@@ -504,9 +506,14 @@ const SettingsPage: React.FC = () => {
 
           {/* Storage */}
           <SectionCard title="Storage">
-            <SliderRow label="Total input capacity" value={draft.storageCapacityMwh}
-              min={500} max={5000} step={100} unit="MWh"
+            <SliderRow label="Storage capacity" value={draft.storageCapacityMwh}
+              min={50} max={2_000} step={50} unit="MWh"
+              hint={`Max stored: ${Math.round(maxStored).toLocaleString('en-US')} kWh · Fill time: ${fillHours.toFixed(0)} h at max power`}
               onChange={(v) => set({ storageCapacityMwh: v })} />
+            <SliderRow label="Max charge power" value={draft.maxChargePowerMw}
+              min={1} max={100} step={1} unit="MW"
+              hint={`${(draft.maxChargePowerMw * 1_000).toLocaleString('en-US')} kW heat pump — fills storage in ${fillHours.toFixed(0)} h`}
+              onChange={(v) => set({ maxChargePowerMw: v })} />
             <SliderRow label="Max charge level" value={draft.maxChargePercent}
               min={50} max={100} unit="%"
               onChange={(v) => set({ maxChargePercent: v })} />
@@ -521,10 +528,10 @@ const SettingsPage: React.FC = () => {
             {/* Derived kWh values */}
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.75 }}>
               <Typography sx={{ fontSize: tx.xs, color: colors.textMuted, mb: 0.25 }}>
-                Calculated values (90 % round-trip efficiency)
+                Calculated values
               </Typography>
-              <KwhRow label="Usable capacity" kwh={outputCapacity} color={colors.primary} />
-              <KwhRow label="Max stored"      kwh={maxStored}       color={colors.cool} />
+              <KwhRow label="Physical capacity" kwh={capacity_kWh} color={colors.primary} />
+              <KwhRow label="Max stored"        kwh={maxStored}     color={colors.cool} />
               <KwhRow label={`Critical level (${draft.criticalThresholdPct} %)`} kwh={criticalKwh} color={colors.danger} />
             </Box>
           </SectionCard>

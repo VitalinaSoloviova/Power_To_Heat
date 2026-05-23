@@ -32,6 +32,7 @@ export interface SimulationRun {
     residents?: number;
     // Storage configuration
     storageCapacityMwh?: number;
+    maxChargePowerMw?: number;
     maxChargePercent?: number;
     // Charging thresholds
     criticalThresholdPct?: number;

@@ -191,7 +191,7 @@ const RunDetail: React.FC<{ run: SimulationRun; onReplay: () => void }> = ({ run
   [run.series]);
 
   const prices         = useMemo(() => run.series.map((p) => p.energy.price),            [run.series]);
-  const demands        = useMemo(() => run.series.map((p) => p.demand.current / 10),      [run.series]); // demand.current = energyDemand/100, so /10 gives MW
+  const demands        = useMemo(() => run.series.map((p) => p.demand.current),            [run.series]); // demand.current is stored in MW
   const temps          = useMemo(() => run.series.map((p) => p.weather.temperature),      [run.series]);
   const storagePercent = useMemo(() => run.series.map((p) => Math.round((p.storage.level / p.storage.capacity) * 100)), [run.series]);
 

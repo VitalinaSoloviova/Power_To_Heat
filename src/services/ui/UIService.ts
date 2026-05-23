@@ -41,6 +41,7 @@ export interface ChartUIDataInput {
 	historyYears: HistoryYears;
 	granularity?: Granularity;
 	startDate?: Date;
+	residents?: number;
 }
 
 export interface SimulationUIDataInput {
@@ -98,6 +99,7 @@ export class UIService {
 				normalizedInput.historyYears,
 				normalizedInput.granularity,
 				normalizedInput.startDate,
+				normalizedInput.residents,
 			),
 		);
 	}
@@ -118,6 +120,7 @@ export class UIService {
 				historyYears: input.historyYears,
 				granularity,
 				startDate: input.startDate,
+				residents: input.chargingConfig?.residents,
 			});
 
 			return this.simulationUIService.getSimulationSeries({
@@ -181,12 +184,13 @@ export class UIService {
 		return request;
 	}
 
-	private buildChartCacheKey(input: Required<Pick<ChartUIDataInput, 'historyYears' | 'granularity'>> & Pick<ChartUIDataInput, 'startDate'>): string {
+	private buildChartCacheKey(input: Required<Pick<ChartUIDataInput, 'historyYears' | 'granularity'>> & Pick<ChartUIDataInput, 'startDate' | 'residents'>): string {
 		return [
 			'charts',
 			input.historyYears,
 			input.granularity,
 			this.toUtcDayTimestamp(input.startDate),
+			input.residents ?? '',
 		].join('|');
 	}
 

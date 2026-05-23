@@ -17,7 +17,22 @@ function sanitize(raw: Record<string, unknown>): Partial<AppSettings> {
 function loadSettings(): AppSettings {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return { ...DEFAULT_SETTINGS, ...sanitize(JSON.parse(raw)) };
+    if (raw) {
+      const parsed: Record<string, unknown> = JSON.parse(raw);
+      const sanitized = sanitize(parsed);
+      // Migrate pre-maxChargePowerMw settings: old storageCapacityMwh (2000 MWh) is
+      // incompatible with the new explicit pump-power model — reset storage params to defaults.
+      if (!('maxChargePowerMw' in parsed)) {
+        return {
+          ...DEFAULT_SETTINGS,
+          ...sanitized,
+          storageCapacityMwh: DEFAULT_SETTINGS.storageCapacityMwh,
+          maxChargePowerMw:   DEFAULT_SETTINGS.maxChargePowerMw,
+          maxChargePercent:   DEFAULT_SETTINGS.maxChargePercent,
+        };
+      }
+      return { ...DEFAULT_SETTINGS, ...sanitized };
+    }
   } catch {
     // ignore
   }
