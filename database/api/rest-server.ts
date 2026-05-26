@@ -2,6 +2,10 @@ import express from 'express';
 import type { Request, Response } from 'express';
 import cors from 'cors';
 import pg from 'pg';
+import path from 'path';
+import { fileURLToPath as _fileURLToPath } from 'url';
+
+const __dirname = path.dirname(_fileURLToPath(import.meta.url));
 
 const { Pool } = pg;
 
@@ -71,6 +75,13 @@ app.get('/api/price/range', async (req: Request, res: Response) => {
     }
 });
 
+
+// Serve the built React frontend (production)
+const distPath = path.resolve(__dirname, '../../dist');
+app.use(express.static(distPath));
+app.get('*', (_req, res) => {
+    res.sendFile(path.join(distPath, 'index.html'));
+});
 
 export { app };
 
