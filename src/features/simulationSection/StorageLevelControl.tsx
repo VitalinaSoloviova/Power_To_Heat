@@ -51,7 +51,11 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
           onChange={(e) => handleNumber(e.target.value)}
           slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end" disableTypography sx={{ color: colors.textSecondary }}>
+                  %
+                </InputAdornment>
+              ),
             },
           }}
           sx={{
