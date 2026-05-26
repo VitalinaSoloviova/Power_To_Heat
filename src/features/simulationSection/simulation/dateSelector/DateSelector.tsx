@@ -39,7 +39,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
     const endLabel = endDate.toLocaleDateString('en-GB', formatOptions);
     labelMonthDay = `${startLabel} - ${endLabel}`;
   } else if (simulationRange === 'month') {
-    labelMonthDay = startDate.toLocaleDateString('de-DE', { month: 'long' });
+    labelMonthDay = startDate.toLocaleDateString('en-US', { month: 'long' });
   }
 
   return (

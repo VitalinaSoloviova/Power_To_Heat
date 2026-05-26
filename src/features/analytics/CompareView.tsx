@@ -1,12 +1,13 @@
 import { useMemo, useRef, useState, useEffect } from 'react';
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Chip } from '@mui/material';
 import CloseRounded from '@mui/icons-material/CloseRounded';
+
 import { LineChart } from '@mui/x-charts/LineChart';
 import { useColors } from '@theme/useTheme';
 import { getChartSx, getGlassSx } from '@theme/colors';
 import { tx, fw, radii } from '@theme/tokens';
 import { computeRunStats } from './analyticsTypes';
-import type { SimulationRun } from './analyticsTypes';
+import type { SimulationRun, RunStats } from './analyticsTypes';
 
 const AutoHeight: React.FC<{ children: (h: number) => React.ReactNode }> = ({ children }) => {
   const ref = useRef<HTMLDivElement>(null);
@@ -87,18 +88,95 @@ interface Props {
   onClose: () => void;
 }
 
+const RANGE_LABEL: Record<string, string> = { day: 'Day', week: 'Week', month: 'Month' };
+
+const SummaryCard: React.FC<{
+  run: SimulationRun;
+  stats: RunStats;
+  label: string;
+  color: string;
+}> = ({ run, stats, label, color }) => {
+  const colors = useColors();
+  return (
+    <Box sx={{
+      ...getGlassSx(colors),
+      flex: 1,
+      minWidth: 0,
+      borderLeft: `3px solid ${color}`,
+      p: 1.5,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 1,
+    }}>
+
+      {/* Date + range */}
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: color, flexShrink: 0 }} />
+        <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: colors.textPrimary }}>{label}</Typography>
+        <Chip label={RANGE_LABEL[run.params.range]} size="small"
+          sx={{ fontSize: tx.xs, height: 16, bgcolor: `${color}22`, color, border: 'none' }} />
+      </Box>
+
+      {/* City + residents */}
+      {(run.params.cityName || run.params.residents !== undefined) && (
+        <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
+          {[run.params.cityName, run.params.residents !== undefined ? `${run.params.residents.toLocaleString('en-US')} residents` : null]
+            .filter(Boolean).join(' · ')}
+        </Typography>
+      )}
+
+      {/* Key metrics */}
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.4, mt: 0.25 }}>
+        {([
+          { label: 'Cost',      value: `${stats.totalCost.toLocaleString('en-US', { maximumFractionDigits: 0 })} €`, color: colors.textPrimary },
+          { label: 'Savings',   value: `${stats.savings >= 0 ? '+' : ''}${stats.savings.toLocaleString('en-US', { maximumFractionDigits: 0 })} €`,
+            color: stats.savings >= 0 ? colors.cool : colors.warning },
+        ] as { label: string; value: string; color: string }[]).map(row => (
+          <Box key={row.label} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Typography sx={{ fontSize: tx.sm, color: colors.textSecondary }}>{row.label}</Typography>
+            <Typography sx={{ fontSize: tx.sm, fontWeight: fw.bold, color: row.color }}>{row.value}</Typography>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Purchase breakdown */}
+      <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mt: 0.25 }}>
+        {[
+          { label: 'Cheap',     count: stats.cheapCount,     color: colors.cool    },
+          { label: 'Expensive', count: stats.expensiveCount, color: colors.warning },
+          ...(stats.emergencyCount > 0 ? [{ label: 'Emergency', count: stats.emergencyCount, color: colors.danger }] : []),
+        ].map(item => (
+          <Box key={item.label} sx={{ display: 'flex', alignItems: 'center', gap: 0.4 }}>
+            <Box sx={{ width: 6, height: 6, borderRadius: '50%', bgcolor: item.color }} />
+            <Typography sx={{ fontSize: tx.xs, color: colors.textSecondary }}>
+              {item.label} <Typography component="span" sx={{ fontWeight: fw.bold, color: item.color, fontSize: tx.xs }}>{item.count}</Typography>
+            </Typography>
+          </Box>
+        ))}
+      </Box>
+
+      {/* Storage + initial level */}
+      {run.params.storageCapacityMwh !== undefined && (
+        <Typography sx={{ fontSize: tx.xs, color: colors.textMuted }}>
+          {run.params.storageCapacityMwh.toLocaleString('en-US')} MWh · Initial {run.params.storageLevel} %
+        </Typography>
+      )}
+    </Box>
+  );
+};
+
 const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
   const colors = useColors();
   const statsA = useMemo(() => computeRunStats(runA.series), [runA.series]);
   const statsB = useMemo(() => computeRunStats(runB.series), [runB.series]);
 
-  const labelA = new Date(runA.params.startDay).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' });
-  const labelB = new Date(runB.params.startDay).toLocaleDateString('de-DE', { day: '2-digit', month: 'short', year: '2-digit' });
+  const labelA = new Date(runA.params.startDay).toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
+  const labelB = new Date(runB.params.startDay).toLocaleDateString('en-US', { day: '2-digit', month: 'short' });
 
   const pricesA      = useMemo(() => runA.series.map(p => p.energy.price), [runA.series]);
   const pricesB      = useMemo(() => runB.series.map(p => p.energy.price), [runB.series]);
-  const demandsA     = useMemo(() => runA.series.map(p => p.demand.current / 10), [runA.series]);
-  const demandsB     = useMemo(() => runB.series.map(p => p.demand.current / 10), [runB.series]);
+  const demandsA     = useMemo(() => runA.series.map(p => p.demand.current), [runA.series]);
+  const demandsB     = useMemo(() => runB.series.map(p => p.demand.current), [runB.series]);
   const tempsA       = useMemo(() => runA.series.map(p => p.weather.temperature), [runA.series]);
   const tempsB       = useMemo(() => runB.series.map(p => p.weather.temperature), [runB.series]);
   const storageA     = useMemo(() => runA.series.map(p => Math.round((p.storage.level / p.storage.capacity) * 100)), [runA.series]);
@@ -107,48 +185,21 @@ const CompareView: React.FC<Props> = ({ runA, runB, onClose }) => {
   const colorA = colors.cool;
   const colorB = colors.heat;
 
-  const statRows = [
-    { label: 'Cost',      a: `${statsA.totalCost.toFixed(0)} €`,     b: `${statsB.totalCost.toFixed(0)} €` },
-    { label: 'Savings',   a: `${statsA.savings >= 0 ? '+' : ''}${statsA.savings.toFixed(0)} €`, b: `${statsB.savings >= 0 ? '+' : ''}${statsB.savings.toFixed(0)} €` },
-    { label: 'Cheap',     a: String(statsA.cheapCount),               b: String(statsB.cheapCount) },
-    { label: 'Expensive', a: String(statsA.expensiveCount),           b: String(statsB.expensiveCount) },
-  ];
-
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', gap: 1.5 }}>
-      {/* Header */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexShrink: 0, flexWrap: 'wrap' }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: colorA }} />
-          <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: colors.textPrimary }}>{labelA}</Typography>
-        </Box>
-        <Typography sx={{ fontSize: tx.md, color: colors.textMuted }}>vs.</Typography>
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          <Box sx={{ width: 10, height: 10, borderRadius: '50%', bgcolor: colorB }} />
-          <Typography sx={{ fontSize: tx.md, fontWeight: fw.bold, color: colors.textPrimary }}>{labelB}</Typography>
-        </Box>
-        <Button
-          size="small"
-          startIcon={<CloseRounded />}
-          onClick={onClose}
-          sx={{ ml: 'auto', fontSize: tx.sm, borderRadius: radii.md, borderColor: colors.border, color: colors.textSecondary,
-            border: `1px solid ${colors.border}`, '&:hover': { bgcolor: colors.bgSurface } }}
-        >
-          Close
-        </Button>
-      </Box>
 
-      {/* Stats strip */}
-      <Box sx={{ ...getGlassSx(colors), px: 2, py: 1.2, display: 'flex', gap: 3, flexShrink: 0, overflow: 'hidden', flexWrap: 'wrap' }}>
-        {statRows.map(row => (
-          <Box key={row.label} sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: 64 }}>
-            <Typography sx={{ fontSize: 9, color: colors.textMuted, letterSpacing: 0.6, textTransform: 'uppercase', mb: 0.3 }}>
-              {row.label}
-            </Typography>
-            <Typography sx={{ fontSize: tx.base, fontWeight: fw.bold, color: colorA }}>{row.a}</Typography>
-            <Typography sx={{ fontSize: tx.base, fontWeight: fw.bold, color: colorB }}>{row.b}</Typography>
-          </Box>
-        ))}
+      {/* Summary cards + close */}
+      <Box sx={{ display: 'flex', gap: 1.5, flexShrink: 0, alignItems: 'flex-start' }}>
+        <SummaryCard run={runA} stats={statsA} label={labelA} color={colorA} />
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', gap: 0.5, flexShrink: 0, pt: 1 }}>
+          <Typography sx={{ fontSize: tx.xs, color: colors.textMuted, fontWeight: fw.medium }}>vs.</Typography>
+          <Button size="small" startIcon={<CloseRounded />} onClick={onClose}
+            sx={{ mt: 1, fontSize: tx.xs, borderRadius: radii.md, border: `1px solid ${colors.border}`,
+              color: colors.textSecondary, '&:hover': { bgcolor: colors.bgSurface } }}>
+            Close
+          </Button>
+        </Box>
+        <SummaryCard run={runB} stats={statsB} label={labelB} color={colorB} />
       </Box>
 
       {/* 2×2 chart grid */}

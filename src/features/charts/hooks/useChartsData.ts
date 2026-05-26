@@ -16,6 +16,7 @@ export function useChartsData(
     historyYears: HistoryYears,
     startDate?: Date,
     granularity: Granularity = 'daily',
+    residents?: number,
 ): UseChartsDataResult {
     const [data, setData] = useState<ChartsData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
@@ -31,7 +32,7 @@ export function useChartsData(
         setError(null);
 
         uiService
-            .getChartUIData({ historyYears, granularity, startDate })
+            .getChartUIData({ historyYears, granularity, startDate, residents })
             .then((d) => {
                 if (cancelled) return;
                 setData(d);
@@ -47,7 +48,7 @@ export function useChartsData(
             cancelled = true;
         };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [historyYears, granularity, startMs]);
+    }, [historyYears, granularity, startMs, residents]);
 
     return { data, loading, error };
 }

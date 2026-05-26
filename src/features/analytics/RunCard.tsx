@@ -21,11 +21,11 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
   const colors = useColors();
   const stats = computeRunStats(run.series);
 
-  const startDate = new Date(run.params.startDay).toLocaleDateString('de-DE', {
-    day: '2-digit', month: 'short', year: 'numeric',
+  const startDate = new Date(run.params.startDay).toLocaleDateString('en-US', {
+    day: '2-digit', month: 'short',
   });
-  const savedAt = new Date(run.savedAt).toLocaleString('de-DE', {
-    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit',
+  const savedAt = new Date(run.savedAt).toLocaleString('en-US', {
+    day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit', hour12: false,
   });
 
   const { historyYears, dataYears } = run.params;
@@ -34,8 +34,10 @@ const RunCard: React.FC<Props> = ({ run, selected, isComparing, onSelect, onDele
     : '—';
 
   const infos = [
+    ...(run.params.cityName ? [`City: ${run.params.cityName}`] : []),
+    ...(run.params.residents !== undefined ? [`Residents: ${run.params.residents.toLocaleString('en-US')}`] : []),
     `Storage: ${run.params.storageLevel} %`,
-    ...(historyYears !== null && historyYears !== undefined ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
+    ...(historyYears !== undefined && historyYears !== undefined ? [`History: ${historyYears}Y requested · ${coverageStr}`] : []),
     `Cost: ${stats.totalCost.toFixed(2)} €`,
     `Cheap / Expensive: ${stats.cheapCount} / ${stats.expensiveCount}`,
     `Savings: ${stats.savings >= 0 ? '+' : ''}${stats.savings.toFixed(0)} €`,

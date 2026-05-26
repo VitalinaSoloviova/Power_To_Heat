@@ -27,6 +27,18 @@ export interface SimulationRun {
       weather: number;
       price: number;
     };
+    // City & population
+    cityName?: string;
+    residents?: number;
+    // Storage configuration
+    storageCapacityMwh?: number;
+    maxChargePowerMw?: number;
+    maxChargePercent?: number;
+    // Charging thresholds
+    criticalThresholdPct?: number;
+    nearCriticalThresholdPct?: number;
+    halfCapacityThresholdPct?: number;
+    emergencyBuyEnabled?: boolean;
   };
   series: SimulationPoint[]; // full time-series produced by useSimulationData
 }

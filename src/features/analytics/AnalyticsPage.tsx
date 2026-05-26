@@ -38,8 +38,12 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
 
   const handleSelect = (id: string) => {
     setSelectedId(id);
-    // if the newly selected run was the compare target, clear compare
-    if (compareId === id) setCompareId(null);
+    // clear compare if it was the newly selected run, or if ranges don't match
+    const newSelected = runs.find((r) => r.id === id);
+    const currentCompared = runs.find((r) => r.id === compareId);
+    if (compareId === id || (newSelected && currentCompared && newSelected.params.range !== currentCompared.params.range)) {
+      setCompareId(null);
+    }
   };
 
   const handleCompare = (id: string) => {
@@ -110,7 +114,7 @@ const AnalyticsPage: React.FC<Props> = ({ runs, onDelete, onReplay }) => {
                 isComparing={run.id === compareId}
                 onSelect={() => handleSelect(run.id)}
                 onDelete={() => handleDelete(run.id)}
-                onCompare={run.id !== selectedId ? () => handleCompare(run.id) : undefined}
+                onCompare={run.id !== selectedId && run.params.range === selected?.params.range ? () => handleCompare(run.id) : undefined}
               />
             ))
           )}

@@ -5,6 +5,7 @@ import MainContent from './MainContent.tsx';
 import Sidebar from './Sidebar.tsx';
 import { ThemeProvider } from '@theme/ThemeContext';
 import { useColors } from '@theme/useTheme';
+import { SettingsProvider } from '@features/settings/SettingsContext';
 
 const AppShell = () => {
   const colors = useColors();
@@ -20,7 +21,9 @@ const AppShell = () => {
 function App() {
   return (
     <ThemeProvider defaultTheme="dark">
-      <AppShell />
+      <SettingsProvider>
+        <AppShell />
+      </SettingsProvider>
     </ThemeProvider>
   );
 }

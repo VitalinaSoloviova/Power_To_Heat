@@ -3,6 +3,7 @@ import { Box } from '@mui/material';
 import ToolbarComponent from './ToolbarComponent';
 import TopWidgetsRow from '@features/topRow/widgets/TopWidgetsRow';
 import AnalyticsPage from '@features/analytics/AnalyticsPage';
+import SettingsPage from '@features/settings/SettingsPage';
 import { useSimulationHistory } from '@features/analytics/useSimulationHistory';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRun } from '@features/analytics/analyticsTypes';
@@ -40,12 +41,15 @@ const MainContent: React.FC<MainContentProps> = ({ activePage, onPageChange }) =
         flexDirection: 'column',
         bgcolor: colors.bgBase,
         overflow: activePage === 'analysis' ? 'hidden' : 'auto',
+        minHeight: 0,
         color: colors.textPrimary,
       }}
     >
       <ToolbarComponent />
       {activePage === 'analysis' ? (
         <AnalyticsPage runs={runs} onDelete={deleteRun} onReplay={handleReplay} />
+      ) : activePage === 'settings' ? (
+        <SettingsPage />
       ) : (
         <>
           <TopWidgetsRow />

@@ -16,6 +16,7 @@ import {
 	type SimulationSeriesInput,
 	type SimulationSeriesData,
 } from './SimulationUIService';
+import type { ChargingConfig } from '@features/simulationSection/simulation/P2HChargingLogic';
 
 export type PeriodTag = 'past' | 'current' | 'future';
 
@@ -40,6 +41,7 @@ export interface ChartUIDataInput {
 	historyYears: HistoryYears;
 	granularity?: Granularity;
 	startDate?: Date;
+	residents?: number;
 }
 
 export interface SimulationUIDataInput {
@@ -47,6 +49,9 @@ export interface SimulationUIDataInput {
 	startDate: Date;
 	initialStoragePercent: number;
 	historyYears: HistoryYears;
+	chargingConfig?: ChargingConfig;
+	emergencyBuyEnabled?: boolean;
+	priceHistoryDays?: number;
 }
 
 const ENERGY_PRICE_REFRESH_MS = 5 * 60 * 1000;
@@ -94,6 +99,7 @@ export class UIService {
 				normalizedInput.historyYears,
 				normalizedInput.granularity,
 				normalizedInput.startDate,
+				normalizedInput.residents,
 			),
 		);
 	}
@@ -114,12 +120,16 @@ export class UIService {
 				historyYears: input.historyYears,
 				granularity,
 				startDate: input.startDate,
+				residents: input.chargingConfig?.residents,
 			});
 
 			return this.simulationUIService.getSimulationSeries({
 				chartsData,
 				range: input.range,
 				initialStoragePercent: input.initialStoragePercent,
+				chargingConfig: input.chargingConfig,
+				emergencyBuyEnabled: input.emergencyBuyEnabled,
+				priceHistoryDays: input.priceHistoryDays,
 			});
 		});
 	}
@@ -174,12 +184,13 @@ export class UIService {
 		return request;
 	}
 
-	private buildChartCacheKey(input: Required<Pick<ChartUIDataInput, 'historyYears' | 'granularity'>> & Pick<ChartUIDataInput, 'startDate'>): string {
+	private buildChartCacheKey(input: Required<Pick<ChartUIDataInput, 'historyYears' | 'granularity'>> & Pick<ChartUIDataInput, 'startDate' | 'residents'>): string {
 		return [
 			'charts',
 			input.historyYears,
 			input.granularity,
 			this.toUtcDayTimestamp(input.startDate),
+			input.residents ?? '',
 		].join('|');
 	}
 
@@ -190,6 +201,9 @@ export class UIService {
 			input.historyYears,
 			this.toUtcDayTimestamp(input.startDate),
 			input.initialStoragePercent,
+			input.chargingConfig ? JSON.stringify(input.chargingConfig) : '',
+			input.emergencyBuyEnabled ?? true,
+			input.priceHistoryDays ?? '',
 		].join('|');
 	}
 
