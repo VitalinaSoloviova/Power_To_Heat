@@ -4,6 +4,7 @@ import ToolbarComponent from './ToolbarComponent';
 import TopWidgetsRow from '@features/topRow/widgets/TopWidgetsRow';
 import AnalyticsPage from '@features/analytics/AnalyticsPage';
 import SettingsPage from '@features/settings/SettingsPage';
+import HelpPageComponent from './HelpPagecomponent';
 import { useSimulationHistory } from '@features/analytics/useSimulationHistory';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRun } from '@features/analytics/analyticsTypes';
@@ -50,6 +51,8 @@ const MainContent: React.FC<MainContentProps> = ({ activePage, onPageChange }) =
         <AnalyticsPage runs={runs} onDelete={deleteRun} onReplay={handleReplay} />
       ) : activePage === 'settings' ? (
         <SettingsPage />
+      ) : activePage === 'help' ? (
+        <HelpPageComponent />
       ) : (
         <>
           <TopWidgetsRow />

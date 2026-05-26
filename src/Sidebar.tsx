@@ -15,7 +15,7 @@ interface NavItem {
 }
 
 const navItems: NavItem[] = [
-  { id: 'overview', icon: <LocalFireDepartmentRounded sx={{width: 34, height: 34}} /> },
+  { id: 'overview', label: 'Overview', icon: <LocalFireDepartmentRounded sx={{width: 34, height: 34}} /> },
   { id: 'analysis', label: 'Analysis', icon: <PieChartRounded sx={{width: 24, height: 24}} /> },
   { id: 'settings', label: 'Settings', icon: <SettingsRounded sx={{width: 24, height: 24}} /> },
 ];
@@ -78,7 +78,33 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
           );
         })}
       </Box>
-         <HelpComponent/>
+      {/* Help at the bottom */}
+      <Box sx={{ mb: 1 }}>
+        <Tooltip title="Help" placement="right" arrow>
+          <Box
+            onClick={() => onPageChange('help')}
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 0.3,
+              cursor: 'pointer',
+              color: activePage === 'help' ? colors.primary : colors.textSecondary,
+              bgcolor: activePage === 'help' ? colors.primarySoft : 'transparent',
+              transition: 'all .2s',
+              '&:hover': { bgcolor: colors.bgSurface, color: colors.textPrimary },
+              '& svg': { fontSize: 22 },
+            }}
+          >
+            <HelpComponent />
+            <Box sx={{ fontSize: 9.5, fontWeight: 600, letterSpacing: 0.2 }}>Help</Box>
+          </Box>
+        </Tooltip>
+      </Box>
     </Box>
   );
 };
