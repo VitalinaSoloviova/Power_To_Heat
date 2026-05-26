@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import DateChip from './DateChip';
 import MonthDayPopover from './MonthDayPopover';
 import { useDateState } from './useDateState';
+import { InfoOutlineRounded } from '@mui/icons-material';
+import { tx } from '@theme/tokens';
 
 interface DateSelectorProps {
   startDay: Date;
@@ -44,9 +46,25 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 53, minWidth: 0}}>
-      <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary, marginBottom: 1}}>
-        Simulation period
+      
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
+        <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary, marginBottom: 1}}>
+        Starting date
       </Typography>
+        <Tooltip
+          arrow
+          placement="top"
+          title="Simulation starting dates."
+        >
+          <IconButton
+            size="small"
+            aria-label="Starting date information"
+            sx={{ color: colors.textMuted, p: 0 }}
+          >
+            <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <DateChip label={labelMonthDay} onClick={e => setAnchorEl(e.currentTarget)} open={open} colors={colors} />
       <MonthDayPopover
         open={open}
