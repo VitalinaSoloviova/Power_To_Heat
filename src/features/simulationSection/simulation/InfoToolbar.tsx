@@ -49,7 +49,7 @@ const InfoToolbar: React.FC<InfoToolbarProps> = ({ point }) => {
           color: '#ddeeff',
           textShadow: '0 1px 2px rgba(0,0,0,0.3)'
         }}>
-          {Math.round(point.storage.level)} kWh
+          {Math.round(point.storage.level / 1000) } MWh
         </Typography>
         <Typography sx={{ 
           fontSize: 8, 
