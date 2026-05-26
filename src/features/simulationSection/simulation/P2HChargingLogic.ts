@@ -20,7 +20,7 @@ const DEFAULT_CONFIG: ChargingConfig = {
   residents: 60_000,
 };
 
-// Standing thermal loss rate: 0.1 % of stored energy per hour (insulation loss)
+// Standing thermal loss rate: 1 % of stored energy per hour (insulation loss)
 const STANDING_LOSS_RATE_PER_HOUR = 0.001;
 
 function deriveThresholds(cfg: ChargingConfig) {

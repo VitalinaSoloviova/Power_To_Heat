@@ -1,6 +1,6 @@
 const PERSONS_PER_HOUSEHOLD = 2.2;      // avg German household size (Destatis)
 const DISTRICT_HEATING_SHARE = 0.15;    // 15 % of households on district heating (Ramboll, 2025)
-const H_TAVG_KW_PER_K = 0.1265;        // avg transmission heat-loss coefficient kW/K (Höttges, 2020)
+const H_TAVG_KW_PER_K = 0.115; 
 const TEMP_IN = 20;                     // target indoor temperature °C
 
 /**
