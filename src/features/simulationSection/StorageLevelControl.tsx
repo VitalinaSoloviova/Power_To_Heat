@@ -1,6 +1,7 @@
-import { Box, Typography, Slider, TextField, InputAdornment } from '@mui/material';
+import { Box, Typography, Slider, TextField, InputAdornment, IconButton, Tooltip } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import { tx } from '@theme/tokens';
+import { InfoOutlineRounded } from '@mui/icons-material';
 
 interface StorageLevelControlProps {
   value: number;
@@ -17,9 +18,24 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: { xs: 140, sm: 260 }, flex: 1 }}>
-      <Typography sx={{ fontSize: tx.base, color: colors.textSecondary }}>
-        Current storage level (input)
+       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
+        <Typography sx={{ fontSize: tx.base, color: colors.textSecondary }}>
+        Initial Storage Capacity
       </Typography>
+        <Tooltip
+          arrow
+          placement="top"
+          title="Storage Capacity to Start the Simulation."
+        >
+          <IconButton
+            size="small"
+            aria-label="The Storage Capacity to Start the Simulation with."
+            sx={{ color: colors.textMuted, p: 0 }}
+          >
+            <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap', minWidth: 0 }}>
         <Slider
           value={value}
@@ -35,7 +51,11 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
           onChange={(e) => handleNumber(e.target.value)}
           slotProps={{
             input: {
-              endAdornment: <InputAdornment position="end">%</InputAdornment>,
+              endAdornment: (
+                <InputAdornment position="end" disableTypography sx={{ color: colors.textSecondary }}>
+                  %
+                </InputAdornment>
+              ),
             },
           }}
           sx={{

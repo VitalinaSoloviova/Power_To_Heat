@@ -82,7 +82,7 @@ export const ChartCard = memo<{
         <Typography sx={{ fontSize: tx.display, fontWeight: fw.bold, color: colors.textPrimary, lineHeight: 1 }}>
           {hasData ? card.formatValue(card.mainValue) : '—'}
         </Typography>
-        <Typography sx={{ fontSize: tx.base, color: colors.textSecondary, mb: 0.25 }}>
+        <Typography sx={{ fontSize: tx.xl, color: colors.chartTitle, mb: 0.25 }}>
           {card.unit}
         </Typography>
       </Box>

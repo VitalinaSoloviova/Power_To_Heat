@@ -1,8 +1,10 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, IconButton, Tooltip, Typography } from '@mui/material';
 import DateChip from './DateChip';
 import MonthDayPopover from './MonthDayPopover';
 import { useDateState } from './useDateState';
+import { InfoOutlineRounded } from '@mui/icons-material';
+import { tx } from '@theme/tokens';
 
 interface DateSelectorProps {
   startDay: Date;
@@ -19,10 +21,16 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
   const dateState = useDateState(startDay);
   React.useEffect(() => { dateState.sync(startDay); }, [startDay]);
 
+  // For 'month' mode, always use day 1 as start
   const applyDate = (month: number, day: number) => {
-    const maxDay = daysInMonth(month);
-    const clampedDay = Math.min(day, maxDay);
-    const d = new Date(Date.UTC(new Date().getFullYear(), month, clampedDay));
+    let d;
+    if (simulationRange === 'month') {
+      d = new Date(Date.UTC(new Date().getFullYear(), month, 1));
+    } else {
+      const maxDay = daysInMonth(month);
+      const clampedDay = Math.min(day, maxDay);
+      d = new Date(Date.UTC(new Date().getFullYear(), month, clampedDay));
+    }
     onStartDayChange(d);
     setAnchorEl(null);
   };
@@ -44,9 +52,25 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
 
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: 53, minWidth: 0}}>
-      <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary, marginBottom: 1}}>
-        Simulation period
+      
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
+        <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary, marginBottom: 1}}>
+        Starting Date
       </Typography>
+        <Tooltip
+          arrow
+          placement="top"
+          title="Simulation starting dates."
+        >
+          <IconButton
+            size="small"
+            aria-label="Starting Date Information"
+            sx={{ color: colors.textMuted, p: 0 }}
+          >
+            <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <DateChip label={labelMonthDay} onClick={e => setAnchorEl(e.currentTarget)} open={open} colors={colors} />
       <MonthDayPopover
         open={open}
@@ -62,6 +86,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
         colors={colors}
         MONTHS={MONTHS}
         daysInMonth={daysInMonth}
+        simulationRange={simulationRange}
       />
     </Box>
   );

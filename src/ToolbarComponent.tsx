@@ -31,7 +31,7 @@ const ToolbarComponent = () => {
           POWER TO HEAT
         </Typography>
         <Typography sx={{ fontSize: 12, color: colors.textSecondary, mt: 0.3 }}>
-          District heating powered by electricity
+          District Heating Powered by Electricity
         </Typography>
       </Box>
       {/* Theme toggle */}

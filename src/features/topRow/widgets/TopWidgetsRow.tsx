@@ -41,27 +41,6 @@ const TopWidgetsRow: React.FC = () => {
                     <Next24hPriceWidget />
                 </Box>
             </Box>
-
-            {/* Toggle button — right-aligned slim bar */}
-            <Box sx={{ display: "flex", justifyContent: "flex-end", mt: open ? 0.5 : 0 }}>
-                <Tooltip title={open ? "Hide widgets" : "Show widgets"} placement="left">
-                    <IconButton
-                        size="small"
-                        onClick={() => setOpen((o) => !o)}
-                        sx={{
-                            p: 0.3,
-                            borderRadius: radii.sm,
-                            color: colors.textMuted,
-                            bgcolor: "transparent",
-                            border: `1px solid ${colors.border}`,
-                            "& svg": { fontSize: 14 },
-                            "&:hover": { color: colors.textSecondary, bgcolor: colors.bgSurface },
-                        }}
-                    >
-                        {open ? <KeyboardArrowUpRounded /> : <KeyboardArrowDownRounded />}
-                    </IconButton>
-                </Tooltip>
-            </Box>
         </Box>
     );
 };

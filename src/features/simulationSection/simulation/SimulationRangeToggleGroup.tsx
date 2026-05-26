@@ -1,7 +1,9 @@
 import React from 'react';
-import { ToggleButton, ToggleButtonGroup, Box, Typography } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup, Box, Typography, IconButton, Tooltip } from '@mui/material';
 import { useColors } from '@theme/useTheme';
 import type { SimulationRange } from '@services/types';
+import { InfoOutlineRounded } from '@mui/icons-material';
+import { tx, fw } from '@theme/tokens';
 
 interface SimulationRangeToggleGroupProps {
   range: SimulationRange;
@@ -12,9 +14,25 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
   const colors = useColors();
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, minHeight: 60 }}>
-      <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
-        Simulation range
+      
+      <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
+        <Typography sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
+        Simulation Range
       </Typography>
+        <Tooltip
+          arrow
+          placement="top"
+          title="Range of the simulation from the selected starting date."
+        >
+          <IconButton
+            size="small"
+            aria-label="Simulation Range Information"
+            sx={{ color: colors.textMuted, p: 0 }}
+          >
+            <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
+          </IconButton>
+        </Tooltip>
+      </Box>
       <ToggleButtonGroup
         size="small"
         exclusive

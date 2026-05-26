@@ -1,24 +1,23 @@
 import { Box, Tooltip } from '@mui/material';
 import {
-  HomeRounded,
+  LocalFireDepartmentRounded,
   PieChartRounded,
   SettingsRounded,
 } from '@mui/icons-material';
 
 import { useColors } from '@theme/useTheme';
-import { LogoComponent } from './LogoComponent';
 import { HelpComponent } from './HelpComponent';
 
 interface NavItem {
   id: string;
-  label: string;
+  label?: string;
   icon: React.ReactNode;
 }
 
 const navItems: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: <HomeRounded /> },
-  { id: 'analysis', label: 'Analysis', icon: <PieChartRounded /> },
-  { id: 'settings', label: 'Settings', icon: <SettingsRounded /> },
+  { id: 'overview', label: 'Overview', icon: <LocalFireDepartmentRounded sx={{width: 34, height: 34}} /> },
+  { id: 'analysis', label: 'Analysis', icon: <PieChartRounded sx={{width: 24, height: 24}} /> },
+  { id: 'settings', label: 'Settings', icon: <SettingsRounded sx={{width: 24, height: 24}} /> },
 ];
 
 interface SidebarProps {
@@ -46,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
         gap: 1,
       }}
     >
-      <LogoComponent/>
+
       {/* Nav */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'center', flex: 1 }}>
         {navItems.map((item) => {
@@ -79,7 +78,32 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
           );
         })}
       </Box>
-         <HelpComponent/>
+      {/* Help at the bottom */}
+      <Box sx={{ mb: 1 }}>
+        <Tooltip title="Help" placement="right" arrow>
+          <Box
+            onClick={() => onPageChange('help')}
+            sx={{
+              width: 56,
+              height: 56,
+              borderRadius: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 0.3,
+              cursor: 'pointer',
+              color: activePage === 'help' ? colors.primary : colors.textSecondary,
+              bgcolor: activePage === 'help' ? colors.primarySoft : 'transparent',
+              transition: 'all .2s',
+              '&:hover': { bgcolor: colors.bgSurface, color: colors.textPrimary },
+              '& svg': { fontSize: 22 },
+            }}
+          >
+            <HelpComponent />
+          </Box>
+        </Tooltip>
+      </Box>
     </Box>
   );
 };

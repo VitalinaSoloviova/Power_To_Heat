@@ -15,7 +15,7 @@ const HistoryPeriodSelector: React.FC<HistoryPeriodSelectorProps> = ({ historyYe
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start',  gap: 0.75}}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
         <Typography sx={{ fontSize: tx.md, fontWeight: fw.medium, color: colors.textSecondary, paddingTop: 0.5 }}>
-          Historical period
+          Historical Period
         </Typography>
         <Tooltip
           arrow
