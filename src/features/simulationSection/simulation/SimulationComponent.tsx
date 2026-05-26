@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback, useMemo } from "react";
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 
 import { useColors } from "@theme/useTheme";
 import { getGlassSx } from "@theme/colors";
@@ -18,6 +18,7 @@ import SimulationPriceTicker from "./priceTicker/SimulationPriceTicker";
 import SimulationScene from "./SimulationScene";
 import type { ReplayParams, SimulationRange } from "@services/types";
 import SimulationSlider from "./SimulationSlider";
+import { fw } from "@theme/tokens";
 
 interface Props {
   onRunComplete?: (run: SimulationRun) => void;
@@ -246,6 +247,19 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 }}
               >
                 <Box sx={{ flex: "1 1 100%", minWidth: 0, paddingLeft: 1 }}>
+                  <Typography
+                    sx={{
+                      px: 2,
+                      pt: 2,
+                      pb: 2,
+                      fontSize: 16,
+                      fontWeight: fw.semibold,
+                      color: colors.textPrimary,
+                      letterSpacing: 0.3,
+                    }}
+                  >
+                    Averages calculated based on simulation parameters
+                  </Typography>
                   <SimulationChartCards
                     startDay={startDay}
                     range={range}
@@ -279,7 +293,16 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                 historyYears={historyYears}
                 setHistoryYears={handleHistoryYearsChange}
               />
-              <Box sx={{ width: "100%", px: 0.5, py: 1, flex: "1 1 0", minHeight: 0, overflow: "hidden" }}>
+              <Box
+                sx={{
+                  width: "100%",
+                  px: 0.5,
+                  py: 1,
+                  flex: "1 1 0",
+                  minHeight: 0,
+                  overflow: "hidden",
+                }}
+              >
                 <SimulationPriceTicker series={series} currentIndex={index} />
               </Box>
             </Box>
