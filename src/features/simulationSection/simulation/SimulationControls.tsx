@@ -42,7 +42,7 @@ const SimulationControls: React.FC<SimulationControlsProps> = ({
         letterSpacing: 0.3,
       }}
     >
-Choose simulation parameters
+Choose Your Simulation Parameters
     </Typography>
       <DateSimulationControlComponent
         timeline={timeline}

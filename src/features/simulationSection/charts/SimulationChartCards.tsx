@@ -52,7 +52,7 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
   const cards = useMemo<CardConfig[]>(() => [
     {
       id: 'price',
-      title: 'Electricity Price',
+      title: 'Average Electricity Price',
       mainValue: mean(prices),
       unit: '€ / MWh',
       formatValue: (v) => v.toFixed(0),
@@ -63,7 +63,7 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
     },
     {
       id: 'demand',
-      title: 'Heat Demand',
+      title: 'Average Heat Demand',
       mainValue: mean(demands),
       unit: 'MW',
       formatValue: (v) => v.toFixed(1),
@@ -74,7 +74,7 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
     },
     {
       id: 'temp',
-      title: 'Temperature',
+      title: 'Average Temperature',
       mainValue: mean(avgTemps),
       unit: '°C',
       formatValue: (v) => v.toFixed(1),

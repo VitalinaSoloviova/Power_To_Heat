@@ -258,7 +258,7 @@ const SimulationComponent: React.FC<Props> = ({ onRunComplete, initialParams }) 
                       letterSpacing: 0.3,
                     }}
                   >
-                    Averages calculated based on simulation parameters
+                    Fluctuation and Average values of Simulation Parameters
                   </Typography>
                   <SimulationChartCards
                     startDay={startDay}
