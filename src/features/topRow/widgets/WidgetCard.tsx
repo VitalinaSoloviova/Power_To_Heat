@@ -2,7 +2,9 @@ import { Box, Typography } from "@mui/material";
 import type { ReactNode } from "react";
 import { useColors } from "@theme/useTheme";
 import { getGlassSx } from "@theme/colors";
-import { tx, fw, duration } from "@theme/tokens";
+import { fw, duration } from "@theme/tokens";
+
+export const WIDGET_CARD_FONT_SIZE = 26;
 
 interface WidgetCardProps {
     label: string;
@@ -38,13 +40,19 @@ const WidgetCard: React.FC<WidgetCardProps> = ({ label, icon, children }) => {
         >
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.6 }}>
                 {icon && (
-                    <Box sx={{ color: colors.textSecondary, display: "flex" }}>
+                    <Box
+                        sx={{
+                            color: colors.textSecondary,
+                            display: "flex",
+                            "& svg": { fontSize: WIDGET_CARD_FONT_SIZE },
+                        }}
+                    >
                         {icon}
                     </Box>
                 )}
                 <Typography
                     sx={{
-                        fontSize: tx.sm,
+                        fontSize: WIDGET_CARD_FONT_SIZE,
                         color: colors.textSecondary,
                         fontWeight: fw.medium,
                     }}
