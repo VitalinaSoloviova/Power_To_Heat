@@ -1,24 +1,23 @@
 import { Box, Tooltip } from '@mui/material';
 import {
-  HomeRounded,
+  LocalFireDepartmentRounded,
   PieChartRounded,
   SettingsRounded,
 } from '@mui/icons-material';
 
 import { useColors } from '@theme/useTheme';
-import { LogoComponent } from './LogoComponent';
 import { HelpComponent } from './HelpComponent';
 
 interface NavItem {
   id: string;
-  label: string;
+  label?: string;
   icon: React.ReactNode;
 }
 
 const navItems: NavItem[] = [
-  { id: 'overview', label: 'Overview', icon: <HomeRounded /> },
-  { id: 'analysis', label: 'Analysis', icon: <PieChartRounded /> },
-  { id: 'settings', label: 'Settings', icon: <SettingsRounded /> },
+  { id: 'overview', icon: <LocalFireDepartmentRounded sx={{width: 34, height: 34}} /> },
+  { id: 'analysis', label: 'Analysis', icon: <PieChartRounded sx={{width: 24, height: 24}} /> },
+  { id: 'settings', label: 'Settings', icon: <SettingsRounded sx={{width: 24, height: 24}} /> },
 ];
 
 interface SidebarProps {
@@ -46,7 +45,7 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
         gap: 1,
       }}
     >
-      <LogoComponent/>
+
       {/* Nav */}
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, alignItems: 'center', flex: 1 }}>
         {navItems.map((item) => {
