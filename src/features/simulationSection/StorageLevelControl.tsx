@@ -20,16 +20,16 @@ const StorageLevelControl = ({ value, onChange }: StorageLevelControlProps) => {
     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 0.5, minWidth: { xs: 140, sm: 260 }, flex: 1 }}>
        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
         <Typography sx={{ fontSize: tx.base, color: colors.textSecondary }}>
-        Initial storage capacity
+        Initial Storage Capacity
       </Typography>
         <Tooltip
           arrow
           placement="top"
-          title="Storage capacity to start the simulation."
+          title="Storage Capacity to Start the Simulation."
         >
           <IconButton
             size="small"
-            aria-label="The storage capacity to start the simulation with."
+            aria-label="The Storage Capacity to Start the Simulation with."
             sx={{ color: colors.textMuted, p: 0 }}
           >
             <InfoOutlineRounded sx={{ fontSize: tx.lg }} />

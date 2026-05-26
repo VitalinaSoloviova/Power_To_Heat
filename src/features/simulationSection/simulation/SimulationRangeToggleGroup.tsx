@@ -16,8 +16,8 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: 0.5, minHeight: 60 }}>
       
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
-        <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
-        Simulation range
+        <Typography sx={{ fontSize: 13, color: colors.textSecondary || colors.textPrimary }}>
+        Simulation Range
       </Typography>
         <Tooltip
           arrow
@@ -26,7 +26,7 @@ const SimulationRangeToggleGroup: React.FC<SimulationRangeToggleGroupProps> = ({
         >
           <IconButton
             size="small"
-            aria-label="Simulation range information"
+            aria-label="Simulation Range Information"
             sx={{ color: colors.textMuted, p: 0 }}
           >
             <InfoOutlineRounded sx={{ fontSize: tx.lg }} />

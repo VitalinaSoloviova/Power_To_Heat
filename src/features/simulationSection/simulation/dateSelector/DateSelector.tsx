@@ -49,7 +49,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
       
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5, flex: '1 1 20px' }}>
         <Typography variant="caption" sx={{ fontSize: 13, color: colors.textSecondary, marginBottom: 1}}>
-        Starting date
+        Starting Date
       </Typography>
         <Tooltip
           arrow
@@ -58,7 +58,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
         >
           <IconButton
             size="small"
-            aria-label="Starting date information"
+            aria-label="Starting Date Information"
             sx={{ color: colors.textMuted, p: 0 }}
           >
             <InfoOutlineRounded sx={{ fontSize: tx.lg }} />
