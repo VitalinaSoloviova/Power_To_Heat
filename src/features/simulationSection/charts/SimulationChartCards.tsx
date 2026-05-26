@@ -54,7 +54,7 @@ const SimulationChartCards: React.FC<SimulationChartCardsProps> = ({
       id: 'price',
       title: 'Electricity Price',
       mainValue: mean(prices),
-      unit: '€/MWh',
+      unit: '€ / MWh',
       formatValue: (v) => v.toFixed(0),
       xLabels,
       series: [
