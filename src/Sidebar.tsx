@@ -101,7 +101,6 @@ const Sidebar: React.FC<SidebarProps> = ({ activePage, onPageChange }) => {
             }}
           >
             <HelpComponent />
-            <Box sx={{ fontSize: 9.5, fontWeight: 600, letterSpacing: 0.2 }}>Help</Box>
           </Box>
         </Tooltip>
       </Box>
