@@ -3,9 +3,9 @@ import type { Request, Response } from 'express';
 import cors from 'cors';
 import pg from 'pg';
 import path from 'path';
-import { fileURLToPath as _fileURLToPath } from 'url';
+import { fileURLToPath } from 'url';
 
-const __dirname = path.dirname(_fileURLToPath(import.meta.url));
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const { Pool } = pg;
 
@@ -85,7 +85,6 @@ app.get('*', (_req, res) => {
 
 export { app };
 
-import { fileURLToPath } from 'url';
 const isMain = process.argv[1] === fileURLToPath(import.meta.url);
 if (isMain) {
     app.listen(PORT, () => {
