@@ -10,7 +10,8 @@
     "dev:web": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "tsx database/api/rest-server.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
