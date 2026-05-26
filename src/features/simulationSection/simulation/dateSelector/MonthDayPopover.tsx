@@ -11,6 +11,7 @@ interface MonthDayPopoverProps {
   colors: any;
   MONTHS: string[];
   daysInMonth: (month: number) => number;
+  simulationRange: 'day' | 'week' | 'month';
 }
 
 const MonthDayPopover: React.FC<MonthDayPopoverProps> = ({
@@ -23,6 +24,7 @@ const MonthDayPopover: React.FC<MonthDayPopoverProps> = ({
   colors,
   MONTHS,
   daysInMonth,
+  simulationRange,
 }) => (
   <Popover
     open={open}
@@ -59,7 +61,7 @@ const MonthDayPopover: React.FC<MonthDayPopoverProps> = ({
           <Box
             key={m}
             component="button"
-            onClick={() => applyDate(i, selectedDay)}
+            onClick={() => applyDate(i, simulationRange === 'month' ? 1 : selectedDay)}
             sx={{
               border: 'none',
               borderRadius: 1.5,
@@ -83,35 +85,37 @@ const MonthDayPopover: React.FC<MonthDayPopoverProps> = ({
       </Box>
     </Box>
 
-    {/* Day picker */}
-    <Box>
-      <Typography sx={{ fontSize: 10, fontWeight: 700, color: colors.textMuted, letterSpacing: 1, mb: 1, textTransform: 'uppercase' }}>
-        Day
-      </Typography>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <IconButton
-          size="small"
-          onClick={() => applyDate(selectedMonth, Math.max(1, selectedDay - 1))}
-          sx={{ color: colors.textSecondary, p: 0.5 }}
-        >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </IconButton>
-        <Typography sx={{ fontSize: 18, fontWeight: 700, color: colors.textPrimary, minWidth: 28, textAlign: 'center' }}>
-          {selectedDay}
+    {/* Day picker only for day/week */}
+    {simulationRange !== 'month' && (
+      <Box>
+        <Typography sx={{ fontSize: 10, fontWeight: 700, color: colors.textMuted, letterSpacing: 1, mb: 1, textTransform: 'uppercase' }}>
+          Day
         </Typography>
-        <IconButton
-          size="small"
-          onClick={() => applyDate(selectedMonth, Math.min(daysInMonth(selectedMonth), selectedDay + 1))}
-          sx={{ color: colors.textSecondary, p: 0.5 }}
-        >
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </IconButton>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          <IconButton
+            size="small"
+            onClick={() => applyDate(selectedMonth, Math.max(1, selectedDay - 1))}
+            sx={{ color: colors.textSecondary, p: 0.5 }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M10 12L6 8l4-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </IconButton>
+          <Typography sx={{ fontSize: 18, fontWeight: 700, color: colors.textPrimary, minWidth: 28, textAlign: 'center' }}>
+            {selectedDay}
+          </Typography>
+          <IconButton
+            size="small"
+            onClick={() => applyDate(selectedMonth, Math.min(daysInMonth(selectedMonth), selectedDay + 1))}
+            sx={{ color: colors.textSecondary, p: 0.5 }}
+          >
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </IconButton>
+        </Box>
       </Box>
-    </Box>
+    )}
   </Popover>
 );
 

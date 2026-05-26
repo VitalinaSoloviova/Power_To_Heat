@@ -21,10 +21,16 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
   const dateState = useDateState(startDay);
   React.useEffect(() => { dateState.sync(startDay); }, [startDay]);
 
+  // For 'month' mode, always use day 1 as start
   const applyDate = (month: number, day: number) => {
-    const maxDay = daysInMonth(month);
-    const clampedDay = Math.min(day, maxDay);
-    const d = new Date(Date.UTC(new Date().getFullYear(), month, clampedDay));
+    let d;
+    if (simulationRange === 'month') {
+      d = new Date(Date.UTC(new Date().getFullYear(), month, 1));
+    } else {
+      const maxDay = daysInMonth(month);
+      const clampedDay = Math.min(day, maxDay);
+      d = new Date(Date.UTC(new Date().getFullYear(), month, clampedDay));
+    }
     onStartDayChange(d);
     setAnchorEl(null);
   };
@@ -80,6 +86,7 @@ const DateSelector: React.FC<DateSelectorProps> = ({ startDay, onStartDayChange,
         colors={colors}
         MONTHS={MONTHS}
         daysInMonth={daysInMonth}
+        simulationRange={simulationRange}
       />
     </Box>
   );
